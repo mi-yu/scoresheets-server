@@ -12,48 +12,57 @@ var gulp = require('gulp'),
     notify = require('gulp-notify'),
     cache = require('gulp-cache'),
     livereload = require('gulp-livereload'),
-    lr = require('tiny-lr'),
-    server = lr();
+    //lr = require('tiny-lr'),
+    pug = require('gulp-pug');
+    //server = lr();
+
+// Templates
+gulp.task('templates', function() {
+  return gulp.src('views/**/*.pug')
+    .pipe(pug())
+    .pipe(livereload())
+    .pipe(notify({ message: 'Templates task complete'}));
+});
 
 // Styles
 gulp.task('styles', function() {
-  return gulp.src('src/styles/main.scss')
+  return gulp.src('public/stylesheets/style.scss')
     .pipe(sass({ style: 'expanded', }))
     .pipe(autoprefixer())
-    .pipe(gulp.dest('dist/styles'))
+    .pipe(gulp.dest('dist/stylesheets'))
     .pipe(rename({ suffix: '.min' }))
     .pipe(minifycss())
-    .pipe(livereload(server))
-    .pipe(gulp.dest('dist/styles'))
+    .pipe(livereload())
+    .pipe(gulp.dest('dist/stylesheets'))
     .pipe(notify({ message: 'Styles task complete' }));
 });
 
 // Scripts
 gulp.task('scripts', function() {
-  return gulp.src('src/scripts/**/*.js')
+  return gulp.src('public/javascripts/**/*.js')
     .pipe(jshint('.jshintrc'))
     .pipe(jshint.reporter('default'))
     .pipe(concat('main.js'))
-    .pipe(gulp.dest('dist/scripts'))
+    .pipe(gulp.dest('dist/javascripts'))
     .pipe(rename({ suffix: '.min' }))
     .pipe(uglify())
-    .pipe(livereload(server))
-    .pipe(gulp.dest('dist/scripts'))
+    .pipe(livereload())
+    .pipe(gulp.dest('dist/javascripts'))
     .pipe(notify({ message: 'Scripts task complete' }));
 });
 
 // Images
 gulp.task('images', function() {
-  return gulp.src('src/images/**/*')
+  return gulp.src('public/images/**/*')
     .pipe(cache(imagemin({ optimizationLevel: 3, progressive: true, interlaced: true })))
-    .pipe(livereload(server))
+    .pipe(livereload())
     .pipe(gulp.dest('dist/images'))
     .pipe(notify({ message: 'Images task complete' }));
 });
 
 // Clean
 gulp.task('clean', function() {
-  return gulp.src(['dist/styles', 'dist/scripts', 'dist/images'], {read: false})
+  return gulp.src(['dist/stylesheets', 'dist/javascripts', 'dist/images'], {read: false})
     .pipe(clean());
 });
 
@@ -66,29 +75,29 @@ gulp.task('default', ['clean'], function() {
 gulp.task('watch', function() {
 
   // Listen on port 35729
-  server.listen(35729, function (err) {
-    if (err) {
-      return console.log(err)
-    };
+  livereload.listen();
 
-    // Watch .scss files
-    gulp.watch('src/styles/**/*.scss', function(event) {
-      console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
-      gulp.run('styles');
-    });
-
-    // Watch .js files
-    gulp.watch('src/scripts/**/*.js', function(event) {
-      console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
-      gulp.run('scripts');
-    });
-
-    // Watch image files
-    gulp.watch('src/images/**/*', function(event) {
-      console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
-      gulp.run('images');
-    });
-
+  // Watch template files
+  gulp.watch('views/**/*.pug', function(event) {
+    console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+    livereload.reload();
   });
 
+  // Watch .scss files
+  gulp.watch('public/stylesheets/**/*.scss', function(event) {
+    console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+    gulp.run('styles');
+  });
+
+  // Watch .js files
+  gulp.watch('public/javascripts/**/*.js', function(event) {
+    console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+    gulp.run('scripts');
+  });
+
+  // Watch image files
+  gulp.watch('public/images/**/*', function(event) {
+    console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+    gulp.run('images');
+  });
 });
