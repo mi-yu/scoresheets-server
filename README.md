@@ -1,4 +1,4 @@
-# ✏️ Scribe
+# ✒️ Scribe
 A scorekeeping and judging system for Science Olympiad tournaments.
 
 ### Features:
