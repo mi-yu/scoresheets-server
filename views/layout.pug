@@ -1,10 +1,6 @@
 doctype html
 html.has-navbar-fixed-top
-	head
-		title= title
-		link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css")
-		link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.1/css/bulma.min.css")
-		link(rel='stylesheet', href='/stylesheets/style.min.css')
+	include partials/_header
 	body
 		include partials/_nav
 		block content

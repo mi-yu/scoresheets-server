@@ -19,11 +19,12 @@ const gulp = require('gulp'),
 // Styles
 gulp.task('styles', function() {
   return gulp.src('public/stylesheets/style.sass')
-    .pipe(sass())
+    .pipe(sass({ style: 'expanded'}))
     .pipe(autoprefixer())
     .pipe(gulp.dest('dist/stylesheets'))
     .pipe(rename({ suffix: '.min' }))
     .pipe(minifycss())
+    .pipe(livereload())
     .pipe(gulp.dest('dist/stylesheets'))
     .pipe(notify({ message: 'Styles task complete' }));
 });
@@ -37,6 +38,7 @@ gulp.task('scripts', function() {
     .pipe(gulp.dest('dist/javascripts'))
     .pipe(rename({ suffix: '.min' }))
     .pipe(uglify())
+    .pipe(livereload())
     .pipe(gulp.dest('dist/javascripts'))
     .pipe(notify({ message: 'Scripts task complete' }));
 });
@@ -45,6 +47,7 @@ gulp.task('scripts', function() {
 gulp.task('images', function() {
   return gulp.src('public/images/**/*')
     .pipe(cache(imagemin({ optimizationLevel: 3, progressive: true, interlaced: true })))
+    .pipe(livereload())
     .pipe(gulp.dest('dist/images'))
     .pipe(notify({ message: 'Images task complete' }));
 });
@@ -82,20 +85,17 @@ gulp.task('watch', ['default'], function() {
   gulp.watch('public/stylesheets/**/*.sass', function(event) {
     console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
     gulp.run('styles');
-    livereload.reload();
   });
 
   // Watch .js files
   gulp.watch('public/javascripts/**/*.js', function(event) {
     console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
     gulp.run('scripts');
-    livereload.reload();
   });
 
   // Watch image files
   gulp.watch('public/images/**/*', function(event) {
     console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
     gulp.run('images');
-    livereload.reload();
   });
 });
