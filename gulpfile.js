@@ -77,6 +77,12 @@ gulp.task('watch', function() {
   // Listen on port 35729
   livereload.listen();
 
+  // // Watch server files
+  // gulp.watch(['app.js', 'routes/*.js', 'models/*.js'], function(event) {
+  //   console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+  //   gulp.run('nodemon')
+  // })
+
   // Watch template files
   gulp.watch('views/**/*.pug', function(event) {
     console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
