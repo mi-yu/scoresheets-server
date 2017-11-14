@@ -1,5 +1,6 @@
 {
-  "name": "scorekeeper",
+  "name": "scribe",
+  "description": "Scorekeeping and judging for Science Olympiad tournaments",
   "version": "0.0.0",
   "private": true,
   "scripts": {
