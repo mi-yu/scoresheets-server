@@ -5,10 +5,31 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
+// Routes
 const index = require('./routes/index');
 const users = require('./routes/users');
 
+// DB and authentication
+const mongoose = require('mongoose');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+
+// Create Express app
 const app = express();
+
+// Set environment
+const env = process.env.NODE_ENV || 'development'
+
+if ('development' == env) {
+	app.use(logger('dev'));
+    require('dotenv').config()
+	mongoose.connect(process.env.DB_LOCAL_URL)
+}
+
+else {
+	mongoose.connect(process.env.DB_URL)
+    console.log(process.env.NODE_ENV)
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -16,13 +37,21 @@ app.set('view engine', 'pug');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-
-app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'dist')));
 
+// Passport config 
+var Account = require('./models/account')
+passport.use(new LocalStrategy(Account.authenticate()))
+passport.serializeUser(Account.serializeUser())
+passport.deserializeUser(Account.deserializeUser())
+
+// Mongoose
+mongoose.Promise = global.Promise
+
+// Use routes
 app.use('/', index);
 app.use('/users', users);
 
