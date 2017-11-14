@@ -1,6 +1,10 @@
 extends layout
 
 block content
-  h1= title
-  h2 Hello, world
-  p Welcome to #{title}
+	section.hero.is-large.is-info
+		.hero-body
+			.container
+				.column.is-4.is-offset-4.has-text-centered
+					h1.title.is-spaced Welcome to #{title},
+					h2.subtitle.is-spaced an open-source scorekeeping system for Science Olympiad tournaments.
+					a.button.is-medium.is-info.is-inverted Learn More
