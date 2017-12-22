@@ -1,0 +1,32 @@
+{"_id":{"$oid":"5867f91727b955df5fc861f9"},"name":"Microbe Mission","inRotation":true,"building":false,"impound":false,"resources":"1 page front and back"}
+{"_id":{"$oid":"5867f91727b955df5fc861fa"},"name":"Disease Detectives","inRotation":true,"building":false,"impound":false,"resources":"1 page front and back"}
+{"_id":{"$oid":"5867f91727b955df5fc861fb"},"name":"Ecology","inRotation":true,"building":false,"impound":false,"resources":"1 page front and back"}
+{"_id":{"$oid":"5867f91727b955df5fc861fc"},"name":"Invasive Species","inRotation":false,"building":false,"impound":false,"resources":"1 binder","topic":"","stateEvent":false}
+{"_id":{"$oid":"5867f91727b955df5fc861fd"},"name":"Astronomy","inRotation":true,"building":false,"impound":false,"resources":"2 laptops, 2 binders, or one of each"}
+{"_id":{"$oid":"5867f91727b955df5fc861fe"},"name":"Dynamic Planet","inRotation":true,"building":false,"impound":false,"resources":"4 pages front and back","topic":"Tectonics","stateEvent":false}
+{"_id":{"$oid":"5867f91727b955df5fc861ff"},"name":"Rocks \u0026 Minerals","inRotation":true,"building":false,"impound":false,"resources":"1 magnifying glass, 1 field guide, and 1 binder"}
+{"_id":{"$oid":"5867f91727b955df5fc86200"},"name":"Remote Sensing","inRotation":true,"building":false,"impound":false,"resources":"1 binder"}
+{"_id":{"$oid":"5867f91727b955df5fc86201"},"name":"Materials Science","inRotation":true,"building":true,"impound":true,"resources":"1 binder"}
+{"_id":{"$oid":"5867f91727b955df5fc86202"},"name":"Hovercraft","inRotation":true,"building":true,"impound":true,"resources":"1 binder"}
+{"_id":{"$oid":"5867f91727b955df5fc86203"},"name":"Chemistry Lab","inRotation":true,"building":false,"impound":false,"resources":"5 pages front and back","topic":"Thermodynamics, Physical properties","stateEvent":false}
+{"_id":{"$oid":"5867f91727b955df5fc86204"},"name":"Forensics","inRotation":true,"building":false,"impound":false,"resources":"1 binder"}
+{"_id":{"$oid":"5867f91727b955df5fc86205"},"name":"WiFi Lab","inRotation":true,"building":true,"impound":true,"resources":"5 pages front and back","topic":"","stateEvent":true}
+{"_id":{"$oid":"5867f91727b955df5fc86206"},"name":"Towers","inRotation":true,"building":true,"impound":false,"resources":"State 2016 bridge resources"}
+{"_id":{"$oid":"5867f91727b955df5fc86207"},"name":"Hydrogeology","inRotation":false,"building":false,"impound":false,"resources":"1 page front and back","topic":"","stateEvent":false}
+{"_id":{"$oid":"5867f91727b955df5fc86208"},"name":"Robot Arm","inRotation":false,"building":true,"impound":false,"resources":"","topic":"","stateEvent":false}
+{"_id":{"$oid":"5867f91727b955df5fc86209"},"name":"Wind Power","inRotation":false,"building":true,"impound":true,"resources":"1 binder","topic":"","stateEvent":false}
+{"_id":{"$oid":"5867f91727b955df5fc8620a"},"name":"Helicopters","inRotation":true,"building":true,"impound":false}
+{"_id":{"$oid":"5867f91727b955df5fc8620b"},"name":"Write It Do It","inRotation":true,"building":false,"impound":false}
+{"_id":{"$oid":"5867f91727b955df5fc8620c"},"name":"Electric Vehicle","inRotation":false,"building":true,"impound":true,"resources":"","topic":"","stateEvent":false}
+{"_id":{"$oid":"5867f91727b955df5fc8620d"},"name":"Experimental Design","inRotation":true,"building":false,"impound":false}
+{"_id":{"$oid":"5867f91727b955df5fc8620e"},"name":"Game On","inRotation":true,"building":false,"impound":false}
+{"_id":{"$oid":"5867f91727b955df5fc8620f"},"name":"We've Got Your Number","inRotation":true,"building":false,"impound":false,"resources":"","topic":"","stateEvent":true}
+{"_id":{"$oid":"5867f91727b955df5fc86210"},"name":"Roller Coaster","inRotation":true,"building":true,"impound":true}
+{"_id":{"$oid":"5867f91727b955df5fc86211"},"name":"Fermi Questions","inRotation":true,"building":false,"impound":false}
+{"_id":{"$oid":"5867f91727b955df5fc86212"},"name":"Optics","inRotation":true,"building":false,"impound":false,"resources":"1 binder"}
+{"_id":{"$oid":"5867f91727b955df5fc86213"},"name":"Picture This","inRotation":true,"building":false,"impound":false,"resources":"","topic":"","stateEvent":true}
+{"_id":{"$oid":"5952dd9b73c39c0004b96c5e"},"name":"Mousetrap Vehicle","topic":"","resources":"","stateEvent":false,"impound":false,"building":true,"inRotation":true,"__v":0}
+{"_id":{"$oid":"5952de3473c39c0004b96c5f"},"name":"Thermodynamics","topic":"","resources":"","stateEvent":false,"impound":false,"building":true,"inRotation":true,"__v":0}
+{"_id":{"$oid":"5952de5173c39c0004b96c60"},"name":"Mission Possible","topic":"","resources":"","stateEvent":false,"impound":false,"building":true,"inRotation":true,"__v":0}
+{"_id":{"$oid":"5952deab73c39c0004b96c61"},"name":"Herpetology","topic":"","resources":"1 binder","stateEvent":false,"impound":false,"building":false,"inRotation":true,"__v":0}
+{"_id":{"$oid":"5966e48e44ad7800040bfbd0"},"name":"Anatomy \u0026 Physiology","resources":"","stateEvent":false,"impound":false,"building":false,"inRotation":true,"__v":0}

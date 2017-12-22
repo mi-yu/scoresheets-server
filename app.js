@@ -43,10 +43,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'dist')));
 
 // Passport config 
-var Account = require('./models/account')
-passport.use(new LocalStrategy(Account.authenticate()))
-passport.serializeUser(Account.serializeUser())
-passport.deserializeUser(Account.deserializeUser())
+var User = require('./models/User')
+passport.use(new LocalStrategy(User.authenticate()))
+passport.serializeUser(User.serializeUser())
+passport.deserializeUser(User.deserializeUser())
 
 // Mongoose
 mongoose.Promise = global.Promise
