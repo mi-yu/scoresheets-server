@@ -2,7 +2,7 @@ extends layouts/basic
 
 block content
 	.container
-		h1 There was an error:
 		h1= message
-		h2= error.status
-		pre #{error.stack}
+		if (error)
+			h2= error.status
+			pre #{error.stack}

@@ -10,7 +10,9 @@ router.get('/', function(req, res, next) {
 
 router.get('/me', function(req, res, next) {
 	console.log(req.user)
-	if (req.user)
+	if (req.user && req.user.group === 'admin')
+		res.redirect('/admin/dashboard')
+	else if (req.user)
 		res.render('user/profile', {
 			'user': req.user
 		})

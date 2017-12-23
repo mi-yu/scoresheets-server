@@ -10,6 +10,7 @@ const session = require('express-session')
 // Routes
 const public = require('./routes/public');
 const users = require('./routes/users');
+const admin = require('./routes/admin');
 
 // DB and authentication
 const mongoose = require('mongoose');
@@ -60,6 +61,7 @@ mongoose.Promise = global.Promise
 // Use routes
 app.use('/', public);
 app.use('/users', users);
+app.use('/admin', admin);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
