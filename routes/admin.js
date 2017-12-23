@@ -5,9 +5,7 @@ const passport = require('passport');
 const needsGroup = require('./helpers').needsGroup;
 
 router.get('/dashboard', needsGroup('admin'), function(req, res, next) {
-	res.render('admin/dashboard', {
-		'user': req.user
-	})
+	res.render('admin/dashboard')
 });
 
 module.exports = router;

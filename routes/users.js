@@ -9,13 +9,8 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/me', function(req, res, next) {
-	console.log(req.user)
-	if (req.user && req.user.group === 'admin')
-		res.redirect('/admin/dashboard')
-	else if (req.user)
-		res.render('user/profile', {
-			'user': req.user
-		})
+	if (req.user)
+		res.render('user/profile')
 	else
 		res.redirect('/users/login');
 })
@@ -54,5 +49,10 @@ router.post('/register', function(req, res, next) {
         });
     });
 });
+
+router.get('/logout', function(req, res, next) {
+	req.logout();
+	res.redirect('/');
+})
 
 module.exports = router;

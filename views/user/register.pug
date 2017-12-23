@@ -1,7 +1,7 @@
 extends ../layouts/basic
 
 block content
-	.container-sm
+	#content: .container-sm
 		h1.title.has-text-centered Register
 
 		form(action='/users/register' method='post')
@@ -18,6 +18,11 @@ block content
 				label.label Password
 				.control
 					input.input(type='password', name='password')
+
+			.field
+				label.label Tournament Code
+				.control
+					input.input(type='text', name='tournamentCode')
 
 			if (message)
 				p.help.is-danger= message

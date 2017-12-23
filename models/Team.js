@@ -1,25 +1,14 @@
-var keystone = require('keystone');
-var Types = keystone.Field.Types;
+const mongoose = require('mongoose'),
+	Schema = mongoose.Schema,
+	passportLocalMongoose = require('passport-local-mongoose');
 
-/**
- * Gallery Model
- * =============
- */
-
-var Team = new keystone.List('Team');
-
-Team.add({
-	school: {
-		type: String 
-	},
-	teamNumber: {
-		type: Boolean
-	},
-	tournaments: {
-		type: Types.Relationship,
-		ref: 'Tournament',
-		many: true
-	}
+const Team = new Schema({
+	tournament: { type: Schema.Types.ObjectId, ref: 'Tournament' },
+	teamNumber: String,
+	score: Number,
+	placing: Number
 });
 
-Team.register();
+Team.plugin(passportLocalMongoose);
+
+module.exports = mongoose.model('Team', Team);

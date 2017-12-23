@@ -1,39 +1,18 @@
-var keystone = require('keystone');
-var Types = keystone.Field.Types;
+const mongoose = require('mongoose'),
+	Schema = mongoose.Schema,
+	passportLocalMongoose = require('passport-local-mongoose');
 
-/**
- * Event Model
- * =============
- */
-
-var Event = new keystone.List('Event', {
-	defaultSort: '-inRotation'
+const Event = new Schema({
+	eventName : {type: String, unique: true},
+	inRotation : {type: Boolean, default: false},
+	isBuilding : {type: Boolean, default: false},
+	isImpounded : {type: Boolean, default: false},
+	isStateEvent : {type: Boolean, default: false},
+	topics: [String],
+	currentTopic: String,
+	notes: String
 });
 
-Event.add({
-	name: {
-		type: String 
-	},
-	building: {
-		type: Boolean
-	},
-	impound: {
-		type: Boolean
-	},
-	inRotation: {
-		type: Boolean
-	},
-	stateEvent: {
-		type: Boolean
-	},
-	topic: {
-		type: String,
-		many: true
-	},
-	resources: {
-		type: String
-	}
-});
+Event.plugin(passportLocalMongoose);
 
-Event.defaultColumns = 'name, building, impound';
-Event.register();
+module.exports = mongoose.model('Event', Event);

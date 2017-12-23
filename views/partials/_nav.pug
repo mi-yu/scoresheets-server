@@ -1,4 +1,4 @@
-nav.navbar.is-fixed-top(role='navigation', aria-label='main navigation')
+nav(class=navLight ? 'is-info' : 'is-dark').navbar.is-fixed-top
 	.navbar-brand
 		a.navbar-item.has-text-weight-bold(href='/') Scribe
 		button.button.navbar-burger
@@ -11,5 +11,6 @@ nav.navbar.is-fixed-top(role='navigation', aria-label='main navigation')
 				a.navbar-item(href='/users/login') Login
 				a.navbar-item(href='/users/register') Register
 			else
+				a.navbar-item(href='/admin/dashboard') Dashboard
 				a.navbar-item(href='/users/me') Profile
-				a.navbar-item(href='#') Manage Tournaments
+				a.navbar-item(href='/users/logout') Logout

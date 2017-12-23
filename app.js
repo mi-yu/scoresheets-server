@@ -11,6 +11,7 @@ const session = require('express-session')
 const public = require('./routes/public');
 const users = require('./routes/users');
 const admin = require('./routes/admin');
+const tournaments = require('./routes/tournaments');
 
 // DB and authentication
 const mongoose = require('mongoose');
@@ -59,9 +60,14 @@ passport.deserializeUser(User.deserializeUser())
 mongoose.Promise = global.Promise
 
 // Use routes
+app.use(function(req, res, next) {
+    res.locals.user = req.user;
+    next();
+});
 app.use('/', public);
 app.use('/users', users);
 app.use('/admin', admin);
+app.use('/tournaments', tournaments);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
