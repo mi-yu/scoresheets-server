@@ -1,0 +1,28 @@
+extends ../layouts/basic
+
+block content
+	.container-sm
+		h1.title.has-text-centered Register
+
+		form(action='/users/register' method='post')
+			.field
+				label.label Full Name
+				.control
+					input.input(type='text', name='name')
+
+			.field
+				label.label Email
+				.control
+					input.input(type='text', name='email')
+			.field
+				label.label Password
+				.control
+					input.input(type='password', name='password')
+
+			if (message)
+				p.help.is-danger= message
+				br
+			
+			.field.is-grouped
+				.control
+					button.button.is-link(type='submit') Submit

@@ -7503,3 +7503,7 @@ label.panel-block {
 .footer {
   background-color: whitesmoke;
   padding: 3rem 1.5rem 6rem; }
+
+.container-sm {
+  width: 30%;
+  margin: 0 auto; }

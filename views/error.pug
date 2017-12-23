@@ -1,7 +1,8 @@
-extends layout
+extends layouts/basic
 
 block content
-	h1 There was an error:
-	h1= message
-	h2= error.status
-	pre #{error.stack}
+	.container
+		h1 There was an error:
+		h1= message
+		h2= error.status
+		pre #{error.stack}

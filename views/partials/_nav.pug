@@ -7,5 +7,9 @@ nav.navbar.is-fixed-top(role='navigation', aria-label='main navigation')
 			span
 	.navbar-menu
 		.navbar-end
-			a.navbar-item(href='/login') Login
-			a.navbar-item Register
+			if (!user)
+				a.navbar-item(href='/users/login') Login
+				a.navbar-item(href='/users/register') Register
+			else
+				a.navbar-item(href='/users/me') Profile
+				a.navbar-item(href='#') Manage Tournaments

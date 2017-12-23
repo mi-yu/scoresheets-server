@@ -1,0 +1,24 @@
+extends ../layouts/basic
+
+block content
+	.container-sm
+		h1.title.has-text-centered Login to Scribe
+
+		form(action='/users/login' method='post')
+
+			.field
+				label.label Email
+				.control
+					input.input(type='text' name='email')
+			.field
+				label.label Password
+				.control
+					input.input(type='password' name='password')
+
+			if (message.error)
+				p.help.is-danger= message.error
+				br
+
+			.field.is-grouped
+				.control
+					button.button.is-link Submit
