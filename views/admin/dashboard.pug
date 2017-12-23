@@ -3,3 +3,12 @@ extends ../layouts/basic
 block content
 	#content: .container
 		h1.title Dashboard
+		hr
+		p.subtitle Tournaments
+		if (tournaments)
+			ul
+			each tournament in tournaments
+				li: a(href='#')= tournament.name
+		a.button.is-primary(href='#')
+			span.icon: i.fa.fa-plus
+			span New Tournament

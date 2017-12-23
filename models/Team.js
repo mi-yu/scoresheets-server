@@ -9,6 +9,4 @@ const Team = new Schema({
 	placing: Number
 });
 
-Team.plugin(passportLocalMongoose);
-
 module.exports = mongoose.model('Team', Team);

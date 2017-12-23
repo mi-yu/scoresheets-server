@@ -13,6 +13,4 @@ const Event = new Schema({
 	notes: String
 });
 
-Event.plugin(passportLocalMongoose);
-
 module.exports = mongoose.model('Event', Event);

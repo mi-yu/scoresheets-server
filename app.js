@@ -4,8 +4,8 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const flash = require('express-flash')
-const session = require('express-session')
+const flash = require('express-flash');
+const session = require('express-session');
 
 // Routes
 const public = require('./routes/public');
@@ -27,11 +27,11 @@ const env = process.env.NODE_ENV || 'development'
 if ('development' == env) {
 	app.use(logger('dev'))
   require('dotenv').config()
-	mongoose.connect(process.env.DB_LOCAL_URL)
+	mongoose.connection.openUri(process.env.DB_LOCAL_URL)
 }
 
 else {
-	mongoose.connect(process.env.DB_URL)
+	mongoose.connection.openUri(process.env.DB_URL)
     console.log(process.env.NODE_ENV)
 }
 
@@ -41,7 +41,7 @@ app.set('view engine', 'pug');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(session({secret: 'koala'}))
+app.use(session({secret: 'koala', resave: false, saveUninitialized: true}))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());

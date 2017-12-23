@@ -1,11 +1,13 @@
-const express = require('express');
-const router = express.Router();
-const User = require('../models/User');
-const passport = require('passport');
-const needsGroup = require('./helpers').needsGroup;
+const router = require('express').Router()
+const User = require('../models/User')
+const passport = require('passport')
+const helpers = require('./helpers')
 
-router.get('/dashboard', needsGroup('admin'), function(req, res, next) {
-	res.render('admin/dashboard')
-});
+router.get('/dashboard', 
+	helpers.needsGroup('admin'), 
+	helpers.getTournamentList, 
+	function(req, res, next) {
+		res.render('admin/dashboard')
+})
 
-module.exports = router;
+module.exports = router
