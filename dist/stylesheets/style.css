@@ -7504,9 +7504,21 @@ label.panel-block {
   background-color: whitesmoke;
   padding: 3rem 1.5rem 6rem; }
 
+* {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  margin: 0;
+  padding: 0; }
+
 .container-sm {
   width: 30%;
   margin: 0 auto; }
 
+.button {
+  margin-bottom: 1rem; }
+
 #content {
+  padding-top: 2rem; }
+
+#messages {
   padding-top: 2rem; }

@@ -1,0 +1,11 @@
+if (messages)
+	#messages.container
+		if (messages.error)
+			article.message.is-danger
+				.message-body= messages.error
+		else if (messages.success)
+			article.message.is-success
+				.message-body= messages.success
+		else if (messages.info)
+			article.message.is-info
+				.message-body= messages.info

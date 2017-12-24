@@ -28,6 +28,7 @@ if ('development' == env) {
 	app.use(logger('dev'))
   require('dotenv').config()
 	mongoose.connection.openUri(process.env.DB_LOCAL_URL)
+  mongoose.set('debug', true);
 }
 
 else {
@@ -61,13 +62,17 @@ mongoose.Promise = global.Promise
 
 // Use routes
 app.use(function(req, res, next) {
-    res.locals.user = req.user;
-    next();
+  res.locals.user = req.user;
+  next();
 });
 app.use('/', public);
 app.use('/users', users);
 app.use('/admin', admin);
 app.use('/tournaments', tournaments);
+app.use((req, res, next) => {
+  res.locals.message = req.flash()
+  next()
+})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

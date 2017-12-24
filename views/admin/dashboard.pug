@@ -5,10 +5,54 @@ block content
 		h1.title Dashboard
 		hr
 		p.subtitle Tournaments
-		if (tournaments)
-			ul
-			each tournament in tournaments
-				li: a(href='#')= tournament.name
-		a.button.is-primary(href='#')
+		a#create.button.is-primary(href='#')
 			span.icon: i.fa.fa-plus
 			span New Tournament
+
+		if (tournaments)
+			.columns.is-multiline
+				each tournament in tournaments
+					.column.is-one-third: .card
+						header.card-header
+							p.card-header-title= tournament.name
+						.card-content
+							.content
+								| Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
+						footer.card-footer
+							a.card-footer-item(href='#') Manage
+							a.card-footer-item(href='#') Delete
+
+		.modal
+			.modal-background
+			.modal-card
+				header.modal-card-head
+					p.modal-card-title Create Tournament
+					button.delete.close-modal(aria-label='close')
+				section.modal-card-body
+					form#new-tournament(action='/tournaments/new' method='post')
+						.field: label.label Tournament Name
+							.control
+								input.input(type='text', name='name')
+						.field: label.label Date
+							.control
+								input.input(type='date', name='date')
+				footer.modal-card-foot
+					button(type='submit' form='new-tournament').button.is-success Save
+					button.button.close-modal Cancel
+
+
+block scripts
+	script.
+		const createTournament = document.getElementById('create')
+		const closeModal = document.querySelectorAll('.close-modal')
+		const modal = document.querySelector('.modal')
+
+		createTournament.onclick = () => {
+			modal.classList.toggle('is-active')
+		}
+
+		closeModal.forEach((el) => {
+			el.onclick = () => {
+				modal.classList.toggle('is-active')
+			}
+		})

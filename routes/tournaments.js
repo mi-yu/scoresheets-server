@@ -5,11 +5,7 @@ const randomWords = require('random-words')
 const needsGroup = require('./helpers').needsGroup
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-	res.redirect('/users/me')
-})
-
-router.post('/new', function(req, res, next) {
+router.post('/new', needsGroup('admin'), function(req, res, next) {
 	const tournament = new Tournament({
 		name: req.body.name,
 		date: req.body.date,
@@ -18,10 +14,11 @@ router.post('/new', function(req, res, next) {
 
 	tournament.save((err) => {
 		if (err)
-			console.log(err)
+			req.flash('error', 'There was an error creating the tournament: ' + err)
 	})
 
-	res.send(JSON.stringify(tournament))
+	req.flash('success', 'Successfully created tournament ' + tournament.name)
+	res.redirect('/admin/dashboard')
 })
 
 module.exports = router

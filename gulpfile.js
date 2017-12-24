@@ -12,9 +12,7 @@ const gulp = require('gulp'),
     notify = require('gulp-notify'),
     cache = require('gulp-cache'),
     livereload = require('gulp-livereload'),
-    //lr = require('tiny-lr'),
     pug = require('gulp-pug');
-    //server = lr();
 
 // Styles
 gulp.task('styles', function() {
