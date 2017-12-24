@@ -6,9 +6,8 @@ module.exports = {
             if (req.user && req.user.group === group) {
                 next()
             } else {
-                res.status(401).render('error', {
-                    'message': "Unauthorized, please contact an administrator for more information"
-                })
+                req.flash('error', 'Unauthorized, please contact an administrator for more information.')
+                res.status(401).render('error')
             }
         }
     },

@@ -14,13 +14,12 @@ router.post('/new', needsGroup('admin'), (req, res, next) => {
 	})
 
 	tournament.save((err) => {
-		if (err)
-			req.flash('error', 'There was an error creating the tournament: ' + err)
+		if (err && err.code === 11000)
+			req.flash('error', 'A tournament named "' + tournament.name + '" already exists.')
 		else
-			req.flash('success', 'Successfully created tournament ' + tournament.name)
+			req.flash('success', 'Successfully created tournament "' + tournament.name + '"')
+		res.redirect('/admin/dashboard')
 	})
-
-	res.redirect('/admin/dashboard')
 })
 
 router.get('/delete/:id', needsGroup('admin'), (req, res, next) => {
