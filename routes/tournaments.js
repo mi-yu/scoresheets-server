@@ -6,9 +6,11 @@ const needsGroup = require('./helpers').needsGroup
 
 /* GET users listing. */
 router.post('/new', needsGroup('admin'), (req, res, next) => {
+	let date = new Date(req.body.date)
+	date = new Date(date.getTime() + date.getTimezoneOffset()*60*1000)
 	const tournament = new Tournament({
 		name: req.body.name,
-		date: req.body.date,
+		date: date,
 		state: req.body.state,
 		city: req.body.city,
 		numTeams: req.body.numTeams,

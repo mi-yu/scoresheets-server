@@ -16,7 +16,7 @@ block content
 						.card-content
 							.content
 								h1.title.is-size-3= tournament.name
-								p.subtitle.is-size-6= tournament.date.toDateString() + ' @ ' + tournament.city + ', ' + tournament.state
+								p.subtitle.is-size-6= tournament.date.toLocaleDateString('en-US') + ' @ ' + tournament.city + ', ' + tournament.state
 								p Proctor registration code:
 									pre= tournament.joinCode
 
