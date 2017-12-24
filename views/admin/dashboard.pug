@@ -13,11 +13,13 @@ block content
 			.columns.is-multiline
 				each tournament in tournaments
 					.column.is-one-third: .card
-						header.card-header
-							p.card-header-title= tournament.name
 						.card-content
 							.content
-								| Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
+								h1.title.is-size-3= tournament.name
+								p.subtitle.is-size-6= tournament.date.toDateString() + ' @ ' + tournament.city + ', ' + tournament.state
+								p Proctor registration code:
+									pre= tournament.joinCode
+
 						footer.card-footer
 							a.card-footer-item(href='#') Manage
 							a.card-footer-item(href='/tournaments/delete/' + tournament._id) Delete

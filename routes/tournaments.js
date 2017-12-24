@@ -9,7 +9,9 @@ router.post('/new', needsGroup('admin'), (req, res, next) => {
 	const tournament = new Tournament({
 		name: req.body.name,
 		date: req.body.date,
-		location: req.body.location,
+		state: req.body.state,
+		city: req.body.city,
+		numTeams: req.body.numTeams,
 		joinCode: randomWords({exactly: 5, join: '-'})
 	})
 

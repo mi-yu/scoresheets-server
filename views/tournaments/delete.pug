@@ -1,10 +1,11 @@
 extends ../layouts/basic
 
 block content
-	.container-sm
+	#content: .container-sm.has-text-centered
 		h1.title Delete Tournament
-		p You are about to delete "#{tournament.name}". This cannot be undone. Proceed?
+		p You are about to delete "#{tournament.name}" and all associated data. This cannot be undone. Proceed?
 		br
 		form(action='/tournaments/delete/' + tournament._id method='POST')
 			button.button.is-danger(type='submit') Delete
+			br
 			a.button(href='/admin/dashboard') Cancel
