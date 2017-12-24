@@ -8,21 +8,21 @@ block content
 			.field
 				label.label Full Name
 				.control
-					input.input(type='text', name='name')
+					input.input(type='text', name='name' required)
 
 			.field
 				label.label Email
 				.control
-					input.input(type='text', name='email')
+					input.input(type='text', name='email' required)
 			.field
 				label.label Password
 				.control
-					input.input(type='password', name='password')
+					input.input(type='password', name='password' required)
 
 			.field
 				label.label Tournament Code
 				.control
-					input.input(type='text', name='tournamentCode')
+					input.input(type='text', name='tournamentCode' required)
 
 			if (message)
 				p.help.is-danger= message

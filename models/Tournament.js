@@ -3,10 +3,10 @@ const mongoose = require('mongoose'),
     passportLocalMongoose = require('passport-local-mongoose')
 
 const Tournament = new Schema({
-    name: { type: String, unique: true, trim: true },
+    name: { type: String, unique: true, trim: true, required: true },
     date: Date,
-    location: String,
-    joinCode: { type: String, unique: true },
+    location: { type: String, required: true},
+    joinCode: { type: String, unique: true, required: true },
     scores: { type: Schema.Types.ObjectId, ref: 'Scoresheet' }
 })
 

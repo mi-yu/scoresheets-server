@@ -9,11 +9,11 @@ block content
 			.field
 				label.label Email
 				.control
-					input.input(type='text' name='email')
+					input.input(type='text' name='email' required)
 			.field
 				label.label Password
 				.control
-					input.input(type='password' name='password')
+					input.input(type='password' name='password' required)
 
 			if (message.error)
 				p.help.is-danger= message.error

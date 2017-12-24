@@ -1,0 +1,20 @@
+#new-tournament-modal.modal
+	.modal-background
+	.modal-card
+		header.modal-card-head
+			p.modal-card-title Create Tournament
+			button.delete.toggles-modal(aria-label='close' data-target='#new-tournament-modal')
+		section.modal-card-body
+			form#new-tournament-form(action='/tournaments/new' method='post')
+				.field: label.label Tournament Name
+					.control
+						input.input(type='text', name='name', required)
+				.field: label.label Location
+					.control
+						input.input(type='text', name='location', required)
+				.field: label.label Date
+					.control
+						input.input(type='date', name='date', required)
+		footer.modal-card-foot
+			button.button.is-success(type='submit' form='new-tournament-form') Save
+			button.button.toggles-modal(data-target='#new-tournament-modal') Cancel

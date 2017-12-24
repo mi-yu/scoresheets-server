@@ -5,7 +5,7 @@ block content
 		h1.title Dashboard
 		hr
 		p.subtitle Tournaments
-		a#create.button.is-primary(href='#')
+		a.button.is-primary.toggles-modal(href='#' data-target='#new-tournament-modal')
 			span.icon: i.fa.fa-plus
 			span New Tournament
 
@@ -20,39 +20,16 @@ block content
 								| Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
 						footer.card-footer
 							a.card-footer-item(href='#') Manage
-							a.card-footer-item(href='#') Delete
+							a.card-footer-item(href='/tournaments/delete/' + tournament._id) Delete
 
-		.modal
-			.modal-background
-			.modal-card
-				header.modal-card-head
-					p.modal-card-title Create Tournament
-					button.delete.close-modal(aria-label='close')
-				section.modal-card-body
-					form#new-tournament(action='/tournaments/new' method='post')
-						.field: label.label Tournament Name
-							.control
-								input.input(type='text', name='name')
-						.field: label.label Date
-							.control
-								input.input(type='date', name='date')
-				footer.modal-card-foot
-					button(type='submit' form='new-tournament').button.is-success Save
-					button.button.close-modal Cancel
-
+		include partials/_tournament-modal
 
 block scripts
 	script.
-		const createTournament = document.getElementById('create')
-		const closeModal = document.querySelectorAll('.close-modal')
-		const modal = document.querySelector('.modal')
+		const togglesModal = document.querySelectorAll('.toggles-modal')
 
-		createTournament.onclick = () => {
-			modal.classList.toggle('is-active')
-		}
-
-		closeModal.forEach((el) => {
+		togglesModal.forEach((el) => {
 			el.onclick = () => {
-				modal.classList.toggle('is-active')
+				document.querySelector(el.dataset.target).classList.toggle('is-active')
 			}
 		})
