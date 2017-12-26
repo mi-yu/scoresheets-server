@@ -25,8 +25,8 @@ block content
 								code.center.aligned= tournament.joinCode
 
 						.extra.content: .ui.two.buttons
-							a.ui.button(href='#') Manage
-							a.ui.button.red(href='/tournaments/delete/' + tournament._id) Delete
+							a.ui.button(href='/tournaments/manage/' + tournament._id) Manage
+							a.ui.button(href='#') Edit Details
 
 		include partials/_tournament-modal
 

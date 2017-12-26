@@ -1,0 +1,12 @@
+extends ../layouts/basic
+
+block content
+	#content: .ui.container
+		h1.ui.header= tournament.name
+			.sub.header= tournament.date.toLocaleDateString()
+			.sub.header= tournament.city + ', ' + tournament.state
+		.ui.divider
+		ul
+			each event in tournament.events
+				li
+					div= event.event.name
