@@ -1,11 +1,14 @@
 if (Object.keys(messages).length > 0)
-	#messages.container
+	#messages.ui.container
 		if (messages.error)
-			article.message.is-danger
-				.message-body= messages.error
+			.ui.message.negative.floating
+				i.close.icon
+				p= messages.error
 		else if (messages.success)
-			article.message.is-success
-				.message-body= messages.success
+			.ui.message.success.floating
+				i.close.icon
+				p= messages.success
 		else if (messages.info)
-			article.message.is-info
-				.message-body= messages.info
+			.ui.message.info.floating
+				i.close.icon
+				p= messages.info

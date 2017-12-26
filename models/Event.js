@@ -1,9 +1,8 @@
 const mongoose = require('mongoose'),
-	Schema = mongoose.Schema,
-	passportLocalMongoose = require('passport-local-mongoose');
+	Schema = mongoose.Schema
 
 const Event = new Schema({
-	eventName : {type: String, unique: true},
+	name : {type: String, unique: true},
 	inRotation : {type: Boolean, default: false},
 	isBuilding : {type: Boolean, default: false},
 	isImpounded : {type: Boolean, default: false},

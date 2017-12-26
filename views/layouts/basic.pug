@@ -7,3 +7,11 @@ html.has-navbar-fixed-top
 		block content
 	include ../partials/_footer
 	block scripts
+
+	script.
+		$('.message .close')
+		  .on('click', function() {
+		    $(this)
+		      .closest('.message')
+		      .transition('fade')
+		  })

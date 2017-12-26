@@ -1,6 +1,5 @@
 const mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
-    passportLocalMongoose = require('passport-local-mongoose')
+    Schema = mongoose.Schema
 
 const Tournament = new Schema({
     name: { type: String, unique: true, trim: true, required: true },
@@ -9,14 +8,18 @@ const Tournament = new Schema({
     city: { type: String, required: true },
     joinCode: { type: String, unique: true, required: true },
     numTeams:  { type: Number, default: 0 },
-    scores: { type: Schema.Types.ObjectId, ref: 'Scoresheet' }
+    scores: { type: Schema.Types.ObjectId, ref: 'Scoresheet' },
+    events: [{
+        event: {
+            type: Schema.Types.ObjectId,
+            ref: 'Event',
+            required: true
+        },
+        proctors: [{
+            type: Schema.Types.ObjectId,
+            ref: 'User'
+        }]
+    }]
 })
-
-Tournament.index({
-	'name': 1,
-	'joinCode': 1
-})
-
-Tournament.on('index', (err) => console.log(err))
 
 module.exports = mongoose.model('Tournament', Tournament)

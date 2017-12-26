@@ -1,6 +1,5 @@
 const mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
-    passportLocalMongoose = require('passport-local-mongoose');
+    Schema = mongoose.Schema
 
 const Scoresheet = new Schema({
     tournament: { type: Schema.Types.ObjectId, ref: 'Tournament'},

@@ -1,4 +1,5 @@
 const Tournament = require('../models/Tournament')
+const Event = require('../models/Event')
 
 module.exports = {
     needsGroup: function(group) {
@@ -14,8 +15,16 @@ module.exports = {
     getTournamentList: (req, res, next) => {
         Tournament.find((err, results) => {
             if (err)
-                console.log(err)
+                req.flash('error', 'Could not load tournaments.')
             res.locals.tournaments = results
+            next()
+        })
+    },
+    getEventsList: (req, res, next) => {
+        Event.find().sort('name').exec((err, results) => {
+            if (err)
+                req.flash('error', 'Could not load events.')
+            res.locals.events = results
             next()
         })
     }

@@ -4,21 +4,18 @@ block content
 	#content: .container-sm
 		h1.title.has-text-centered Login to Scribe
 
-		form(action='/users/login' method='post')
+		form.ui.form(action='/users/login' method='post')
 
-			.field
-				label.label Email
-				.control
-					input.input(type='text' name='email' required)
-			.field
-				label.label Password
-				.control
-					input.input(type='password' name='password' required)
+			.field.required
+				label Email
+				input(type='text' name='email' required)
+			.field.required
+				label Password
+				input(type='password' name='password' required)
 
 			if (message.error)
-				p.help.is-danger= message.error
-				br
+				.ui.message.negative
+					p= message.error
 
-			.field.is-grouped
-				.control
-					button.button.is-link Submit
+			.field
+				button.ui.button.primary(type='submit') Submit

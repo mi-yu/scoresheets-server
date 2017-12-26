@@ -1,37 +1,51 @@
 extends ../layouts/basic
 
 block content
-	#content: .container
-		h1.title Dashboard
+	#content: .ui.container
+		h1.ui.header Dashboard
 		hr
-		p.subtitle Tournaments
-		a.button.is-primary.toggles-modal(href='#' data-target='#new-tournament-modal')
-			span.icon: i.fa.fa-plus
-			span New Tournament
+
+		h2.ui.header Tournaments
+		button#new-tournament.ui.button.green
+			i.icon.plus
+			| New Tournament
+		.ui.hidden.divider
 
 		if (tournaments)
-			.columns.is-multiline
+			.ui.grid
 				each tournament in tournaments
-					.column.is-one-third: .card
-						.card-content
-							.content
-								h1.title.is-size-3= tournament.name
-								p.subtitle.is-size-6= tournament.date.toLocaleDateString('en-US') + ' @ ' + tournament.city + ', ' + tournament.state
+					.four.wide.column: .ui.card
+						.content
+							.header= tournament.name
+							.meta
+								span= tournament.date.toLocaleDateString('en-US')
+								span= tournament.city + ', ' + tournament.state
+							.description
 								p Proctor registration code:
-									pre= tournament.joinCode
+								code.center.aligned= tournament.joinCode
 
-						footer.card-footer
-							a.card-footer-item(href='#') Manage
-							a.card-footer-item(href='/tournaments/delete/' + tournament._id) Delete
+						.extra.content: .ui.two.buttons
+							a.ui.button(href='#') Manage
+							a.ui.button.red(href='/tournaments/delete/' + tournament._id) Delete
 
 		include partials/_tournament-modal
 
 block scripts
 	script.
-		const togglesModal = document.querySelectorAll('.toggles-modal')
+		$('.ui.dropdown').dropdown()
 
-		togglesModal.forEach((el) => {
-			el.onclick = () => {
-				document.querySelector(el.dataset.target).classList.toggle('is-active')
-			}
+		$('#new-tournament').click(() => {
+			$('.ui.modal').modal('show')
+		})
+
+		$('#add-all-events').click(() => {
+			$('#events option').each( function() {
+				$('#events').dropdown('set selected', $(this).prop('value'))
+			})
+		})
+
+		$('#clear-events').click(() => {
+			$('#events option').each( function() {
+				$('#events').dropdown('remove selected', $(this).prop('value'))
+			})
 		})

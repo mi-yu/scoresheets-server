@@ -1,18 +1,32 @@
-// Import initial Bulma functions
-@import '../../node_modules/bulma/sass/utilities/initial-variables'
-@import '../../node_modules/bulma/sass/utilities/functions'
+// // Import initial Bulma functions
+// @import '../../node_modules/bulma/sass/utilities/initial-variables'
+// @import '../../node_modules/bulma/sass/utilities/functions'
 
-// Navbar height
+// // Navbar height
 $navbar-height: 3.5rem
 
-// Import rest of Bulma
-@import '../../node_modules/bulma/bulma'
+// // Import rest of Bulma
+// @import '../../node_modules/bulma/bulma'
 
 // Custom styles
 @import 'partials/helpers'
 
 #content
-	padding-top: 2rem
+	padding-top: $navbar-height + 2rem
 
 #messages
-	padding-top: 2rem
+	padding-top: $navbar-height + 2rem
+	z-index: 100
+	position: absolute
+	left: 50%
+	transform: translateX(-50%)
+
+#hero
+	height: 80vh
+	display: flex
+	align-items: center
+	flex-direction: column
+	justify-content: center
+
+nav
+	height: $navbar-height

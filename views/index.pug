@@ -1,10 +1,8 @@
 extends layouts/basic
 
 block content
-	section.hero.is-medium.is-info
-		.hero-body
-			.container
-				.column.is-4.is-offset-4.has-text-centered
-					h1.title.is-spaced Welcome to #{title},
-					h2.subtitle.is-spaced an open-source scorekeeping system for Science Olympiad tournaments.
-					a.button.is-medium.is-info.is-inverted Learn More
+	#content: #hero.ui.vertical.center.aligned.segment
+		h1.ui.header Welcome to #{title},
+			.sub.header an open-source scorekeeping system for Science Olympiad tournaments.
+		.ui.hidden.divider
+		a.ui.button.primary Learn More

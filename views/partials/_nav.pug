@@ -1,16 +1,11 @@
-nav(class=navLight ? 'is-info' : 'is-dark').navbar.is-fixed-top
-	.navbar-brand
-		a.navbar-item.has-text-weight-bold(href='/') Scribe
-		button.button.navbar-burger
-			span
-			span
-			span
-	.navbar-menu
-		.navbar-end
-			if (!user)
-				a.navbar-item(href='/users/login') Login
-				a.navbar-item(href='/users/register') Register
-			else
-				a.navbar-item(href='/admin/dashboard') Dashboard
-				a.navbar-item(href='/users/me') Profile
-				a.navbar-item(href='/users/logout') Logout
+nav.ui.menu.top.fixed.inverted
+	a.item(href='/')
+		| Scribe
+	.right.menu
+		if (!user)
+			a.item(href='/users/login') Log In
+			a.item(href='/users/register') Register
+		else
+			a.item(href='/admin/dashboard') Dashboard
+			a.item(href='/users/me') Profile
+			a.item(href='/users/logout') Logout

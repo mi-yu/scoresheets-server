@@ -4,30 +4,25 @@ block content
 	#content: .container-sm
 		h1.title.has-text-centered Register
 
-		form(action='/users/register' method='post')
+		form.ui.form(action='/users/register' method='post')
 			.field
-				label.label Full Name
-				.control
-					input.input(type='text', name='name' required)
+				label Full Name
+				input(type='text', name='name' required)
 
 			.field
-				label.label Email
-				.control
-					input.input(type='text', name='email' required)
+				label Email
+				input(type='text', name='email' required)
 			.field
-				label.label Password
-				.control
-					input.input(type='password', name='password' required)
+				label Password
+				input(type='password', name='password' required)
 
 			.field
-				label.label Tournament Code
-				.control
-					input.input(type='text', name='tournamentCode' required)
+				label Tournament Code
+				input(type='text', name='tournamentCode' required)
 
 			if (message)
 				p.help.is-danger= message
 				br
 			
-			.field.is-grouped
-				.control
-					button.button.is-link(type='submit') Submit
+			.field
+				button.ui.button.primary(type='submit') Submit
