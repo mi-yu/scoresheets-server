@@ -1,18 +1,18 @@
 .ui.modal
 	.close.icon
-	.header Create Tournament
+	.header= tournament ? 'Edit Tournament' : 'Create Tournament'
 	.content
-		form#new-tournament-form.ui.form(action='/tournaments/new' method='post' autocomplete='false')
+		form#new-tournament-form.ui.form(action=action ? action : '/tournaments/new' method='post' autocomplete='false')
 			.field.required
 				label Tournament Name
-				input(type='text', name='name', required autocomplete='false')
+				input(type='text' name='name' required autocomplete='false' value=tournament ? tournament.name : '')
 			.field.required
 				label City
-				input(type='text', name='city', required autocomplete='false')
+				input(type='text' name='city' required autocomplete='false' value=tournament ? tournament.city : '')
 			.field.required
 				label State
-				select.ui.search.dropdown(name='state', required autocomplete='false')
-						option(value='', selected='selected') Select a State
+				select#states.ui.search.dropdown(name='state' required autocomplete='false')
+						option(value='' selected='selected') Select a State
 						option(value='AL') Alabama
 						option(value='AK') Alaska
 						option(value='AZ') Arizona
@@ -66,7 +66,7 @@
 						option(value='WY') Wyoming
 			.field.required
 				label Date
-				input(type='date', name='date', required autocomplete='false')
+				input#date(type='date' name='date' required autocomplete='false')
 			.field.required
 				label Events
 				select#events.ui.fluid.search.dropdown(name='events' multiple required autocomplete='false')
@@ -81,7 +81,7 @@
 					i.icon.delete
 					| Clear Events
 			.field: label Number of Teams
-				input(type='number', name='numTeams' autocomplete='false')
+				input(type='number' name='numTeams' autocomplete='false')
 	.actions
-		button.ui.green.button(type='submit' form='new-tournament-form') Save
+		button.ui.green.button(type='submit' form='new-tournament-form')= tournament ? 'Save Changes' : 'Save'
 		button.ui.cancel.button Cancel

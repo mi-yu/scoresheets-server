@@ -2,9 +2,9 @@ const router = require('express').Router()
 const User = require('../models/User')
 const Tournament = require('../models/Tournament')
 const Event = require('../models/Event')
-const ObjectId = require('mongoose').Types.ObjectId
 const randomWords = require('random-words')
 const needsGroup = require('./helpers').needsGroup
+const getEventsList = require('./helpers').getEventsList
 
 /* GET users listing. */
 router.post('/new', needsGroup('admin'), (req, res, next) => {
@@ -22,7 +22,7 @@ router.post('/new', needsGroup('admin'), (req, res, next) => {
 		let events = []
 		results.forEach((e) => {
 			events.push({
-				'event': ObjectId(e._id)
+				'event': e._id
 			})
 		})
 
@@ -69,14 +69,15 @@ router.post('/delete/:id', needsGroup('admin'), (req, res, next) => {
 	})
 })
 
-router.get('/manage/:id', needsGroup('admin'), (req, res, next) => {
+router.get('/manage/:id', needsGroup('admin'), getEventsList, (req, res, next) => {
 	Tournament.findById(req.params.id)
 		.populate('events.event events.proctors')
 		.exec((err, result) => {
 			if (err)
 				req.flash('error', 'The requested tournament could not be found.')
 			res.render('tournaments/manage', {
-				tournament: result
+				tournament: result,
+				action: '/tournaments/edit/' + result._id
 			})
 		})
 })
