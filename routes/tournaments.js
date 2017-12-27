@@ -82,4 +82,33 @@ router.get('/manage/:id', needsGroup('admin'), getEventsList, (req, res, next) =
 		})
 })
 
+router.post('/edit/:id', needsGroup('admin'), (req, res, next) => {
+	Event.find({
+		'name': {
+			$in: req.body.events
+		}
+	}, '_id', (err, results) => {
+		let events = []
+		results.forEach((e) => {
+			events.push({
+				'event': e._id
+			})
+		})
+		Tournament.update({_id: req.params.id}, {
+			$set: {
+				name: req.body.name,
+				date: req.body.date,
+				state: req.body.state,
+				city: req.body.city,
+				numTeams: req.body.numTeams,
+				events: events
+			}
+		}, (err) => {
+			if (err)
+				req.flash('error', 'There was an error updating the tournament details: ' + err)
+			res.redirect('/tournaments/manage/' + req.params.id)
+		})		
+	})
+})
+
 module.exports = router

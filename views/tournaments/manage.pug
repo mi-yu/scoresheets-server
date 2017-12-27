@@ -6,7 +6,7 @@ block content
 			.sub.header= tournament.date.toLocaleDateString('en-US')
 			.sub.header= tournament.city + ', ' + tournament.state
 		p Proctor registration code:
-		pre= tournament.joinCode
+		pre: code.code= tournament.joinCode
 		button#edit-details.ui.button.primary
 			i.icon.edit
 			| Edit Details
@@ -43,6 +43,7 @@ block content
 									i.icon.trophy
 									| Scores
 		.ui.divider
+		a.ui.button.red(href='/tournaments/delete/' + tournament._id) Delete Tournament
 	include partials/_tournament-modal
 
 block scripts
