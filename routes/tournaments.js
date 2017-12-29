@@ -3,6 +3,7 @@ const User = require('../models/User')
 const Tournament = require('../models/Tournament')
 const Event = require('../models/Event')
 const Team = require('../models/Team')
+const Scoresheet = require('../models/Scoresheet')
 const randomWords = require('random-words')
 const helpers = require('./helpers')
 const needsGroup = helpers.needsGroup
@@ -25,14 +26,34 @@ router.post('/new', needsGroup('admin'), (req, res, next) => {
 		events: req.body.events
 	})
 
+	let entries = []
+	req.body.events.forEach((event) => {
+		entries.push({
+			event: event
+		})
+	})
+
+	const scoresheet = new Scoresheet({
+		tournament: tournament._id,
+		entries: entries
+	})
+
 	tournament.save((err) => {
-		if (err && err.code === 11000)
+		if (err && err.code === 11000) {
 			req.flash('error', 'A tournament named "' + tournament.name + '" already exists.')
-		else if (err)
+			res.redirect('/admin/dashboard')
+		} else if (err) {
 			req.flash('error', 'An unknown error occurred: ' + err)
-		else
-			req.flash('success', 'Successfully created tournament "' + tournament.name + '"')
-		res.redirect('/admin/dashboard')
+			res.redirect('/admin/dashboard')
+		} else {
+			scoresheet.save((err) => {
+				if (err)
+					req.flash('error', 'An unknown error occurred: ' + err)
+				else
+					req.flash('success', 'Successfully created tournament "' + tournament.name + '"')
+				res.redirect('/admin/dashboard')
+			})
+		}
 	})
 })
 
@@ -66,8 +87,6 @@ router.get('/manage/:id',
 	Tournament.findById(req.params.id)
 		.populate('events scoresheet')
 		.exec((err, result) => {
-			console.log(err)
-			console.log(result)
 			if (err) {
 				req.flash('error', 'The requested tournament could not be found.')
 				next()
@@ -116,12 +135,22 @@ router.post('/edit/:id/addTeam', needsGroup('admin'), (req, res, next) => {
 		teamNumber: req.body.teamNumber
 	})
 
-	team.save((err) => {
-		if (err)
+	Team.findOne({tournament: req.params.id, teamNumber: req.body.teamNumber}, (err, result) => {
+		if (err) {
 			req.flash('error', 'An unknown error occurred: ' + err)
-		else
-			req.flash('success', 'Successfully created team ' + team.teamNumber + ' (' + team.school + ').')
-		res.redirect('/tournaments/manage/' + req.params.id)
+			res.redirect('/tournaments/manage/' + req.params.id)
+		} else if (result) {
+			req.flash('error', 'A team with team number ' + req.body.teamNumber + ' already exists.')
+			res.redirect('/tournaments/manage/' + req.params.id)
+		} else {
+			team.save((err) => {
+				if (err)
+					req.flash('error', 'An unknown error occurred: ' + err)
+				else
+					req.flash('success', 'Successfully created team ' + team.teamNumber + ' (' + team.school + ').')
+				res.redirect('/tournaments/manage/' + req.params.id)
+			})
+		}
 	})
 })
 

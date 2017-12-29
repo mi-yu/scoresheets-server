@@ -5,8 +5,9 @@ block content
 		h1.ui.header= tournament.name
 			.sub.header= tournament.date.toLocaleDateString('en-US')
 			.sub.header= tournament.city + ', ' + tournament.state
-		p Proctor registration code:
-		pre: code.code= tournament.joinCode
+			.sub.header= tournament.scoresheet
+		//- p Proctor registration code:
+		//- pre: code.code= tournament.joinCode
 		button.ui.button.primary.opens-modal(data-target='#tournament-modal')
 			i.icon.edit
 			| Edit Details

@@ -7,6 +7,6 @@ const Team = new Schema({
 	teamNumber: { type: String, required: true },
 	score: Number,
 	placing: Number
-});
+})
 
-module.exports = mongoose.model('Team', Team);
+module.exports = mongoose.model('Team', Team)

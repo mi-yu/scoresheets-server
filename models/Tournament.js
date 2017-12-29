@@ -8,8 +8,11 @@ const Tournament = new Schema({
     city: { type: String, required: true },
     joinCode: { type: String, unique: true, required: true },
     numTeams:  { type: Number, default: 0 },
-    scores: { type: Schema.Types.ObjectId, ref: 'Scoresheet' },
     events: [{ type: Schema.Types.ObjectId, ref: 'Event' }]
+})
+
+Tournament.pre('remove', (next) => {
+    this.model('Scoresheet').remove({tournament: this._id}, next)
 })
 
 module.exports = mongoose.model('Tournament', Tournament)

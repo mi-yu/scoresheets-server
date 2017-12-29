@@ -37,7 +37,7 @@ module.exports = {
             results.forEach((el) => {
                 schools.push(el.school)
             })
-            res.locals.schools = schools
+            res.locals.schools = Array.from(new Set(schools))
             next()
         })
     },
