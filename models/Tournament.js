@@ -10,7 +10,11 @@ const TournamentEvent = new Schema({
     supervisors: [{
         type: Schema.Types.ObjectId,
         ref: 'User'
-    }]
+    }],
+    locked: {
+        type: Boolean,
+        default: false
+    }
 }, {_id: false})
 
 const Tournament = new Schema({

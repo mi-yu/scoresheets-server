@@ -1,0 +1,23 @@
+#team-modal.ui.modal
+	.close.icon
+	.header= team ? 'Edit Team' + team.teamNumber : 'Create New Team'
+	.content
+		form#new-team-form.ui.form(action = '/tournaments/edit/' + tournament._id + '/addTeam' method = 'post')
+			.field.required
+				label School
+				select#school.ui.search.dropdown(name='school' required autcomplete='false')
+					each school in schools
+						option(value=school)= school
+			.field
+				label Or, add a school
+				input#add-school-input(type='text' autocomplete='false')
+			.field
+				a#add-school-button.ui.primary.button
+					i.plus.icon
+					| Add
+			.field.required
+				label Team Number
+				input(type='text' name='teamNumber' required autocomplete='false' placeholder='e.g. C1, C2, C30, NOT 1, 2, 30')
+	.actions
+		button.ui.green.button(type='submit' form='new-team-form') Create
+		button.ui.cancel.button Cancel

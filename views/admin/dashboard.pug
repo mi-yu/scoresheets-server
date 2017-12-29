@@ -46,6 +46,6 @@ block scripts
 
 		$('#clear-events').click(() => {
 			$('#events option').each( function() {
-				$('#events').dropdown('remove selected', $(this).prop('value'))
+				$('#events').dropdown('clear')
 			})
 		})

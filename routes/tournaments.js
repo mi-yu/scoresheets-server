@@ -2,9 +2,13 @@ const router = require('express').Router()
 const User = require('../models/User')
 const Tournament = require('../models/Tournament')
 const Event = require('../models/Event')
+const Team = require('../models/Team')
 const randomWords = require('random-words')
-const needsGroup = require('./helpers').needsGroup
-const getEventsList = require('./helpers').getEventsList
+const helpers = require('./helpers')
+const needsGroup = helpers.needsGroup
+const getEventsList = helpers.getEventsList
+const getSchoolsList = helpers.getSchoolsList
+const getTeamsInTournament = helpers.getTeamsInTournament
 
 /* GET users listing. */
 router.post('/new', needsGroup('admin'), (req, res, next) => {
@@ -69,7 +73,12 @@ router.post('/delete/:id', needsGroup('admin'), (req, res, next) => {
 	})
 })
 
-router.get('/manage/:id', needsGroup('admin'), getEventsList, (req, res, next) => {
+router.get('/manage/:id', 
+	needsGroup('admin'), 
+	getEventsList, 
+	getSchoolsList, 
+	getTeamsInTournament,
+	(req, res, next) => {
 	Tournament.findById(req.params.id)
 		.populate('events.event events.proctors')
 		.exec((err, result) => {
@@ -108,6 +117,22 @@ router.post('/edit/:id', needsGroup('admin'), (req, res, next) => {
 				req.flash('error', 'There was an error updating the tournament details: ' + err)
 			res.redirect('/tournaments/manage/' + req.params.id)
 		})		
+	})
+})
+
+router.post('/edit/:id/addTeam', needsGroup('admin'), (req, res, next) => {
+	const team = new Team({
+		tournament: req.params.id,
+		school: req.body.school,
+		teamNumber: req.body.teamNumber
+	})
+
+	team.save((err) => {
+		if (err)
+			req.flash('error', 'An unknown error occurred: ' + err)
+		else
+			req.flash('success', 'Successfully created team ' + team.teamNumber + ' (' + team.school + ').')
+		res.redirect('/tournaments/manage/' + req.params.id)
 	})
 })
 

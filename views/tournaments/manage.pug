@@ -7,72 +7,102 @@ block content
 			.sub.header= tournament.city + ', ' + tournament.state
 		p Proctor registration code:
 		pre: code.code= tournament.joinCode
-		button#edit-details.ui.button.primary
+		button.ui.button.primary.opens-modal(data-target='#tournament-modal')
 			i.icon.edit
 			| Edit Details
 		.ui.divider
 		.ui.accordion
-			h3.ui.title
+			h3.ui.title.active
 				.dropdown.icon
 				| Teams
-			.content
-				h1 hello
+			.content.active
+				button.ui.button.primary.opens-modal(data-target='#team-modal')
+					i.plus.icon
+					| New Team
+			if (teams)
+					.ui.grid
+						each team in teams
+							.four.wide.column: .ui.card
+								.content
+									.header= team.teamNumber
+									.meta
+										span= team.school
+								.extra.content: .ui.one.buttons
+									a.ui.button(href='#') 
+										i.icon.trophy
+										| Scores
 		.ui.divider
 		.ui.accordion
 			h3.ui.title
 				.dropdown.icon
 				| Events
-			if (tournament.events)
-				.content: .ui.grid
-					each tournamentEvent in tournament.events
-						.four.wide.column: .ui.card
-							.content
-								.header= tournamentEvent.event.name
-								.meta
-									if (tournamentEvent.event.building)
-										.ui.tiny.brown.label Building
-									if (tournamentEvent.event.impound)
-										.ui.tiny.orange.label Impound
-									if (!tournamentEvent.event.done)
-										.ui.tiny.grey.label Scoring in progress
-							.extra.content: .ui.two.buttons
-								a.ui.button(href='/tournaments/manage/' + tournament._id) 
-									i.icon.plus
-									| Proctors
-								a.ui.button(href='#') 
-									i.icon.trophy
-									| Scores
+			.content
+				p Add or remove events from the 'Edit Details' button.
+				if (tournament.events)
+					.ui.grid
+						each tournamentEvent in tournament.events
+							.four.wide.column: .ui.card
+								.content
+									.header= tournamentEvent.event.name
+									.meta
+										if (tournamentEvent.event.building)
+											.ui.tiny.brown.label Building
+										if (tournamentEvent.event.impound)
+											.ui.tiny.orange.label Impound
+										if (!tournamentEvent.event.done)
+											.ui.tiny.grey.label Scoring in progress
+								.extra.content: .ui.two.buttons
+									a.ui.button(href='/tournaments/manage/' + tournament._id) 
+										i.icon.plus
+										| Proctors
+									a.ui.button(href='#') 
+										i.icon.trophy
+										| Scores
 		.ui.divider
 		a.ui.button.red(href='/tournaments/delete/' + tournament._id) Delete Tournament
 	include partials/_tournament-modal
+	include partials/_team-modal
 
 block scripts
 	script.
+		// Expose tournament data from back-end
 		const tournament = !{JSON.stringify(tournament)}
 
+		// Initialize dropdowns and accordions
 		$('.ui.dropdown').dropdown()
 		$('.ui.accordion').accordion()
 
+		// Pre-fill events field in tournament form
 		tournament.events.forEach((tournamentEvent) => {
 			$('#events').dropdown('set selected', tournamentEvent.event.name)
 		})
 		let date = new Date(tournament.date)
 		$('#date').val(date.toISOString().substr(0, 10))
-
 		$('#states').dropdown('set selected', tournament.state)
 
-		$('#edit-details').click(() => {
-			$('.ui.modal').modal('show')
+		// Bind button to show modal action
+		$('.opens-modal').click( function() {
+			$($(this).data('target')).modal('show')
 		})
 
+		// Bind add all event button
 		$('#add-all-events').click(() => {
 			$('#events option').each( function() {
 				$('#events').dropdown('set selected', $(this).prop('value'))
 			})
 		})
 
+		// Bind clear all events button
 		$('#clear-events').click(() => {
 			$('#events option').each( function() {
-				$('#events').dropdown('remove selected', $(this).prop('value'))
+				$('#events').dropdown('clear')
 			})
+		})
+
+		// Add custom options to schools dropdown
+		const $schoolDropdown = $('#school')
+		$('#add-school-button').click(() => {
+			const newSchool = $('#add-school-input').val()
+			$schoolDropdown.append('<option value="' + newSchool + '" selected>' + newSchool + '</option>')
+			$('#school ~ .menu').append('<div class="item" data-value="' + newSchool + '">' + newSchool + '</div>')
 		})
