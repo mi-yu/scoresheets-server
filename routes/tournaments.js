@@ -15,40 +15,24 @@ router.post('/new', needsGroup('admin'), (req, res, next) => {
 	let date = new Date(req.body.date)
 	date = new Date(date.getTime() + date.getTimezoneOffset()*60*1000)
 
-	Event.find({
-		'name': {
-			$in: req.body.events
-		}
-	}, '_id', (err, results) => {
-		if (err)
-			req.flash('error', 'Could not get events.')
+	const tournament = new Tournament({
+		name: req.body.name,
+		date: date,
+		state: req.body.state,
+		city: req.body.city,
+		numTeams: req.body.numTeams,
+		joinCode: randomWords({exactly: 5, join: '-'}),
+		events: req.body.events
+	})
 
-		let events = []
-		results.forEach((e) => {
-			events.push({
-				'event': e._id
-			})
-		})
-
-		const tournament = new Tournament({
-			name: req.body.name,
-			date: date,
-			state: req.body.state,
-			city: req.body.city,
-			numTeams: req.body.numTeams,
-			joinCode: randomWords({exactly: 5, join: '-'}),
-			events: events
-		})
-
-		tournament.save((err) => {
-			if (err && err.code === 11000)
-				req.flash('error', 'A tournament named "' + tournament.name + '" already exists.')
-			else if (err)
-				req.flash('error', 'An unknown error occurred: ' + err)
-			else
-				req.flash('success', 'Successfully created tournament "' + tournament.name + '"')
-			res.redirect('/admin/dashboard')
-		})
+	tournament.save((err) => {
+		if (err && err.code === 11000)
+			req.flash('error', 'A tournament named "' + tournament.name + '" already exists.')
+		else if (err)
+			req.flash('error', 'An unknown error occurred: ' + err)
+		else
+			req.flash('success', 'Successfully created tournament "' + tournament.name + '"')
+		res.redirect('/admin/dashboard')
 	})
 })
 
@@ -74,20 +58,25 @@ router.post('/delete/:id', needsGroup('admin'), (req, res, next) => {
 })
 
 router.get('/manage/:id', 
-	needsGroup('admin'), 
-	getEventsList, 
-	getSchoolsList, 
+	needsGroup('admin'),
+	getEventsList,
+	getSchoolsList,
 	getTeamsInTournament,
 	(req, res, next) => {
 	Tournament.findById(req.params.id)
-		.populate('events.event events.proctors')
+		.populate('events scoresheet')
 		.exec((err, result) => {
-			if (err)
+			console.log(err)
+			console.log(result)
+			if (err) {
 				req.flash('error', 'The requested tournament could not be found.')
-			res.render('tournaments/manage', {
-				tournament: result,
-				action: '/tournaments/edit/' + result._id
-			})
+				next()
+			}
+			else
+				res.render('tournaments/manage', {
+					tournament: result,
+					action: '/tournaments/edit/' + result._id
+				})
 		})
 })
 

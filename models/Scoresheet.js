@@ -1,21 +1,24 @@
 const mongoose = require('mongoose'),
     Schema = mongoose.Schema
 
+const Score = new Schema({
+    team: { type: Schema.Types.ObjectId, ref: 'Team', required: true },
+    rawScore: Number,
+    tier: { type: Number, default: 1, required: true },
+    noShow: { type: Boolean, default: false },
+    participationOnly: { type: Boolean, default: false }
+    rank: Number
+})
+
 const Scoresheet = new Schema({
     tournament: { type: Schema.Types.ObjectId, ref: 'Tournament'},
-    events: [
+    entries: [
     	{
-    		event: { type: Schema.Types.ObjectId, ref: 'Event'},
-    		scores: [{
-    			team: { type: Schema.Types.ObjectId, ref: 'Team' },
-    			rawScore: Number,
-    			rank: Number,
-    			highWins: { type: Boolean, default: true }
-    		}]
+    		event: { type: Schema.Types.ObjectId, ref: 'Event', required: true },
+    		scores: [Score],
+            locked: { type: Boolean, default: false}
     	}
     ]
-});
+})
 
-Scoresheet.plugin(passportLocalMongoose);
-
-module.exports = mongoose.model('Scoresheet', Scoresheet);
+module.exports = mongoose.model('Scoresheet', Scoresheet)

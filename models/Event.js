@@ -9,7 +9,8 @@ const Event = new Schema({
 	stateEvent : {type: Boolean, default: false},
 	topics: [String],
 	currentTopic: String,
-	notes: String
+	notes: String,
+	highScoreWins: {type: Boolean, default: true}
 });
 
 module.exports = mongoose.model('Event', Event);

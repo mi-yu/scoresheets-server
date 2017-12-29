@@ -31,6 +31,10 @@
       -ms-flex-pack: center;
           justify-content: center; }
 
+.spacer {
+  margin-top: 1rem;
+  margin-bottom: 1rem; }
+
 #content {
   padding-top: 5.5rem; }
 

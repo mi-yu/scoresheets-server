@@ -72,7 +72,7 @@
 				select#events.ui.fluid.search.dropdown(name='events' multiple required autocomplete='false')
 					each event in events
 						if (event.inRotation)
-							option(value=event.name)= event.name
+							option(value=event._id)= event.name
 			.field
 				a#add-all-events.ui.primary.button
 					i.icon.plus
