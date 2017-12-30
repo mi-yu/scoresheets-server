@@ -90,35 +90,36 @@ router.get('/manage/:tournamentId',
 				req.flash('error', 'The requested tournament could not be found.')
 				next()
 			}
-			else
+			else {
+				result.events.sort((a, b) => {
+					if (a.name < b.name)
+						return -1
+					if (a.name > b.name)
+						return 1
+					return 0
+				})
 				res.render('tournaments/manage', {
 					tournament: result,
 					action: '/tournaments/edit/' + result._id
 				})
+			}
 		})
 })
 
 router.post('/edit/:id', needsGroup('admin'), (req, res, next) => {
-	Event.find({
-		'_id': {
-			$in: req.body.events
+	Tournament.update({_id: req.params.id}, {
+		$set: {
+			name: req.body.name,
+			date: req.body.date,
+			state: req.body.state,
+			city: req.body.city,
+			events: req.body.events
 		}
-	}, '_id', (err, results) => {
-		console.log(results)
-		Tournament.update({_id: req.params.id}, {
-			$set: {
-				name: req.body.name,
-				date: req.body.date,
-				state: req.body.state,
-				city: req.body.city,
-				events: results
-			}
-		}, (err) => {
-			if (err)
-				req.flash('error', 'There was an error updating the tournament details: ' + err)
-			res.redirect('/tournaments/manage/' + req.params.id)
-		})		
-	})
+	}, (err) => {
+		if (err)
+			req.flash('error', 'There was an error updating the tournament details: ' + err)
+		res.redirect('/tournaments/manage/' + req.params.id)
+	})		
 })
 
 router.post('/edit/:id/addTeam', needsGroup('admin'), (req, res, next) => {
