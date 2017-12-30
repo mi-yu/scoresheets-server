@@ -11,14 +11,10 @@ const Score = new Schema({
 }, {_id: false})
 
 const ScoresheetEntry = new Schema({
+    tournament: { type: Schema.Types.ObjectId, ref: 'Tournament', required: true},
     event: { type: Schema.Types.ObjectId, ref: 'Event', required: true },
     scores: [Score],
     locked: { type: Boolean, default: false}
-}, {_id: false})
-
-const Scoresheet = new Schema({
-    tournament: { type: Schema.Types.ObjectId, ref: 'Tournament'},
-    entries: [ScoresheetEntry]
 })
 
-module.exports = mongoose.model('Scoresheet', Scoresheet)
+module.exports = mongoose.model('ScoresheetEntry', ScoresheetEntry)

@@ -2,20 +2,23 @@ extends ../layouts/basic
 
 block content
 	#content: .ui.container
-		h1.ui.header= eventName
-			.sub.header= scoresheet.tournament.name
+		h1.ui.header= scoresheetEntry.event.name
+			.sub.header= scoresheetEntry.tournament.name
 		table.ui.celled.padded.table
 			thead
 				tr
-					th.single.line Evidence Rating
-					th Effect
-					th Efficacy
-					th Consensus
-					th Comments
+					th Team Number
+					th School
+					th Raw Score
+					th Tier
+					th NS
+					th PP
 			tbody
+				each score in scoresheetEntry.scores
+					pre= score
 				tr
 					td
-						h2.ui.center.aligned.header A
+						div a
 					td.single.line
 						| Power Output
 					td
@@ -26,6 +29,7 @@ block content
 						a(href='#') 18 studies
 					td
 						| Creatine supplementation is the reference compound for increasing muscular creatine levels; there is variability in this increase, however, with some nonresponders.
+					td
 				tr
 					td
 						h2.ui.center.aligned.header A
@@ -39,7 +43,8 @@ block content
 						a(href='#') 65 studies
 					td
 						| Creatine is the reference compound for power improvement, with numbers from one meta-analysis to assess potency
+					td
 
 block scripts
 	script.
-		const scoresheet = !{JSON.stringify(scoresheet)}
+		const scoresheetEntry = !{JSON.stringify(scoresheetEntry)}

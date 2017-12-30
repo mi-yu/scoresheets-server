@@ -3,7 +3,7 @@ const User = require('../models/User')
 const Tournament = require('../models/Tournament')
 const Event = require('../models/Event')
 const Team = require('../models/Team')
-const Scoresheet = require('../models/Scoresheet')
+const ScoresheetEntry = require('../models/ScoresheetEntry')
 const randomWords = require('random-words')
 const helpers = require('./helpers')
 const needsGroup = helpers.needsGroup
@@ -26,15 +26,11 @@ router.post('/new', needsGroup('admin'), (req, res, next) => {
 	})
 
 	let entries = []
-	req.body.events.forEach((event) => {
+	req.body.events.forEach((eventId) => {
 		entries.push({
-			event: event
+			tournament: tournament._id,
+			event: eventId
 		})
-	})
-
-	const scoresheet = new Scoresheet({
-		tournament: tournament._id,
-		entries: entries
 	})
 
 	tournament.save((err) => {
@@ -45,7 +41,7 @@ router.post('/new', needsGroup('admin'), (req, res, next) => {
 			req.flash('error', 'An unknown error occurred: ' + err)
 			res.redirect('/admin/dashboard')
 		} else {
-			scoresheet.save((err) => {
+			ScoresheetEntry.create(entries, (err) => {
 				if (err)
 					req.flash('error', 'An unknown error occurred: ' + err)
 				else
@@ -142,9 +138,20 @@ router.post('/edit/:id/addTeam', needsGroup('admin'), (req, res, next) => {
 					req.flash('error', 'An unknown error occurred: ' + err)
 				else
 					req.flash('success', 'Successfully created team ' + team.teamNumber + ' (' + team.school + ').')
-				res.redirect('/tournaments/manage/' + req.params.id)
+				res.locals.teamId = team._id
+				next()
 			})
 		}
+	})
+}, (req, res, next) => {
+	ScoresheetEntry.update({tournament: req.params.id}, {
+		$push: {
+			scores: { team: res.locals.teamId }
+		}
+	}, {multi: true}, (err) => {
+		if (err)
+			req.flash('error', 'An unknown error occurred: ' + err)
+		res.redirect('/tournaments/manage/' + req.params.id)
 	})
 })
 

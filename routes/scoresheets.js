@@ -3,32 +3,27 @@ const User = require('../models/User')
 const Tournament = require('../models/Tournament')
 const Event = require('../models/Event')
 const Team = require('../models/Team')
-const Scoresheet = require('../models/Scoresheet')
+const ScoresheetEntry = require('../models/ScoresheetEntry')
 const helpers = require('./helpers')
 const needsGroup = helpers.needsGroup
 const getTeamsInTournament = helpers.getTeamsInTournament
 
-router.get('/:tournamentId/scores/:eventName',
+router.get('/:tournamentId/scores/:eventId',
 	needsGroup('admin'),
 	getTeamsInTournament,
 	(req, res, next) => {
-	Scoresheet.findOne({tournament: req.params.tournamentId})
-		.populate('tournament')
-		.populate({
-			path: 'entries.event',
-			populate: {
-				path: 'entries.event',
-				model: 'Event'
-			}
+	ScoresheetEntry.findOne({
+		tournament: req.params.tournamentId,
+		event: req.params.eventId
+	})
+	.populate('tournament event scores.team')
+	.exec((err, result) => {
+		if (err)
+			req.flash('error', 'An unknown error occurred: ' + err)
+		res.render('tournaments/event-detail', {
+			scoresheetEntry: result
 		})
-		.exec((err, result) => {
-			if (err)
-				req.flash('error', 'An unknown error occurred: ' + err)
-			res.render('tournaments/event-detail', {
-				scoresheet: result,
-				eventName: req.params.eventName
-			})
-		})
+	})
 })
 
 module.exports = router
