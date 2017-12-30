@@ -7,7 +7,6 @@ const Tournament = new Schema({
     state: { type: String, required: true},
     city: { type: String, required: true },
     joinCode: { type: String, unique: true, required: true },
-    numTeams:  { type: Number, default: 0 },
     events: [{ type: Schema.Types.ObjectId, ref: 'Event' }]
 })
 

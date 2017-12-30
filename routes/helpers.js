@@ -42,7 +42,7 @@ module.exports = {
         })
     },
     getTeamsInTournament: (req, res, next) => {
-        Team.find({tournament: req.params.id}, (err, results) => {
+        Team.find({tournament: req.params.tournamentId}, (err, results) => {
             if (err)
                 req.flash('error', 'Could not load teams: ' + err)
             res.locals.teams = results

@@ -21,7 +21,6 @@ router.post('/new', needsGroup('admin'), (req, res, next) => {
 		date: date,
 		state: req.body.state,
 		city: req.body.city,
-		numTeams: req.body.numTeams,
 		joinCode: randomWords({exactly: 5, join: '-'}),
 		events: req.body.events
 	})
@@ -78,14 +77,14 @@ router.post('/delete/:id', needsGroup('admin'), (req, res, next) => {
 	})
 })
 
-router.get('/manage/:id', 
+router.get('/manage/:tournamentId', 
 	needsGroup('admin'),
 	getEventsList,
 	getSchoolsList,
 	getTeamsInTournament,
 	(req, res, next) => {
-	Tournament.findById(req.params.id)
-		.populate('events scoresheet')
+	Tournament.findById(req.params.tournamentId)
+		.populate('events')
 		.exec((err, result) => {
 			if (err) {
 				req.flash('error', 'The requested tournament could not be found.')
@@ -101,24 +100,18 @@ router.get('/manage/:id',
 
 router.post('/edit/:id', needsGroup('admin'), (req, res, next) => {
 	Event.find({
-		'name': {
+		'_id': {
 			$in: req.body.events
 		}
 	}, '_id', (err, results) => {
-		let events = []
-		results.forEach((e) => {
-			events.push({
-				'event': e._id
-			})
-		})
+		console.log(results)
 		Tournament.update({_id: req.params.id}, {
 			$set: {
 				name: req.body.name,
 				date: req.body.date,
 				state: req.body.state,
 				city: req.body.city,
-				numTeams: req.body.numTeams,
-				events: events
+				events: results
 			}
 		}, (err) => {
 			if (err)
