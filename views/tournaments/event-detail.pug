@@ -4,47 +4,50 @@ block content
 	#content: .ui.container
 		h1.ui.header= scoresheetEntry.event.name
 			.sub.header= scoresheetEntry.tournament.name
-		table.ui.celled.padded.table
+		form.ui.form: table.ui.celled.padded.table
 			thead
 				tr
 					th Team Number
 					th School
 					th Raw Score
-					th Tier
-					th NS
-					th PP
+					th Tier 
+						.right.floated.ui.mini.circular.icon.button(data-html='Competitors may be tiered according to event-specific rules. Please make sure these are accurate as all tier 2 teams will be ranked below tier 1 teams regardless of raw score, all tier 3 below tier 2, and so on.')
+							i.ui.icon.help
+					th No Show
+						.right.floated.ui.mini.circular.icon.button(data-html='<div><strong>No shows are ranked last place + 1</strong>, so if there are 30 teams this team will be ranked 31st. This greatly affects a school\'s overall placement, so please be <strong>certain</strong> that this team did not show up before checking the box.</div>')
+							i.ui.icon.help
+					th Participation Points Only
+						.right.floated.ui.mini.circular.icon.button(data-html='<div>Teams may be awarded participation points if an honest attempt was made but a <strong>raw score was unable to be assigned</strong>. <strong>They will be ranked last place</strong>.</div>')
+							i.ui.icon.help
 			tbody
 				each score in scoresheetEntry.scores
-					pre= score
-				tr
-					td
-						div a
-					td.single.line
-						| Power Output
-					td
-						.ui.star.rating(data-rating='3', data-max-rating='3')
-					td.right.aligned
-						| 80% 
-						br
-						a(href='#') 18 studies
-					td
-						| Creatine supplementation is the reference compound for increasing muscular creatine levels; there is variability in this increase, however, with some nonresponders.
-					td
-				tr
-					td
-						h2.ui.center.aligned.header A
-					td.single.line
-						| Weight
-					td
-						.ui.star.rating(data-rating='3', data-max-rating='3')
-					td.right.aligned
-						| 100% 
-						br
-						a(href='#') 65 studies
-					td
-						| Creatine is the reference compound for power improvement, with numbers from one meta-analysis to assess potency
-					td
+					tr
+						td= score.team.teamNumber
+						td= score.team.school
+						td
+							.six.wide.field
+								input(type='number' name='rawScore' value=score.rawScore)
+						td
+							.four.wide.field
+								select.ui.compact.dropdown(name='tier')
+									option(value=1) 1
+									option(value=2) 2
+									option(value=3) 3
+									option(value=4) 4
+						td
+							.inline.fields
+								.ui.checkbox
+									input(type='checkbox' name='noShow' checked=score.noShow)
+									label Did not show
+						td
+							.inline.fields
+								.ui.checkbox
+									input(type='checkbox' name='participationOnly' checked=score.participationOnly)
+									label Participation only
 
 block scripts
 	script.
 		const scoresheetEntry = !{JSON.stringify(scoresheetEntry)}
+
+		$('.ui.dropdown').dropdown()
+		$('.ui.mini.circular.icon.button').popup()

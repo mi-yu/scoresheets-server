@@ -12,7 +12,6 @@
 			.field.required
 				label State
 				select#states.ui.search.dropdown(name='state' required autocomplete='false')
-						option(value='' selected='selected') Select a State
 						option(value='AL') Alabama
 						option(value='AK') Alaska
 						option(value='AZ') Arizona
@@ -80,8 +79,6 @@
 				a#clear-events.ui.button
 					i.icon.delete
 					| Clear Events
-			.field: label Number of Teams
-				input(type='number' name='numTeams' autocomplete='false')
 	.actions
 		button.ui.green.button(type='submit' form='new-tournament-form')= tournament ? 'Save Changes' : 'Save'
 		button.ui.cancel.button Cancel
