@@ -64,6 +64,7 @@ router.get('/delete/:id', needsGroup('admin'), (req, res, next) => {
 
 router.post('/delete/:id', needsGroup('admin'), (req, res, next) => {
 	Tournament.findByIdAndRemove(req.params.id, (err, deleted) => {
+		deleted.remove()
 		if (err)
 			req.flash('error', 'The requested tournament could not be deleted.')
 		else if (deleted)

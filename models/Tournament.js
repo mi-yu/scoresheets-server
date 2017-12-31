@@ -1,5 +1,7 @@
 const mongoose = require('mongoose'),
-    Schema = mongoose.Schema
+    Schema = mongoose.Schema,
+    Team = require('./Team'),
+    ScoresheetEntry = require('./ScoresheetEntry')
 
 const Tournament = new Schema({
     name: { type: String, unique: true, trim: true, required: true },
@@ -10,8 +12,20 @@ const Tournament = new Schema({
     events: [{ type: Schema.Types.ObjectId, ref: 'Event' }]
 })
 
-Tournament.pre('remove', (next) => {
-    this.model('Scoresheet').remove({tournament: this._id}, next)
+Tournament.post('remove', (doc) => {
+    console.log('removing all scoresheets with tournament id ' + doc._id)
+    ScoresheetEntry.remove({tournament: doc._id}, (err) => {
+        if (err)
+            console.log(err)
+    })
+})
+
+Tournament.post('remove', (doc) => {
+    console.log('removing all teams with tournament id ' + doc._id)
+    Team.remove({tournament: doc.id}, (err) => {
+        if (err)
+            console.log(err)
+    })
 })
 
 module.exports = mongoose.model('Tournament', Tournament)
