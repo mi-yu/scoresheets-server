@@ -1,19 +1,16 @@
-// // Import initial Bulma functions
-// @import '../../node_modules/bulma/sass/utilities/initial-variables'
-// @import '../../node_modules/bulma/sass/utilities/functions'
+/*----------  Import variables  ----------*/
 
-// // Navbar height
-$navbar-height: 3.5rem
+@import 'partials/vars'
 
-// // Import rest of Bulma
-// @import '../../node_modules/bulma/bulma'
+/*----------  Custom styles  ----------*/
 
-// Custom styles
 @import 'partials/helpers'
 
+// Push content below navbar
 #content
 	padding-top: $navbar-height + 2rem
 
+// Set messages above content
 #messages
 	padding-top: $navbar-height + 2rem
 	z-index: 100
@@ -30,12 +27,3 @@ $navbar-height: 3.5rem
 
 nav
 	height: $navbar-height
-
-.code
-	padding: 10px 10px 10px 10px
-	background: #eeeeee
-	width: auto
-	border-radius: 0
-
-pre
-	margin-bottom: 2rem

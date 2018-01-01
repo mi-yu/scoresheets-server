@@ -12,6 +12,7 @@ const Tournament = new Schema({
     events: [{ type: Schema.Types.ObjectId, ref: 'Event' }]
 })
 
+// Remove all scoresheet entries that reference deleted tournament.
 Tournament.post('remove', (doc) => {
     console.log('removing all scoresheets with tournament id ' + doc._id)
     ScoresheetEntry.remove({tournament: doc._id}, (err) => {
@@ -20,6 +21,7 @@ Tournament.post('remove', (doc) => {
     })
 })
 
+// Remove all teams that reference deleted tournament.
 Tournament.post('remove', (doc) => {
     console.log('removing all teams with tournament id ' + doc._id)
     Team.remove({tournament: doc.id}, (err) => {
