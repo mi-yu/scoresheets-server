@@ -4,6 +4,7 @@ const mongoose = require('mongoose'),
 const Score = new Schema({
     team: { type: Schema.Types.ObjectId, ref: 'Team', required: true },
     rawScore: Number,
+    outOf: Number,
     tier: { type: Number, default: 1, required: true },
     noShow: { type: Boolean, default: false },
     participationOnly: { type: Boolean, default: false },

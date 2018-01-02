@@ -1,0 +1,16 @@
+extends ../layouts/basic
+
+block content
+	#content: .container-sm.has-text-centered
+		h1.title Delete Team
+		p You are about to delete team 
+			strong #{team.teamNumber} (#{team.school}) from tournament #{team.tournament.name} 
+			| and all associated data. This includes 
+			strong all score data
+			| .
+		p This cannot be undone. Proceed?
+		br
+		form.ui.form(action='/tournaments/edit/' + team.tournament._id + '/deleteTeam/' + team.teamNumber method='POST')
+			.field
+				button.ui.button.red(type='submit') Delete
+				a.ui.button(href='/admin/dashboard') Cancel

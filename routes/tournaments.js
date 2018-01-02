@@ -156,4 +156,30 @@ router.post('/edit/:id/addTeam', needsGroup('admin'), (req, res, next) => {
 	})
 })
 
+router.get('/edit/:tournamentId/deleteTeam/:teamNumber', (req, res, next) => {
+	Team.findOne({
+		tournament: req.params.tournamentId,
+		teamNumber: req.params.teamNumber
+	})
+	.populate('tournament')
+	.exec((err, result) => {
+		if (err)
+			req.flash('error', 'An unknown error occurred: ' + err)
+		res.locals.team = result
+		res.render('teams/delete')
+	})
+})
+
+router.post('/edit/:tournamentId/deleteTeam/:teamNumber', (req, res, next) => {
+	Team.findOne({
+		tournament: req.params.tournamentId,
+		teamNumber: req.params.teamNumber
+	}, (err, result) => {
+		result.remove()
+		if (err)
+			req.flash('error', 'Unable to find team ' + req.params.teamNumber + ': ' + err)
+		res.redirect('/tournaments/manage/' + req.params.tournamentId)
+	})
+})
+
 module.exports = router

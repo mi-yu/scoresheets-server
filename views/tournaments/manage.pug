@@ -30,9 +30,15 @@ block content
 										.meta
 											span= team.school
 									.extra.content
-										a.fluid.ui.button(href='#') 
-											i.icon.trophy
-											| Scores
+										.ui.two.buttons
+											a.ui.button(href='#') 
+												i.icon.trophy
+												| Scores
+											a.ui.button.red(href='/tournaments/edit/' + tournament._id + '/deleteTeam/' + team.teamNumber)
+												i.icon.delete
+												| Delete
+
+			.spacer
 		.ui.divider
 		.ui.accordion
 			h3.ui.title
@@ -72,9 +78,9 @@ block scripts
 		$('.ui.accordion').accordion()
 
 		// Pre-fill events field in tournament form
-		tournament.events.forEach((event => {
+		tournament.events.forEach((event) => {
 			$('#events').dropdown('set selected', event.name)
-		}))
+		})
 		let date = new Date(tournament.date)
 		$('#date').val(date.toISOString().substr(0, 10))
 		$('#states').dropdown('set selected', tournament.state)
