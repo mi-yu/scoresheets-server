@@ -26,4 +26,19 @@ router.get('/:tournamentId/scores/:eventId',
 	})
 })
 
+router.post('/:scoresheetId/updateEvent/:eventName', needsGroup('admin'), (req, res, next) => {
+	ScoresheetEntry.findById(req.params.scoresheetId, (err, sse) => {
+		if (err)
+			req.flash('error', 'An unknown error occurred: ' + err)
+		Object.keys(req.body).forEach((id) => {
+			sse.scores.id(id).rawScore = req.body.id.rawScore
+			sse.scores.id(id).tier = req.body.id.tier
+			sse.scores.id(id).noShow = req.body.id.noShow
+			sse.scores.id(id).participationOnly = req.body.id.participationOnly
+		})
+		sse.save() //TODO: error handle this
+		res.redirect('/scoresheets/' + sse.tournament + '/scores/' + sse.event)
+	})
+})
+
 module.exports = router

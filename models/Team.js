@@ -11,9 +11,6 @@ const Team = new Schema({
 	placing: Number
 })
 
-/*----------  need to fix this block  ----------*/
-
-// Remove all scoresheet entries that reference deleted team.
 Team.post('remove', (doc) => {
     console.log('removing all scoresheet entries with team id ' + doc._id)
     ScoresheetEntry.update({},
