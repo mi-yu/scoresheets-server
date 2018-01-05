@@ -26,10 +26,10 @@ block content
 						td= score.team.school
 						td
 							.six.wide.field
-								input(type='number' name=score.team._id + '[rawScore]' value=score.rawScore || 0)
+								input(type='number' name=score._id + '[rawScore]' value=score.rawScore || 0)
 						td
 							.four.wide.field
-								select.ui.compact.dropdown(name=score.team._id + '[tier]')
+								select.ui.compact.dropdown(name=score._id + '[tier]')
 									option(value=1) 1
 									option(value=2) 2
 									option(value=3) 3
@@ -37,12 +37,12 @@ block content
 						td
 							.inline.fields
 								.ui.checkbox
-									input(type='checkbox' name=score.team._id + '[noShow]' checked=score.noShow)
+									input(type='checkbox' name=score._id + '[noShow]' checked=score.noShow)
 									label Did not show
 						td
 							.inline.fields
 								.ui.checkbox
-									input(type='checkbox' name=score.team._id + '[participationOnly]' checked=score.participationOnly)
+									input(type='checkbox' name=score._id + '[participationOnly]' checked=score.participationOnly)
 									label Participation only
 		.spacer
 		button.ui.primary.button(type='submit' form='scores') Submit
