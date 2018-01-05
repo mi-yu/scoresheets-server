@@ -17,7 +17,7 @@ block content
 				.dropdown.icon
 				| Teams
 			.content.active
-				button.ui.button.primary.opens-modal(data-target='#team-modal')
+				button#new-team.ui.button.primary.opens-modal(data-target='#team-modal')
 					i.plus.icon
 					| New Team
 				.spacer
@@ -30,13 +30,13 @@ block content
 										.meta
 											span= team.school
 									.extra.content
-										.ui.two.buttons
+										.ui.three.buttons
 											a.ui.button(href='#') 
 												i.icon.trophy
 												| Scores
-											a.ui.button.red(href='/tournaments/edit/' + tournament._id + '/deleteTeam/' + team.teamNumber)
-												i.icon.delete
-												| Delete
+											button.ui.button.opens-modal.edit-team(data-target='#team-modal' data-teamid=team._id)
+												i.icon.edit
+												| Edit
 
 			.spacer
 		.ui.divider
@@ -70,8 +70,9 @@ block content
 
 block scripts
 	script.
-		// Expose tournament data from back-end
+		// Expose tournament and team data from back-end
 		const tournament = !{JSON.stringify(tournament)}
+		const teams = !{JSON.stringify(teams)}
 
 		// Initialize dropdowns and accordions
 		$('.ui.dropdown').dropdown()
@@ -110,4 +111,28 @@ block scripts
 			const newSchool = $('#add-school-input').val()
 			$schoolDropdown.append('<option value="' + newSchool + '" selected>' + newSchool + '</option>')
 			$('#school ~ .menu').append('<div class="item" data-value="' + newSchool + '">' + newSchool + '</div>')
+		})
+
+		// Populate team modal with team data on click
+		$('.edit-team').click( function() {
+			let $this = $(this)
+			let teamData = teams.find(team => team._id === $this.data('teamid'))
+
+			// Populate data
+			$('#team-modal .header').text('Edit team ' + teamData.teamNumber)
+			$schoolDropdown.dropdown('set selected', teamData.school)
+			$('#add-school-input').val('')
+			$('#team-number-input').val(teamData.teamNumber)
+
+			// Change form action
+			$('#team-modal form').attr('action', '/tournaments/edit/' + tournament._id + '/editTeam/' + teamData.teamNumber)
+		})
+
+		// Change form action and clear fields when opening new team modal
+		$('#new-team').click(() => {
+			$('#team-modal .header').text('Create New Team')
+			$('#add-school-input').val('')
+			$('#team-number-input').val('')
+
+			$('#team-modal form').attr('action', '/tournaments/edit/' + tournament._id + '/addTeam')
 		})

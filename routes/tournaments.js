@@ -182,4 +182,23 @@ router.post('/edit/:tournamentId/deleteTeam/:teamNumber', (req, res, next) => {
 	})
 })
 
+router.post('/edit/:tournamentId/editTeam/:teamNumber', (req, res, next) => {
+	Team.findOne({
+		tournament: req.params.tournamentId,
+		teamNumber: req.params.teamNumber
+	}, (err, result) => {
+		if (err)
+			req.flash('error', 'Unable to find team ' + req.params.teamNumber + ': ' + err)
+		result.teamNumber = req.body.teamNumber
+		result.school = req.body.school
+		result.save((err) => {
+			if (err)
+				req.flash('error', 'There was an error saving team ' + result.teamNumber + ': ' + err)
+			else
+				req.flash('success', 'Successfully updated team ' + result.teamNumber)
+			res.redirect('/tournaments/manage/' + req.params.tournamentId)
+		})
+	})
+})
+
 module.exports = router
