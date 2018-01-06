@@ -3,10 +3,16 @@ const mongoose = require('mongoose'),
 	ScoresheetEntry = require('./ScoresheetEntry'),
 	ObjectId = mongoose.Types.ObjectId
 
+const divisionValidator = [
+    val => /^(B|C)$/.test(val),
+    'Division must be either B or C.'
+]
+
 const Team = new Schema({
 	tournament: { type: Schema.Types.ObjectId, ref: 'Tournament', required: true },
 	school: String,
-	teamNumber: { type: String, required: true },
+    division: { type: String, required: true, validate: divisionValidator },
+	teamNumber: { type: Number, required: true },
 	score: Number,
 	placing: Number
 })

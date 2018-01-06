@@ -26,25 +26,29 @@ block content
 							each team in teams
 								.four.wide.column: .ui.card
 									.content
-										.header= team.teamNumber
+										.header= team.division + team.teamNumber
 										.meta
 											span= team.school
 									.extra.content
-										.ui.three.buttons
-											a.ui.button(href='#') 
+										.ui.three.icon.buttons
+											a.ui.compact.button(href='#') 
 												i.icon.trophy
 												| Scores
-											button.ui.button.opens-modal.edit-team(data-target='#team-modal' data-teamid=team._id)
+											button.ui.compact.button.opens-modal.edit-team(data-target='#team-modal' data-teamid=team._id)
 												i.icon.edit
 												| Edit
+											a.ui.compact.red.button(href='/tournaments/edit/' + tournament._id + '/' + team.division + '/deleteTeam/' + team.teamNumber)
+												i.icon.remove
+												| Delete
+
 
 			.spacer
 		.ui.divider
 		.ui.accordion
-			h3.ui.title
+			h3.ui.title.active
 				.dropdown.icon
 				| Events
-			.content
+			.content.active
 				p Add or remove events from the 'Edit Details' button.
 				if (tournament.events)
 					.ui.grid
@@ -125,7 +129,7 @@ block scripts
 			$('#team-number-input').val(teamData.teamNumber)
 
 			// Change form action
-			$('#team-modal form').attr('action', '/tournaments/edit/' + tournament._id + '/editTeam/' + teamData.teamNumber)
+			$('#team-modal form').attr('action', '/tournaments/edit/' + tournament._id + '/' + teamData.division + '/editTeam/' + teamData.teamNumber)
 		})
 
 		// Change form action and clear fields when opening new team modal

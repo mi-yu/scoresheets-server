@@ -13,4 +13,4 @@ block content
 		form.ui.form(action='/tournaments/edit/' + team.tournament._id + '/deleteTeam/' + team.teamNumber method='POST')
 			.field
 				button.ui.button.red(type='submit') Delete
-				a.ui.button(href='/admin/dashboard') Cancel
+				a.ui.button(href='javascript:history.back()') Cancel

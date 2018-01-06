@@ -20,6 +20,22 @@ router.get('/:tournamentId/scores/:eventId',
 	.exec((err, result) => {
 		if (err)
 			req.flash('error', 'An unknown error occurred: ' + err)
+		else {
+			// Sort scores by team number
+			result.scores.sort((s1, s2) => {
+				console.log(s1, s2)
+				let t1 = s1.team.teamNumber
+				let t2 = s2.team.teamNumber
+				console.log(t1, t2)
+				if (t1 > t2)
+					return 1
+				if (t1 === t2)
+					return 0
+				if (t1 < t2)
+					return -1
+			})
+			console.log(result.scores)
+		}
 		res.render('tournaments/event-detail', {
 			scoresheetEntry: result
 		})
@@ -35,6 +51,8 @@ router.post('/:scoresheetId/updateEvent/:eventName', needsGroup('admin'), (req, 
 			sse.scores.id(id).tier = req.body[id].tier || 1
 			sse.scores.id(id).noShow = req.body[id].noShow || false
 			sse.scores.id(id).participationOnly = req.body[id].participationOnly || false
+			sse.scores.id(id).notes = req.body[id].notes || ''
+			sse.scores.id(id).tiebreaker = req.body[id].tiebreaker || 0
 		})
 		sse.save((err) => {
 			if (err)

@@ -104,7 +104,7 @@ router.get('/manage/:tournamentId',
 })
 
 router.post('/edit/:id', needsGroup('admin'), (req, res, next) => {
-	Tournament.update({_id: req.params.id}, {
+	Tournament.findByIdAndUpdate(req.params.id, {
 		$set: {
 			name: req.body.name,
 			date: req.body.date,
@@ -112,9 +112,11 @@ router.post('/edit/:id', needsGroup('admin'), (req, res, next) => {
 			city: req.body.city,
 			events: req.body.events
 		}
-	}, (err) => {
+	}, (err, updated) => {
 		if (err)
 			req.flash('error', 'There was an error updating the tournament details: ' + err)
+		else
+			req.flash('success', 'Successfully updated tournament ' + updated.name)
 		res.redirect('/tournaments/manage/' + req.params.id)
 	})		
 })
@@ -123,10 +125,15 @@ router.post('/edit/:id/addTeam', needsGroup('admin'), (req, res, next) => {
 	const team = new Team({
 		tournament: req.params.id,
 		school: req.body.school,
-		teamNumber: req.body.teamNumber
+		teamNumber: req.body.teamNumber,
+		division: req.body.division
 	})
 
-	Team.findOne({tournament: req.params.id, teamNumber: req.body.teamNumber}, (err, result) => {
+	Team.findOne({
+		tournament: req.params.id, 
+		teamNumber: req.body.teamNumber,
+		division: req.body.division
+	}, (err, result) => {
 		if (err) {
 			req.flash('error', 'An unknown error occurred: ' + err)
 			res.redirect('/tournaments/manage/' + req.params.id)
@@ -136,30 +143,40 @@ router.post('/edit/:id/addTeam', needsGroup('admin'), (req, res, next) => {
 		} else {
 			team.save((err) => {
 				if (err)
-					req.flash('error', 'An unknown error occurred: ' + err)
-				else
+					req.error = err
+				else {
 					req.flash('success', 'Successfully created team ' + team.teamNumber + ' (' + team.school + ').')
-				res.locals.teamId = team._id
+					res.locals.teamId = team._id
+				}
+				console.log('calling next')
 				next()
 			})
 		}
 	})
-}, (req, res, next) => {
-	ScoresheetEntry.update({tournament: req.params.id}, {
-		$push: {
-			scores: { team: res.locals.teamId }
-		}
-	}, {multi: true}, (err) => {
-		if (err)
-			req.flash('error', 'An unknown error occurred: ' + err)
+}, (req, res) => {
+	if (req.error) {
+		console.log(req.error)
+		req.flash('error', req.error.message)
 		res.redirect('/tournaments/manage/' + req.params.id)
-	})
+	} else {
+		ScoresheetEntry.update({tournament: req.params.id}, {
+			$push: {
+				scores: { team: res.locals.teamId }
+			}
+		}, {multi: true}, (err) => {
+			if (err)
+				req.flash('error', 'An unknown error occurred: ' + err)
+			console.log('redirecting to: ', '/tournaments/manage/' + req.params.id)
+			res.redirect('/tournaments/manage/' + req.params.id)
+		})
+	}
 })
 
-router.get('/edit/:tournamentId/deleteTeam/:teamNumber', (req, res, next) => {
+router.get('/edit/:tournamentId/:division/deleteTeam/:teamNumber', (req, res, next) => {
 	Team.findOne({
 		tournament: req.params.tournamentId,
-		teamNumber: req.params.teamNumber
+		teamNumber: req.params.teamNumber,
+		division: req.params.division
 	})
 	.populate('tournament')
 	.exec((err, result) => {
@@ -170,10 +187,11 @@ router.get('/edit/:tournamentId/deleteTeam/:teamNumber', (req, res, next) => {
 	})
 })
 
-router.post('/edit/:tournamentId/deleteTeam/:teamNumber', (req, res, next) => {
+router.post('/edit/:tournamentId/:division/deleteTeam/:teamNumber', (req, res, next) => {
 	Team.findOne({
 		tournament: req.params.tournamentId,
-		teamNumber: req.params.teamNumber
+		teamNumber: req.params.teamNumber,
+		division: req.params.division
 	}, (err, result) => {
 		result.remove()
 		if (err)
@@ -182,13 +200,16 @@ router.post('/edit/:tournamentId/deleteTeam/:teamNumber', (req, res, next) => {
 	})
 })
 
-router.post('/edit/:tournamentId/editTeam/:teamNumber', (req, res, next) => {
+router.post('/edit/:tournamentId/:division/editTeam/:teamNumber', (req, res, next) => {
 	Team.findOne({
 		tournament: req.params.tournamentId,
-		teamNumber: req.params.teamNumber
+		teamNumber: req.params.teamNumber,
+		division: req.params.division
 	}, (err, result) => {
-		if (err)
+		if (err) {
 			req.flash('error', 'Unable to find team ' + req.params.teamNumber + ': ' + err)
+			next()
+		}
 		result.teamNumber = req.body.teamNumber
 		result.school = req.body.school
 		result.save((err) => {

@@ -1,0 +1,8 @@
+TODOS
+	---- validate team numbers ('C' + Number)
+	--- when to calculate ranks?
+	-- mongoose schema statics
+	-- improved error handling middleware
+	-- update scoresheetEntries when adding/removing events from tournament
+	-- B and C scores
+	- research API naming/design
