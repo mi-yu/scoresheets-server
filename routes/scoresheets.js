@@ -23,10 +23,8 @@ router.get('/:tournamentId/scores/:eventId',
 		else {
 			// Sort scores by team number
 			result.scores.sort((s1, s2) => {
-				console.log(s1, s2)
 				let t1 = s1.team.teamNumber
 				let t2 = s2.team.teamNumber
-				console.log(t1, t2)
 				if (t1 > t2)
 					return 1
 				if (t1 === t2)
@@ -34,7 +32,6 @@ router.get('/:tournamentId/scores/:eventId',
 				if (t1 < t2)
 					return -1
 			})
-			console.log(result.scores)
 		}
 		res.render('tournaments/event-detail', {
 			scoresheetEntry: result
@@ -53,6 +50,7 @@ router.post('/:scoresheetId/updateEvent/:eventName', needsGroup('admin'), (req, 
 			sse.scores.id(id).participationOnly = req.body[id].participationOnly || false
 			sse.scores.id(id).notes = req.body[id].notes || ''
 			sse.scores.id(id).tiebreaker = req.body[id].tiebreaker || 0
+			sse.scores.id(id).dropped = req.body[id].dropped || false
 		})
 		sse.save((err) => {
 			if (err)
@@ -61,6 +59,24 @@ router.post('/:scoresheetId/updateEvent/:eventName', needsGroup('admin'), (req, 
 				req.flash('success', 'Successfully updated scores for ' + req.params.eventName)
 			res.redirect('/scoresheets/' + sse.tournament + '/scores/' + sse.event)
 		})
+	})
+})
+
+router.get('/:scoresheetId/rank', needsGroup('admin'), (req, res, next) => {
+	ScoresheetEntry.findById(req.params.scoresheetId)
+	.exec((err, sse) => {
+		if (err) {
+			req.flash('error', err)
+			res.redirect('/scoresheets/' + sse.tournament + '/scores/' + sse.event.name)
+		} else {
+			sse.rank((err) => {
+				if (err)
+					req.flash('error', 'There was an error ranking teams for ' + sse.event.name + ': ' + err)
+				else
+					req.flash('success', 'Generated ranks.')
+				res.redirect('/scoresheets/' + sse.tournament + '/scores/' + sse.event)
+			})
+		}
 	})
 })
 

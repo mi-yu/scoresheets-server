@@ -34,7 +34,7 @@ if ('development' == env) {
 
 else {
 	mongoose.connection.openUri(process.env.DB_URL)
-    console.log(process.env.NODE_ENV)
+  console.log(process.env.NODE_ENV)
 }
 
 // view engine setup

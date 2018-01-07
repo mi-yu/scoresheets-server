@@ -148,14 +148,12 @@ router.post('/edit/:id/addTeam', needsGroup('admin'), (req, res, next) => {
 					req.flash('success', 'Successfully created team ' + team.teamNumber + ' (' + team.school + ').')
 					res.locals.teamId = team._id
 				}
-				console.log('calling next')
 				next()
 			})
 		}
 	})
 }, (req, res) => {
 	if (req.error) {
-		console.log(req.error)
 		req.flash('error', req.error.message)
 		res.redirect('/tournaments/manage/' + req.params.id)
 	} else {
@@ -166,7 +164,6 @@ router.post('/edit/:id/addTeam', needsGroup('admin'), (req, res, next) => {
 		}, {multi: true}, (err) => {
 			if (err)
 				req.flash('error', 'An unknown error occurred: ' + err)
-			console.log('redirecting to: ', '/tournaments/manage/' + req.params.id)
 			res.redirect('/tournaments/manage/' + req.params.id)
 		})
 	}

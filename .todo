@@ -1,8 +1,8 @@
 TODOS
-	---- validate team numbers ('C' + Number)
-	--- when to calculate ranks?
-	-- mongoose schema statics
-	-- improved error handling middleware
-	-- update scoresheetEntries when adding/removing events from tournament
-	-- B and C scores
-	- research API naming/design
+	-3 only allow selection of ONE of NS, PP, DROP
+	-3 when to calculate ranks?
+	-2 add division param to scoresheet routes
+	-2 mongoose schema statics
+	-2 improved error handling middleware
+	-2 update scoresheetEntries when adding/removing events from tournament
+	-1 research API naming/design

@@ -12,7 +12,7 @@ const Team = new Schema({
 	tournament: { type: Schema.Types.ObjectId, ref: 'Tournament', required: true },
 	school: String,
     division: { type: String, required: true, validate: divisionValidator },
-	teamNumber: { type: Number, required: true },
+	teamNumber: { type: Number, required: true, min: 1},
 	score: Number,
 	placing: Number
 })
