@@ -52,7 +52,7 @@ router.post('/:scoresheetId/updateEvent/:eventName', needsGroup('admin'), (req, 
 			sse.scores.id(id).tiebreaker = req.body[id].tiebreaker || 0
 			sse.scores.id(id).dropped = req.body[id].dropped || false
 		})
-		sse.save((err) => {
+		sse.rank((err) => {
 			if (err)
 				req.flash('error', 'There was an error saving scoresheet data.')
 			else

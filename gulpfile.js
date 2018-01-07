@@ -12,11 +12,12 @@ const gulp = require('gulp'),
     notify = require('gulp-notify'),
     cache = require('gulp-cache'),
     livereload = require('gulp-livereload'),
-    pug = require('gulp-pug')
+    pug = require('gulp-pug'),
+    prettier = require('gulp-prettier')
 
 // Styles
 gulp.task('styles', () => {
-  return gulp.src('public/stylesheets/style.sass')
+  gulp.src('public/stylesheets/style.sass')
     .pipe(sass({ style: 'expanded'}))
     .pipe(autoprefixer())
     .pipe(rename({ suffix: '.min' }))
@@ -28,7 +29,7 @@ gulp.task('styles', () => {
 
 // Scripts
 gulp.task('scripts', () => {
-  return gulp.src('public/javascripts/**/*.js')
+  gulp.src('public/javascripts/**/*.js')
     .pipe(jshint('.jshintrc'))
     .pipe(jshint.reporter('default'))
     .pipe(concat('main.js'))
@@ -42,7 +43,7 @@ gulp.task('scripts', () => {
 
 // Images
 gulp.task('images', () => {
-  return gulp.src('public/images/**/*')
+  gulp.src('public/images/**/*')
     .pipe(cache(imagemin({ optimizationLevel: 3, progressive: true, interlaced: true })))
     .pipe(livereload())
     .pipe(gulp.dest('dist/images'))
@@ -51,8 +52,17 @@ gulp.task('images', () => {
 
 // Clean
 gulp.task('clean', () => {
-  return gulp.src(['dist/stylesheets', 'dist/javascripts', 'dist/images'], {read: false})
+  gulp.src(['dist/stylesheets', 'dist/javascripts', 'dist/images'], {read: false})
     .pipe(clean())
+})
+
+// Prettify
+gulp.task('prettify', () => {
+  gulp.src('**/*.js')
+    .pipe(prettier({
+      tabWidth: 4
+    }))
+    .pipe(gulp.dest(file => file.base))
 })
 
 // Default task

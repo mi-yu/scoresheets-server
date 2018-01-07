@@ -8,9 +8,9 @@ block content
 		h1.ui.header= scoresheetEntry.event.name
 			.sub.header= scoresheetEntry.tournament.name
 		.spacer
-		a.ui.primary.button(href='/scoresheets/' + scoresheetEntry._id + '/rank')
-			i.trophy.icon
-			| Generate Ranks
+		//- a.ui.primary.button(href='/scoresheets/' + scoresheetEntry._id + '/rank')
+		//- 	i.trophy.icon
+		//- 	| Generate Ranks
 		.spacer
 		form#scores.ui.form(action='/scoresheets/' + scoresheetEntry._id + '/updateEvent/' + scoresheetEntry.event.name method='post'): table.ui.celled.compact.table
 			thead
@@ -73,7 +73,7 @@ block content
 						td
 							.field
 								textarea(name=score._id + '[notes]' rows=3)= score.notes || ''
-						td.red.center.aligned= score.rank || 'No rank yet'
+						td.red.center.aligned= score.rank || 0
 		.spacer
 		button.ui.primary.button(type='submit' form='scores') Submit
 

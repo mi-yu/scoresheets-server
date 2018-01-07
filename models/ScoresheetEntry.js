@@ -51,13 +51,15 @@ ScoresheetEntry.methods.rank = function(cb) {
         throw new Error('Tie must be broken between ' + s1 + ' and ' + s2)
     })
     scores.forEach((score, i) => {
-        if (!score.noShow && !score.participationOnly)
+        if (!score.noShow && !score.participationOnly && !score.dropped)
             score.rank = i+1
         else {
             if (score.noShow)
                 score.rank = scores.length + 1
             if (score.participationOnly)
                 score.rank = scores.length
+            if (score.dropped)
+                score.rank = 0
         }
     })
     this.save((err) => {
