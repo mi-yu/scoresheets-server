@@ -1,21 +1,21 @@
 extends ../layouts/basic
 
 block content
-	#content: .container-sm
-		h1.title.has-text-centered Login to Scribe
+    #content: .container-sm
+        h1.title.has-text-centered Login to Scribe
 
-		form.ui.form(action='/users/login' method='post')
+        form.ui.form(action='/users/login' method='post')
 
-			.field.required
-				label Email
-				input(type='text' name='email' required)
-			.field.required
-				label Password
-				input(type='password' name='password' required)
+            .field.required
+                label Email
+                input(type='text' name='email' required)
+            .field.required
+                label Password
+                input(type='password' name='password' required)
 
-			if (message.error)
-				.ui.message.negative
-					p= message.error
+            if (message.error)
+                .ui.message.negative
+                    p= message.error
 
-			.field
-				button.ui.button.primary(type='submit') Submit
+            .field
+                button.ui.button.primary(type='submit') Submit

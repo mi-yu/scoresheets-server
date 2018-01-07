@@ -1,51 +1,51 @@
 extends ../layouts/basic
 
 block content
-	#content: .ui.container
-		h1.ui.header Dashboard
-		hr
+    #content: .ui.container
+        h1.ui.header Dashboard
+        hr
 
-		h2.ui.header Tournaments
-		button#new-tournament.ui.button.green
-			i.icon.plus
-			| New Tournament
-		.ui.hidden.divider
+        h2.ui.header Tournaments
+        button#new-tournament.ui.button.green
+            i.icon.plus
+            | New Tournament
+        .ui.hidden.divider
 
-		if (tournaments)
-			.ui.grid
-				each tournament in tournaments
-					.four.wide.column: .ui.card
-						.content
-							.header= tournament.name
-							.meta
-								span= tournament.date.toLocaleDateString('en-US')
-								span= tournament.city + ', ' + tournament.state
-							.description
-								p Proctor registration code:
-								code.center.aligned= tournament.joinCode
+        if (tournaments)
+            .ui.grid
+                each tournament in tournaments
+                    .four.wide.column: .ui.card
+                        .content
+                            .header= tournament.name
+                            .meta
+                                span= tournament.date.toLocaleDateString('en-US')
+                                span= tournament.city + ', ' + tournament.state
+                            .description
+                                p Proctor registration code:
+                                code.center.aligned= tournament.joinCode
 
-						.extra.content: .ui.two.buttons
-							a.ui.button(href='/tournaments/manage/' + tournament._id) Manage
-							a.ui.button(href='#') Edit Details
+                        .extra.content: .ui.two.buttons
+                            a.ui.button(href='/tournaments/manage/' + tournament._id) Manage
+                            a.ui.button(href='#') Edit Details
 
-		include ../tournaments/partials/_tournament-modal
+        include ../tournaments/partials/_tournament-modal
 
 block scripts
-	script.
-		$('.ui.dropdown').dropdown()
+    script.
+        $('.ui.dropdown').dropdown()
 
-		$('#new-tournament').click(() => {
-			$('.ui.modal').modal('show')
-		})
+        $('#new-tournament').click(() => {
+            $('.ui.modal').modal('show')
+        })
 
-		$('#add-all-events').click(() => {
-			$('#events option').each( function() {
-				$('#events').dropdown('set selected', $(this).prop('value'))
-			})
-		})
+        $('#add-all-events').click(() => {
+            $('#events option').each( function() {
+                $('#events').dropdown('set selected', $(this).prop('value'))
+            })
+        })
 
-		$('#clear-events').click(() => {
-			$('#events option').each( function() {
-				$('#events').dropdown('clear')
-			})
-		})
+        $('#clear-events').click(() => {
+            $('#events option').each( function() {
+                $('#events').dropdown('clear')
+            })
+        })

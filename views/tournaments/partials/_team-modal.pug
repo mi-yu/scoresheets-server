@@ -1,28 +1,28 @@
 #team-modal.ui.modal
-	.close.icon
-	.header Create New Team
-	.content
-		form#new-team-form.ui.form(action = '/tournaments/edit/' + tournament._id + '/addTeam' method = 'post')
-			.field.required
-				label School
-				select#school.ui.search.dropdown(name='school' required autcomplete='false')
-					each school in schools
-						option(value=school)= school
-			.field
-				label Or, add a school
-				input#add-school-input(type='text' autocomplete='false')
-			.field
-				a#add-school-button.ui.primary.button
-					i.plus.icon
-					| Add
-			.field.required
-				label Division (currently only C division supported)
-				select.ui.dropdown(name='division' required autocomplete='false')
-					//option(value='B') B
-					option(value='C') C
-			.field.required
-				label Team Number
-				input#team-number-input(type='number' name='teamNumber' required autocomplete='false' placeholder='e.g. 1, 2, 30, NOT 01, 02, 030, etc.')
-	.actions
-		button.ui.green.button(type='submit' form='new-team-form') Create
-		button.ui.cancel.button Cancel
+    .close.icon
+    .header Create New Team
+    .content
+        form#new-team-form.ui.form(action = '/tournaments/edit/' + tournament._id + '/addTeam' method = 'post')
+            .field.required
+                label School
+                select#school.ui.search.dropdown(name='school' required autcomplete='false')
+                    each school in schools
+                        option(value=school)= school
+            .field
+                label Or, add a school
+                input#add-school-input(type='text' autocomplete='false')
+            .field
+                a#add-school-button.ui.primary.button
+                    i.plus.icon
+                    | Add
+            .field.required
+                label Division (currently only C division supported)
+                select.ui.dropdown(name='division' required autocomplete='false')
+                    //option(value='B') B
+                    option(value='C') C
+            .field.required
+                label Team Number
+                input#team-number-input(type='number' name='teamNumber' required autocomplete='false' placeholder='e.g. 1, 2, 30, NOT 01, 02, 030, etc.')
+    .actions
+        button.ui.green.button(type='submit' form='new-team-form') Create
+        button.ui.cancel.button Cancel

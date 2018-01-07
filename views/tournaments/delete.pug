@@ -1,16 +1,16 @@
 extends ../layouts/basic
 
 block content
-	#content: .container-sm.has-text-centered
-		h1.ui.header Delete Tournament
-		p You are about to delete tournament 
-			strong #{tournament.name} 
-			| and all associated data. This includes 
-			strong all teams, scores, and score data
-			| .
-		p This cannot be undone. Proceed?
-		br
-		form.ui.form(action='/tournaments/delete/' + tournament._id method='POST')
-			.field
-				button.ui.button.red(type='submit') Delete
-				a.ui.button(href='/admin/dashboard') Cancel
+    #content: .container-sm.has-text-centered
+        h1.ui.header Delete Tournament
+        p You are about to delete tournament 
+            strong #{tournament.name} 
+            | and all associated data. This includes 
+            strong all teams, scores, and score data
+            | .
+        p This cannot be undone. Proceed?
+        br
+        form.ui.form(action='/tournaments/delete/' + tournament._id method='POST')
+            .field
+                button.ui.button.red(type='submit') Delete
+                a.ui.button(href='/admin/dashboard') Cancel
