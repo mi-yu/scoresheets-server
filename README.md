@@ -2,7 +2,7 @@
 A scorekeeping and judging system for Science Olympiad tournaments.
 
 ### Features:
-- [ ] Allows event supervisors to submit scores
+- [x] Allows event supervisors to submit scores
 - [ ] Automatic generation of scoresheets and awards presentation
 - [ ] ESUS-like time slot registration
 - [ ] Team, schedule, and room management system
@@ -22,5 +22,5 @@ Then in project root:
 		
 5. Run `npm install -g gulp`
 6. Run `npm install`
-7. In separate console, run `mongod` (local development server)
+7. In separate console, run `mongod` (local development database)
 8. Run `npm start-dev`
