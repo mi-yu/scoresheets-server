@@ -38,7 +38,7 @@ describe('Test tournament routes', () => {
 		mongoose.disconnect(done)
 	})
 
-	it('it should GET tournament management page properly /tournaments/manage/:d', () => {
+	it('GET /tournaments/manage/:id', () => {
 		chai.request(app)
 			.get('/tournaments/manage/' + tournament._id)
 			.end((err, res) => {
@@ -46,7 +46,7 @@ describe('Test tournament routes', () => {
 			})
 	})
 
-	it('POST /tournaments/new saves new tournament correctly', () => {
+	it('POST /tournaments/new', () => {
 		const tournamentData = baseTournament
 		tournamentData.name = 'New Tournament'
 		tournamentData.joinCode = 'a-new-join-code-here'
@@ -57,7 +57,6 @@ describe('Test tournament routes', () => {
 			.send(tournamentData)
 			.end((err, res) => {
 				res.should.have.status(200)
-				console.log(res.body)
 			})
 	})
 })

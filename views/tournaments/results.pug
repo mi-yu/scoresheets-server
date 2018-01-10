@@ -1,0 +1,33 @@
+extends ../layouts/basic
+
+block content
+    #content(style='overflow: scroll;'): .ui.container
+        //- a.ui.primary.button(href='/tournaments/manage/' + scoresheetEntry.tournament._id)
+        //-     i.angle.left.icon
+        //-     | Back to Tournament
+        //- h1.ui.header= scoresheetEntry.event.name
+        //-     .sub.header= scoresheetEntry.tournament.name
+        //- .spacer
+        table.ui.celled.table
+            thead
+                th Team (School)
+                each entry in entries
+                    th= entry.event.name
+                th Total
+                th Rank
+            tbody
+                each team in teams
+                    tr
+                        th= team.division + team.teamNumber + ' (' + team.school + ')'
+                        each score in team.scores
+                            th.center.aligned= score
+                        th.center.aligned= team.score
+                        th.center.aligned= team.rank
+                
+
+        .spacer
+                
+
+
+
+        

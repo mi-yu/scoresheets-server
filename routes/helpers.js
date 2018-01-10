@@ -45,10 +45,18 @@ module.exports = {
         });
     },
     getTeamsInTournament: (req, res, next) => {
-        Team.find({ tournament: req.params.tournamentId }).sort('teamNumber').exec((err, results) => {
+        Team.find({ tournament: req.params.tournamentId }).lean().sort('teamNumber').exec((err, results) => {
             if (err)
                 req.flash('error', 'Could not load teams: ' + err);
             res.locals.teams = results;
+            next();
+        });
+    },
+    resetScores: (req, res, next) => {
+        Team.update({ tournament: req.params.tournamentId }, { score: 0 }, { multi: true }, (err, updated) => {
+            console.log(updated)
+            if (err)
+                req.flash('error', 'There was an error resetting scores: ' + err);
             next();
         });
     }
