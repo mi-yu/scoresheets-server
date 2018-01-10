@@ -8,7 +8,7 @@ const flash = require('express-flash');
 const session = require('express-session');
 
 // Routes
-const public = require('./routes/public');
+const basic = require('./routes/basic');
 const users = require('./routes/users');
 const admin = require('./routes/admin');
 const tournaments = require('./routes/tournaments');
@@ -23,16 +23,17 @@ const LocalStrategy = require('passport-local').Strategy;
 const app = express();
 
 // Set environment
-const env = process.env.NODE_ENV || 'development';
+const env = process.env.NODE_ENV;
 
 if ('development' == env) {
-    app.use(logger('dev'));
     require('dotenv').config();
+    app.use(logger('dev'));
     mongoose.connection.openUri(process.env.DB_LOCAL_URL);
     mongoose.set('debug', true);
+} else if ('test' == env) {
+    require('dotenv').config();
 } else {
     mongoose.connection.openUri(process.env.DB_URL);
-    console.log(process.env.NODE_ENV);
 }
 
 // view engine setup
@@ -60,11 +61,11 @@ passport.deserializeUser(User.deserializeUser());
 mongoose.Promise = global.Promise;
 
 // Use routes
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
     res.locals.user = req.user;
     next();
 });
-app.use('/', public);
+app.use('/', basic);
 app.use('/users', users);
 app.use('/admin', admin);
 app.use('/tournaments', tournaments);
@@ -75,14 +76,14 @@ app.use((req, res, next) => {
 });
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
     let err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use((err, req, res, next) => {
     // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};

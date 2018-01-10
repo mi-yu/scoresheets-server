@@ -9,7 +9,6 @@ const gulp = require('gulp'),
     rename = require('gulp-rename'),
     clean = require('gulp-clean'),
     concat = require('gulp-concat'),
-    notify = require('gulp-notify'),
     cache = require('gulp-cache'),
     livereload = require('gulp-livereload'),
     prettier = require('gulp-prettier'),
@@ -24,8 +23,7 @@ gulp.task('styles', () => {
         .pipe(rename({ suffix: '.min' }))
         .pipe(minifycss())
         .pipe(livereload())
-        .pipe(gulp.dest('dist/stylesheets'))
-        .pipe(notify({ message: 'Styles task complete' }));
+        .pipe(gulp.dest('dist/stylesheets'));
 });
 
 // Scripts
@@ -39,8 +37,7 @@ gulp.task('scripts', () => {
         .pipe(rename({ suffix: '.min' }))
         .pipe(uglify())
         .pipe(livereload())
-        .pipe(gulp.dest('dist/javascripts'))
-        .pipe(notify({ message: 'Scripts task complete' }));
+        .pipe(gulp.dest('dist/javascripts'));
 });
 
 // Images
@@ -49,8 +46,7 @@ gulp.task('images', () => {
         .src('public/images/**/*')
         .pipe(cache(imagemin({ optimizationLevel: 3, progressive: true, interlaced: true })))
         .pipe(livereload())
-        .pipe(gulp.dest('dist/images'))
-        .pipe(notify({ message: 'Images task complete' }));
+        .pipe(gulp.dest('dist/images'));
 });
 
 // Clean

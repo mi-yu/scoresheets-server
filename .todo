@@ -1,5 +1,4 @@
 TODOS
-	-3 only allow selection of ONE of NS, PP, DROP
 	-3 when to calculate ranks?
 	-2 add division param to scoresheet routes
 	-2 mongoose schema statics

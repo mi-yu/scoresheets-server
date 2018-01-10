@@ -51,10 +51,8 @@ block content
                         td
                             .field
                                 select.ui.compact.dropdown(name=score._id + '[tier]')
-                                    option(value=1) 1
-                                    option(value=2) 2
-                                    option(value=3) 3
-                                    option(value=4) 4
+                                    each i in [1,2,3,4]
+                                        option(value = i selected = score.tier === i ? true : false)= i
                         td.center.aligned
                             .inline.fields
                                 .ui.checkbox
@@ -75,9 +73,13 @@ block content
                                 textarea(name=score._id + '[notes]' rows=3)= score.notes || ''
                         td.red.center.aligned= score.rank || 0
         .spacer
-        button.ui.primary.button(type='submit' form='scores') Submit
+        button.ui.primary.button(type='submit' form='scores') Save
 
 block scripts
     script.
+        const scoresheetEntry = !{JSON.stringify(scoresheetEntry)}
+
         $('.ui.dropdown').dropdown()
         $('.ui.mini.circular.icon.button').popup()
+
+

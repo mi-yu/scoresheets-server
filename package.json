@@ -5,9 +5,13 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "start-dev": "run-p start-server watch",
+    "start-dev": "set NODE_ENV=development&&run-p start-server watch",
     "start-server": "nodemon ./bin/www",
-    "watch": "gulp watch"
+    "watch": "gulp watch",
+    "test": "set NODE_ENV=test&&mocha --exit"
+  },
+  "jest": {
+    "testEnvironment": "node"
   },
   "dependencies": {
     "body-parser": "~1.18.2",
@@ -26,6 +30,8 @@
     "serve-favicon": "~2.4.5"
   },
   "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-http": "^3.0.0",
     "dotenv": "^4.0.0",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^4.0.0",
@@ -36,13 +42,13 @@
     "gulp-imagemin": "^4.0.0",
     "gulp-jshint": "^2.0.4",
     "gulp-livereload": "^3.8.1",
-    "gulp-notify": "^3.0.0",
     "gulp-prettier": "^1.1.0",
     "gulp-pug-beautify": "0.0.1",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^3.1.0",
     "gulp-uglify": "^3.0.0",
     "jshint": "^2.9.5",
+    "mocha": "^4.1.0",
     "nodemon": "^1.12.1",
     "tiny-lr": "^1.0.5"
   }
