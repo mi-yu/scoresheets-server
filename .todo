@@ -1,5 +1,7 @@
 TODOS
-	-3 when to calculate ranks?
+	-4 powerpoint making
+	-3 fix results formating
+	-3 event categories (bio, earth, life, inquiry, etc) for deeper analysis
 	-2 add division param to scoresheet routes
 	-2 mongoose schema statics
 	-2 improved error handling middleware

@@ -221,23 +221,6 @@ router.post('/edit/:tournamentId/:division/editTeam/:teamNumber', (req, res, nex
     );
 });
 
-router.get('/:tournamentId/generateResults', resetScores, (req, res, next) => {
-    ScoresheetEntry
-        .find({ tournament: req.params.tournamentId })
-        .populate('tournament event scores.team')
-        .exec((err, entries) => {
-            entries.forEach(entry => {
-                entry.scores.forEach(score => {
-                    Team.findByIdAndUpdate(score.team, { $inc: { score: score.rank || 0 } }, (err, doc) => {
-                        if (err)
-                            console.log(err)
-                    });
-                });
-            });
-            res.redirect('/tournaments/' + req.params.tournamentId + '/results');
-        });
-});
-
 router.get('/:tournamentId/results', getTeamsInTournament, (req, res, next) => {
     ScoresheetEntry
         .find({ tournament: req.params.tournamentId })
@@ -247,11 +230,22 @@ router.get('/:tournamentId/results', getTeamsInTournament, (req, res, next) => {
             entries.sort((a, b) => {
                 return a.event.name.localeCompare(b.event.name)
             })
+            entries.forEach(entry => {
+                entry.scores.sort((a,b) => {
+                    if (a.team.teamNumber > b.team.teamNumber)
+                        return 1
+                    if (a.team.teamNumber < b.team.teamNumber)
+                        return -1
+                    return 0
+                })
+            })
             let teams = res.locals.teams
             teams.forEach((team, i) => {
                 team.scores = []
+                team.totalScore = 0
                 entries.forEach(entry => {
                     team.scores.push(entry.scores[i].rank || 0)
+                    team.totalScore += entry.scores[i].rank || 0
                 })
             })
             console.log(teams)

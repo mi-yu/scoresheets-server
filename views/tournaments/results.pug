@@ -1,14 +1,18 @@
 extends ../layouts/basic
 
 block content
-    #content(style='overflow: scroll;'): .ui.container
+    #content(style='overflow-x: scroll;'): .ui.container
         //- a.ui.primary.button(href='/tournaments/manage/' + scoresheetEntry.tournament._id)
         //-     i.angle.left.icon
         //-     | Back to Tournament
         //- h1.ui.header= scoresheetEntry.event.name
         //-     .sub.header= scoresheetEntry.tournament.name
         //- .spacer
-        table.ui.celled.table
+        h1.ui.header #{entries[0].tournament.name} Results
+        a.ui.button.primary(href='/tournaments/manage/' + entries[0].tournament._id)
+            i.icon.angle.left
+            | Back to Tournament
+        table.ui.celled.stackable.table
             thead
                 th Team (School)
                 each entry in entries
@@ -21,7 +25,7 @@ block content
                         th= team.division + team.teamNumber + ' (' + team.school + ')'
                         each score in team.scores
                             th.center.aligned= score
-                        th.center.aligned= team.score
+                        th.center.aligned= team.totalScore
                         th.center.aligned= team.rank
                 
 
