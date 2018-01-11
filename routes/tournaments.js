@@ -227,9 +227,12 @@ router.get('/:tournamentId/results', getTeamsInTournament, (req, res, next) => {
         .populate('tournament scores.team')
         .populate({path: 'event', select: 'name'})
         .exec((err, entries) => {
+            // Sort entries by event name
             entries.sort((a, b) => {
                 return a.event.name.localeCompare(b.event.name)
             })
+
+            // Sort scores by team number
             entries.forEach(entry => {
                 entry.scores.sort((a,b) => {
                     if (a.team.teamNumber > b.team.teamNumber)
@@ -239,6 +242,8 @@ router.get('/:tournamentId/results', getTeamsInTournament, (req, res, next) => {
                     return 0
                 })
             })
+
+            // Append score data to each team
             let teams = res.locals.teams
             teams.forEach((team, i) => {
                 team.scores = []
@@ -248,7 +253,7 @@ router.get('/:tournamentId/results', getTeamsInTournament, (req, res, next) => {
                     team.totalScore += entry.scores[i].rank || 0
                 })
             })
-            console.log(teams)
+            
             res.locals.entries = entries;
             res.render('tournaments/results');
         });

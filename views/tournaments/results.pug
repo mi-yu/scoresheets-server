@@ -1,7 +1,7 @@
 extends ../layouts/basic
 
 block content
-    #content(style='overflow-x: scroll;'): .ui.container
+    #content(style='overflow-x: auto;'): .ui.container
         //- a.ui.primary.button(href='/tournaments/manage/' + scoresheetEntry.tournament._id)
         //-     i.angle.left.icon
         //-     | Back to Tournament
@@ -12,21 +12,22 @@ block content
         a.ui.button.primary(href='/tournaments/manage/' + entries[0].tournament._id)
             i.icon.angle.left
             | Back to Tournament
-        table.ui.celled.stackable.table
+        table.ui.celled.collapsing.small.compact.table
             thead
-                th Team (School)
+                th.bottom.aligned.sixteen.wide Team (School)
                 each entry in entries
-                    th= entry.event.name
-                th Total
-                th Rank
+                    th.one.wide
+                        div(style='transform: rotate(-90deg) translateY(45%) translateX(-500%); white-space: nowrap; width: 15px; height: 150px;')= entry.event.name
+                th.bottom.aligned Total
+                th.bottom.aligned Rank
             tbody
                 each team in teams
                     tr
-                        th= team.division + team.teamNumber + ' (' + team.school + ')'
+                        td= team.division + team.teamNumber + ' (' + team.school + ')'
                         each score in team.scores
-                            th.center.aligned= score
-                        th.center.aligned= team.totalScore
-                        th.center.aligned= team.rank
+                            td.center.aligned= score
+                        td.center.aligned= team.totalScore
+                        td.center.aligned= team.rank
                 
 
         .spacer
