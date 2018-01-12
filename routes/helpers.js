@@ -51,13 +51,5 @@ module.exports = {
             res.locals.teams = results;
             next();
         });
-    },
-    resetScores: (req, res, next) => {
-        Team.update({ tournament: req.params.tournamentId }, { score: 0 }, { multi: true }, (err, updated) => {
-            console.log(updated)
-            if (err)
-                req.flash('error', 'There was an error resetting scores: ' + err);
-            next();
-        });
     }
 };

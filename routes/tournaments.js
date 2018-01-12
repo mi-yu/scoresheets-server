@@ -10,7 +10,7 @@ const needsGroup = helpers.needsGroup;
 const getEventsList = helpers.getEventsList;
 const getSchoolsList = helpers.getSchoolsList;
 const getTeamsInTournament = helpers.getTeamsInTournament;
-const resetScores = helpers.resetScores;
+const mw = require('./mw/tournaments.mw.js');
 
 /* GET users listing. */
 router.post('/new', needsGroup('admin'), (req, res, next) => {
@@ -221,42 +221,14 @@ router.post('/edit/:tournamentId/:division/editTeam/:teamNumber', (req, res, nex
     );
 });
 
-router.get('/:tournamentId/results', getTeamsInTournament, (req, res, next) => {
-    ScoresheetEntry
-        .find({ tournament: req.params.tournamentId })
-        .populate('tournament scores.team')
-        .populate({path: 'event', select: 'name'})
-        .exec((err, entries) => {
-            // Sort entries by event name
-            entries.sort((a, b) => {
-                return a.event.name.localeCompare(b.event.name)
-            })
-
-            // Sort scores by team number
-            entries.forEach(entry => {
-                entry.scores.sort((a,b) => {
-                    if (a.team.teamNumber > b.team.teamNumber)
-                        return 1
-                    if (a.team.teamNumber < b.team.teamNumber)
-                        return -1
-                    return 0
-                })
-            })
-
-            // Append score data to each team
-            let teams = res.locals.teams
-            teams.forEach((team, i) => {
-                team.scores = []
-                team.totalScore = 0
-                entries.forEach(entry => {
-                    team.scores.push(entry.scores[i].rank || 0)
-                    team.totalScore += entry.scores[i].rank || 0
-                })
-            })
-            
-            res.locals.entries = entries;
-            res.render('tournaments/results');
-        });
-});
+router.get(
+    '/:tournamentId/results',
+    getTeamsInTournament,
+    mw.getScoresheetsInTournament,
+    mw.populateTotalsAndRankTeams,
+    (req, res, next) => {
+        res.render('tournaments/results');
+    }
+);
 
 module.exports = router;
