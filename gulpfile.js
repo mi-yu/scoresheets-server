@@ -20,8 +20,8 @@ gulp.task('styles', () => {
         .src('public/stylesheets/style.sass')
         .pipe(sass({ style: 'expanded' }))
         .pipe(autoprefixer())
-        .pipe(rename({ suffix: '.min' }))
         .pipe(minifycss())
+        .pipe(rename({ suffix: '.min' }))
         .pipe(livereload())
         .pipe(gulp.dest('dist/stylesheets'));
 });
@@ -34,8 +34,8 @@ gulp.task('scripts', () => {
         .pipe(jshint.reporter('default'))
         .pipe(concat('main.js'))
         .pipe(gulp.dest('dist/javascripts'))
-        .pipe(rename({ suffix: '.min' }))
         .pipe(uglify())
+        .pipe(rename({ suffix: '.min' }))
         .pipe(livereload())
         .pipe(gulp.dest('dist/javascripts'));
 });
@@ -47,6 +47,10 @@ gulp.task('images', () => {
         .pipe(cache(imagemin({ optimizationLevel: 3, progressive: true, interlaced: true })))
         .pipe(livereload())
         .pipe(gulp.dest('dist/images'));
+});
+
+gulp.task('reveal-js', () => {
+    gulp.src('public/reveal.js-3.6.0/**/*').pipe(gulp.dest('dist/reveal.js-3.6.0'));
 });
 
 // Clean
@@ -67,7 +71,7 @@ gulp.task('prettify-pug', () => {
 });
 
 // Default task
-gulp.task('default', [ 'clean' ], () => {
+gulp.task('default', [ 'clean', 'reveal-js' ], () => {
     gulp.run('styles', 'scripts', 'images');
 });
 

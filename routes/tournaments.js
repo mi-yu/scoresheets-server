@@ -231,4 +231,8 @@ router.get(
     }
 );
 
+router.get('/slideshow', (req, res, next) => {
+    res.render('tournaments/slideshow')
+})
+
 module.exports = router;
