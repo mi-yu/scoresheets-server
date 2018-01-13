@@ -46,9 +46,9 @@ exports.populateTotalsAndRankTeams = (req, res, next) => {
 
     teams.sort((a, b) => {
         if (a.totalScore > b.totalScore)
-            return -1;
-        if (a.totalScore < b.totalScore)
             return 1;
+        if (a.totalScore < b.totalScore)
+            return -1;
         return 0;
     });
 
@@ -61,10 +61,10 @@ exports.populateTotalsAndRankTeams = (req, res, next) => {
 };
 
 exports.getTopTeams = (req, res, next) => {
-    ScoresheetEntry.getTopTeams(4, (err, topTeams) => {
+    ScoresheetEntry.getTopTeams(4, req.params.tournamentId, (err, topTeams) => {
         if (err)
-            next(err)
-        res.locals.topTeams = topTeams
-        next()
-    })
-}
+            next(err);
+        res.locals.topTeams = topTeams;
+        next();
+    });
+};

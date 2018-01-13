@@ -23,10 +23,10 @@ const ScoresheetEntry = new Schema({
 ScoresheetEntry.methods.rank = function(cb) {
     let scores = this.scores;
     scores.sort((s1, s2) => {
-        if (s1.dropped > s1.dropped)
-            return -1;
-        if (s1.dropped < s2.dropped)
+        if (s1.dropped > s2.dropped)
             return 1;
+        if (s1.dropped < s2.dropped)
+            return -1;
         if (s1.noShow > s2.noShow)
             return 1;
         if (s1.noShow < s2.noShow)
@@ -69,32 +69,43 @@ ScoresheetEntry.methods.rank = function(cb) {
     });
 };
 
-ScoresheetEntry.statics.getTopTeams = function(n, cb) {
+ScoresheetEntry.statics.getTopTeams = function(n, id, cb) {
     return this
-        .find()
+        .find({ tournament: id })
         .select('event scores')
         .populate('event scores.team')
         .lean()
         .exec((err, entries) => {
             if (err)
-                cb(err)
+                cb(err);
+            let drops = 0;
             entries.forEach(entry => {
-                entry.scores.sort((a,b) => {
+                entry.scores.forEach(score => {
+                    if (!score.rank)
+                        drops++;
+                });
+                entry.scores.sort((a, b) => {
+                    if (a.rank === 0)
+                        return 1;
+                    if (b.rank === 0)
+                        return -1;
                     if (a.rank > b.rank)
-                        return 1
+                        return 1;
                     if (a.rank < b.rank)
-                        return -1
-                    return 0
-                })
-                entry.scores.slice(0, Math.min(n, entry.scores.length))
-            })
+                        return -1;
+                    return 0;
+                });
+                entry.scores = entry.scores.slice(0, Math.min(n, entry.scores.length - drops, entry.scores.length));
+                console.log(entry.event.name + ' ' + drops);
+                drops = 0;
+            });
 
             entries.sort((a, b) => {
-                return a.event.name.localeCompare(b.event.name)
-            })
+                return a.event.name.localeCompare(b.event.name);
+            });
 
-            cb(null, entries)
-        })
-}
+            cb(null, entries);
+        });
+};
 
 module.exports = mongoose.model('ScoresheetEntry', ScoresheetEntry);
