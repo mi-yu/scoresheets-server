@@ -59,3 +59,12 @@ exports.populateTotalsAndRankTeams = (req, res, next) => {
 
     next();
 };
+
+exports.getTopTeams = (req, res, next) => {
+    ScoresheetEntry.getTopTeams(4, (err, topTeams) => {
+        if (err)
+            next(err)
+        res.locals.topTeams = topTeams
+        next()
+    })
+}

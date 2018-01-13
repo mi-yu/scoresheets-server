@@ -69,4 +69,32 @@ ScoresheetEntry.methods.rank = function(cb) {
     });
 };
 
+ScoresheetEntry.statics.getTopTeams = function(n, cb) {
+    return this
+        .find()
+        .select('event scores')
+        .populate('event scores.team')
+        .lean()
+        .exec((err, entries) => {
+            if (err)
+                cb(err)
+            entries.forEach(entry => {
+                entry.scores.sort((a,b) => {
+                    if (a.rank > b.rank)
+                        return 1
+                    if (a.rank < b.rank)
+                        return -1
+                    return 0
+                })
+                entry.scores.slice(0, Math.min(n, entry.scores.length))
+            })
+
+            entries.sort((a, b) => {
+                return a.event.name.localeCompare(b.event.name)
+            })
+
+            cb(null, entries)
+        })
+}
+
 module.exports = mongoose.model('ScoresheetEntry', ScoresheetEntry);

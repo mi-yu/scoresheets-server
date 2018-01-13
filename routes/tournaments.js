@@ -231,7 +231,8 @@ router.get(
     }
 );
 
-router.get('/slideshow', (req, res, next) => {
+//TODO: variable top ranks
+router.get('/slideshow', mw.getTopTeams, (req, res, next) => {
     res.render('tournaments/slideshow')
 })
 
