@@ -41,17 +41,24 @@ router.post('/:scoresheetId/updateEvent/:eventName', needsGroup('admin'), (req, 
             sse.scores.id(id).tier = req.body[id].tier || 1;
             sse.scores.id(id).noShow = req.body[id].noShow || false;
             sse.scores.id(id).participationOnly = req.body[id].participationOnly || false;
+            sse.scores.id(id).dq = req.body[id].dq || false
             sse.scores.id(id).notes = req.body[id].notes || '';
             sse.scores.id(id).tiebreaker = req.body[id].tiebreaker || 0;
             sse.scores.id(id).dropped = req.body[id].dropped || false;
         });
-        sse.rank(err => {
-            if (err)
-                req.flash('error', 'There was an error saving scoresheet data.');
-            else
-                req.flash('success', 'Successfully updated scores for ' + req.params.eventName);
+        try {
+            sse.rank(err => {
+                if (err)
+                    req.flash('error', err.message);
+                else
+                    req.flash('success', 'Successfully updated scores for ' + req.params.eventName);
+                res.redirect('/scoresheets/' + sse.tournament + '/scores/' + sse.event);
+            });
+        } catch(err) {
+            console.log('thrown error')
+            req.flash('error', err.message)
             res.redirect('/scoresheets/' + sse.tournament + '/scores/' + sse.event);
-        });
+        }
     });
 });
 

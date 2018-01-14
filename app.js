@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');
-const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const flash = require('express-flash');
@@ -26,6 +25,7 @@ const app = express();
 const env = process.env.NODE_ENV;
 
 if ('development' == env) {
+    const logger = require('morgan');
     require('dotenv').config();
     app.use(logger('dev'));
     mongoose.connection.openUri(process.env.DB_LOCAL_URL);

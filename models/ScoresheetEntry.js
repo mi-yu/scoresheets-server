@@ -5,6 +5,7 @@ const Score = new Schema({
     rawScore: Number,
     tiebreaker: Number,
     tier: { type: Number, default: 1, required: true },
+    dq: { type: Boolean, default: false },
     noShow: { type: Boolean, default: false },
     participationOnly: { type: Boolean, default: false },
     dropped: { type: Boolean, default: false },
@@ -27,6 +28,10 @@ ScoresheetEntry.methods.rank = function(cb) {
             return 1;
         if (s1.dropped < s2.dropped)
             return -1;
+        if (s1.dq > s2.dq)
+            return 1
+        if (s1.dq < s2.dq)
+            return -1
         if (s1.noShow > s2.noShow)
             return 1;
         if (s1.noShow < s2.noShow)
@@ -39,6 +44,8 @@ ScoresheetEntry.methods.rank = function(cb) {
             return 1;
         if (s1.tier < s2.tier)
             return -1;
+        if (s1.rawScore === 0)
+            return 1
         if (s1.rawScore > s2.rawScore)
             return -1;
         if (s1.rawScore < s2.rawScore)
@@ -47,12 +54,15 @@ ScoresheetEntry.methods.rank = function(cb) {
             return 1;
         if (s1.rawScore === s2.rawScore && s1.tiebreaker > s2.tiebreaker)
             return -1;
-        throw new Error('Tie must be broken between ' + s1 + ' and ' + s2);
+        throw new Error('Tie must be broken between');
     });
+
     scores.forEach((score, i) => {
-        if (!score.noShow && !score.participationOnly && !score.dropped)
+        if (!score.dq && !score.noShow && !score.participationOnly && !score.dropped)
             score.rank = i + 1;
         else {
+            if (score.dq)
+                score.rank = scores.length + 2;
             if (score.noShow)
                 score.rank = scores.length + 1;
             if (score.participationOnly)
@@ -61,6 +71,7 @@ ScoresheetEntry.methods.rank = function(cb) {
                 score.rank = 0;
         }
     });
+    
     this.save(err => {
         if (err)
             cb(err);

@@ -32,6 +32,9 @@ block content
                     th Dropped
                         .right.floated.ui.mini.circular.icon.button(data-html='A team may be allowed to drop an event. <strong>They will receive a score of 0 for this event</strong>, so please be sure this is accurate.')
                             i.ui.icon.help
+                    th Disqualified
+                        .right.floated.ui.mini.circular.icon.button(data-html='A team may be disqualified for cheating or other serious offenses. Coaches must be contacted as soon as possible after issuing a DQ. This team will be assigned a rank of total teams + 2.')
+                            i.ui.icon.help
                     th Notes
                         .right.floated.ui.mini.circular.icon.button(data-html='Here you can take optional notes to help you remember how ties were broken, what caused a team to be disqualified, and anything else that is not otherwise represented in the other fields.')
                             i.ui.icon.help
@@ -68,6 +71,11 @@ block content
                                 .ui.checkbox
                                     input(type='checkbox' name=score._id + '[dropped]' checked=score.dropped)
                                     label Dropped?
+                        td
+                            .inline.fields
+                                .ui.checkbox
+                                    input(type='checkbox' name=score._id + '[dq]' checked=score.dq)
+                                    label DQ?
                         td
                             .field
                                 textarea(name=score._id + '[notes]' rows=3)= score.notes || ''
