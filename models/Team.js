@@ -10,8 +10,8 @@ const Team = new Schema({
     school: String,
     division: { type: String, required: true, validate: divisionValidator },
     teamNumber: { type: Number, required: true, min: 1 },
-    score: Number,
-    placing: Number
+    totalScore: Number,
+    rank: Number
 });
 
 Team.post('remove', doc => {
@@ -22,5 +22,18 @@ Team.post('remove', doc => {
         console.log(affected);
     });
 });
+
+Team.statics.getTopTeams = function(n, id, cb) {
+    return this
+        .find({tournament: id})
+        .sort('rank')
+        .limit(n)
+        .exec((err, teams) => {
+            if (err)
+                cb(err)
+            else
+                cb(null, teams)
+        })
+}
 
 module.exports = mongoose.model('Team', Team);

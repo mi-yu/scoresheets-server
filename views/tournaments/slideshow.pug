@@ -1,9 +1,13 @@
 extends ../layouts/slideshow
 
 block content
-    .reveal: .slides
-        each entry in topTeams
-            section(data-markdown)
-                strong= entry.event.name
-                each score, i in entry.scores
-                    p.fragment(data-fragment-index=(entry.scores.length-i-1))= (i+1) + '. ' + score.team.division + score.team.teamNumber + ' (' + score.team.school + ')'
+	.reveal: .slides
+		each entry in topTeamsPerEvent
+			section
+				strong= entry.event.name
+				each score, i in entry.scores
+					p.fragment(data-fragment-index=(entry.scores.length-i-1))= (i+1) + '. ' + score.team.division + score.team.teamNumber + ' (' + score.team.school + ')'
+		section
+			strong Sweepstakes
+			each team, i in topTeams
+				p.fragment(data-fragment-index=(topTeamsPerEvent[0].scores.length-i-1))= (i+1) + '. ' + team.division + team.teamNumber + ' (' + team.school + ')'

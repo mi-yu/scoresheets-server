@@ -58,9 +58,11 @@ ScoresheetEntry.methods.rank = function(cb) {
     });
 
     scores.forEach((score, i) => {
-        if (!score.dq && !score.noShow && !score.participationOnly && !score.dropped)
+        if (!score.dq && !score.noShow && !score.participationOnly && !score.dropped && score.rawScore !== 0)
             score.rank = i + 1;
         else {
+            if (score.rawScore === 0)
+                score.rank = scores.length;
             if (score.dq)
                 score.rank = scores.length + 2;
             if (score.noShow)
@@ -80,7 +82,7 @@ ScoresheetEntry.methods.rank = function(cb) {
     });
 };
 
-ScoresheetEntry.statics.getTopTeams = function(n, id, cb) {
+ScoresheetEntry.statics.getTopTeamsPerEvent = function(n, id, cb) {
     return this
         .find({ tournament: id })
         .select('event scores')
@@ -107,7 +109,7 @@ ScoresheetEntry.statics.getTopTeams = function(n, id, cb) {
                     return 0;
                 });
                 entry.scores = entry.scores.slice(0, Math.min(n, entry.scores.length - drops, entry.scores.length));
-                console.log(entry.event.name + ' ' + drops);
+
                 drops = 0;
             });
 

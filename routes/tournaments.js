@@ -232,7 +232,7 @@ router.get(
 );
 
 //TODO: variable top ranks
-router.get('/:tournamentId/slideshow', mw.getTopTeams, (req, res, next) => {
+router.get('/:tournamentId/slideshow', mw.getTopTeamsPerEvent, mw.getTopTeams, (req, res, next) => {
     res.render('tournaments/slideshow');
 });
 
