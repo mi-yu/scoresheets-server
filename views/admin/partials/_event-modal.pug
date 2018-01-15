@@ -1,0 +1,37 @@
+#event-modal.ui.modal
+	.close.icon
+	.header= 'New Event'
+	.content
+		form#new-event-form.ui.form(action='/events/new' method='post')
+			.field.required
+				label Name
+				input(type='text' name='name' required)
+			.field.required
+				label Category
+				select.ui.dropdown(type='text' name='category' required)
+					option(value='bio') Life, Personal & Social
+					option(value='earth') Earth and Space
+					option(value='chem') Physical Science and Chemistry
+					option(value='building') Technology & Engineering
+					option(value='inquiry') Inquiry & Nature of Science
+			.field.required
+				label Resources Allowed (1 binder, 4 sheets of paper, etc)
+				input(type='text' name='notes' required)
+			.inline.fields
+				.field.required: .ui.checkbox
+					input(type='checkbox' name='inRotation' required)
+					label In rotation?
+				.field.required: .ui.checkbox
+					input(type='checkbox' name='impound' required)
+					label Requires Impound?
+				.field.required: .ui.checkbox
+					input(type='checkbox' name='stateEvent' required)
+					label State/Trial Event?
+				.field.required: .ui.checkbox
+					input(type='checkbox' name='highScoreWins' required)
+					label High Score Wins?
+
+
+	.actions
+		button.ui.green.button(type='submit' form='new-event-form') Save
+		button.ui.cancel.button Cancel

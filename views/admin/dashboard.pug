@@ -6,7 +6,7 @@ block content
         hr
 
         h2.ui.header Tournaments
-        button#new-tournament.ui.button.green
+        button.ui.button.green.opens-modal(data-target='#tournament-modal')
             i.icon.plus
             | New Tournament
         .ui.hidden.divider
@@ -28,14 +28,22 @@ block content
                             a.ui.button(href='/tournaments/manage/' + tournament._id) Manage
                             a.ui.button(href='#') Edit Details
 
+        h2.ui.header Events
+        button.ui.button.green.opens-modal(data-target='#event-modal')
+            i.icon.plus
+            | New Event
+        
+        include partials/_event-modal
         include ../tournaments/partials/_tournament-modal
+
 
 block scripts
     script.
         $('.ui.dropdown').dropdown()
 
-        $('#new-tournament').click(() => {
-            $('.ui.modal').modal('show')
+        // Bind button to show modal action
+        $('.opens-modal').click( function() {
+            $($(this).data('target')).modal('show')
         })
 
         $('#add-all-events').click(() => {
