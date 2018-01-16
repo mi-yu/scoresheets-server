@@ -27,11 +27,39 @@ block content
                         .extra.content: .ui.two.buttons
                             a.ui.button(href='/tournaments/manage/' + tournament._id) Manage
                             a.ui.button(href='#') Edit Details
+        .ui.divider
+        .ui.accordion
+            h2.ui.title.active
+                .dropdown.icon
+                | 2017-18 Season Events
+            .content.active
+                button#new-event.ui.button.green.opens-modal(data-target='#event-modal')
+                    i.icon.plus
+                    | New Event
+                .spacer
+                .ui.grid
+                    each event in events
+                        .four.wide.column: .ui.card
+                            .content
+                                .header= event.name
+                                .description
+                                    if (event.category === 'bio')
+                                        .ui.tiny.green.label Biology
+                                    if (event.category === 'earth')
+                                        .ui.tiny.brown.label Earth/Space
+                                    if (event.category === 'phys/chem')
+                                        .ui.tiny.orange.label Physics/Chemistry
+                                    if (event.category === 'building')
+                                        .ui.tiny.violet.label Building
+                                    if (event.category === 'inquiry')
+                                        .ui.tiny.pink.label Inquiry
+                                    if (event.stateEvent)
+                                        .ui.tiny.teal.label State/Trial
+                                    each division in event.division
+                                        .ui.tiny.grey.label= division
+                            .extra.content
+                                a.ui.fluid.button.edit-event.opens-modal(data-eventid=event._id data-target='#event-modal') Edit
 
-        h2.ui.header Events
-        button.ui.button.green.opens-modal(data-target='#event-modal')
-            i.icon.plus
-            | New Event
         
         include partials/_event-modal
         include ../tournaments/partials/_tournament-modal
@@ -39,7 +67,10 @@ block content
 
 block scripts
     script.
+        const events = !{JSON.stringify(events)}
+
         $('.ui.dropdown').dropdown()
+        $('.ui.accordion').accordion()
 
         // Bind button to show modal action
         $('.opens-modal').click( function() {
@@ -56,4 +87,43 @@ block scripts
             $('#events option').each( function() {
                 $('#events').dropdown('clear')
             })
+        })
+
+        // Populate event modal with event data on click
+        $('.edit-event').click( function() {
+            let $this = $(this)
+            let eventData = events.find(event => event._id === $this.data('eventid'))
+
+            // Populate data
+            $('#event-modal .header').text('Editing event: ' + eventData.name)
+            $('#name').val(eventData.name)
+            $('#division-dropdown').dropdown('clear')
+            eventData.division.forEach(item => {
+                $('#division-dropdown').dropdown('set selected', item)
+            })
+            $('#category-dropdown').dropdown('set selected', eventData.category)
+            console.log(eventData.category)
+            $('#in-rotation').attr('checked', eventData.inRotation)
+            $('#impound').attr('checked', eventData.impound)
+            $('#state-event').attr('checked', eventData.stateEvent)
+            $('#high-score-wins').attr('checked', eventData.highScoreWins)
+            $('#resources').val(eventData.resources || '')
+            $('#current-topic').val(eventData.topic || '')
+
+            // Change form action
+            $('#event-modal form').attr('action', '/events/' + eventData._id + '/edit')
+        })
+
+        // Change form action and clear fields when opening new team modal
+        $('#new-event').click(() => {
+            $('#event-modal .header').text('Create New Event')
+            $('#name').val('')
+            $('#in-rotation').attr('checked', false)
+            $('#impound').attr('checked', false)
+            $('#state-event').attr('checked', false)
+            $('#high-score-wins').attr('checked', false)
+            $('#current-topic').val('')
+            $('#resources').val('')
+
+            $('#event-modal form').attr('action', '/events/new')
         })

@@ -5,33 +5,41 @@
 		form#new-event-form.ui.form(action='/events/new' method='post')
 			.field.required
 				label Name
-				input(type='text' name='name' required)
+				input#name(type='text' name='name' required)
+			.field.required
+				label Division (select all applicable)
+				select#division-dropdown.ui.dropdown(name='division' multiple required)
+					option(value='B') B
+					option(value='C') C
 			.field.required
 				label Category
-				select.ui.dropdown(type='text' name='category' required)
+				select#category-dropdown.ui.dropdown(name='category' required)
 					option(value='bio') Life, Personal & Social
 					option(value='earth') Earth and Space
-					option(value='chem') Physical Science and Chemistry
+					option(value='phys/chem') Physical Science and Chemistry
 					option(value='building') Technology & Engineering
 					option(value='inquiry') Inquiry & Nature of Science
-			.field.required
+			.field
 				label Resources Allowed (1 binder, 4 sheets of paper, etc)
-				input(type='text' name='notes' required)
+				input#resources(type='text' name='resources')
+			p: strong Other Options
 			.inline.fields
-				.field.required: .ui.checkbox
-					input(type='checkbox' name='inRotation' required)
+				.field: .ui.checkbox
+					input#in-rotation(type='checkbox' name='inRotation')
 					label In rotation?
-				.field.required: .ui.checkbox
-					input(type='checkbox' name='impound' required)
+				.field: .ui.checkbox
+					input#impound(type='checkbox' name='impound')
 					label Requires Impound?
-				.field.required: .ui.checkbox
-					input(type='checkbox' name='stateEvent' required)
+				.field: .ui.checkbox
+					input#state-event(type='checkbox' name='stateEvent')
 					label State/Trial Event?
-				.field.required: .ui.checkbox
-					input(type='checkbox' name='highScoreWins' required)
+				.field: .ui.checkbox
+					input#high-score-wins(type='checkbox' name='highScoreWins')
 					label High Score Wins?
-
-
+			.field
+				.field
+					label Current Topic (tectonics, stellar evolution, etc)
+					input#current-topic(type='text' name='currentTopic')
 	.actions
 		button.ui.green.button(type='submit' form='new-event-form') Save
 		button.ui.cancel.button Cancel

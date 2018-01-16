@@ -7,7 +7,7 @@ const ScoresheetEntry = require('../models/ScoresheetEntry');
 const randomWords = require('random-words');
 const helpers = require('./helpers');
 const needsGroup = helpers.needsGroup;
-const getEventsList = helpers.getEventsList;
+const getCurrentEventsList = helpers.getCurrentEventsList;
 const getSchoolsList = helpers.getSchoolsList;
 const getTeamsInTournament = helpers.getTeamsInTournament;
 const mw = require('./mw/tournaments.mw.js');
@@ -70,7 +70,7 @@ router.post('/delete/:id', needsGroup('admin'), (req, res, next) => {
     });
 });
 
-router.get('/manage/:tournamentId', needsGroup('admin'), getEventsList, getSchoolsList, getTeamsInTournament, (
+router.get('/manage/:tournamentId', needsGroup('admin'), getCurrentEventsList, getSchoolsList, getTeamsInTournament, (
     req,
     res,
     next

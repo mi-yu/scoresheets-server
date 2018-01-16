@@ -12,6 +12,7 @@ const users = require('./routes/users');
 const admin = require('./routes/admin');
 const tournaments = require('./routes/tournaments');
 const scoresheets = require('./routes/scoresheets');
+const events = require('./routes/events')
 
 // DB and authentication
 const mongoose = require('mongoose');
@@ -65,11 +66,14 @@ app.use((req, res, next) => {
     res.locals.user = req.user;
     next();
 });
+
 app.use('/', basic);
 app.use('/users', users);
 app.use('/admin', admin);
 app.use('/tournaments', tournaments);
 app.use('/scoresheets', scoresheets);
+app.use('/events', events)
+
 app.use((req, res, next) => {
     res.locals.message = req.flash();
     next();

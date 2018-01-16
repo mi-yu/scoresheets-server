@@ -24,8 +24,8 @@ module.exports = {
             next();
         });
     },
-    getEventsList: (req, res, next) => {
-        Event.find().sort('name').exec((err, results) => {
+    getCurrentEventsList: (req, res, next) => {
+        Event.find({inRotation: true}).sort('name').exec((err, results) => {
             if (err)
                 req.flash('error', 'Could not load events: ' + err);
             res.locals.events = results;
