@@ -44,7 +44,7 @@ router.post('/:eventId/edit', needsGroup('admin'), (req, res, next) => {
 		if (err)
 			req.flash('error', err.message)
 		else
-			req.flash('success', 'Successfully updated ' + updated.name + ' (' + updated.category + ')')
+			req.flash('success', 'Successfully updated ' + updated.name)
 		res.redirect('/admin/dashboard')
 	})
 })

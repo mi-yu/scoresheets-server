@@ -98,11 +98,8 @@ block scripts
             $('#event-modal .header').text('Editing event: ' + eventData.name)
             $('#name').val(eventData.name)
             $('#division-dropdown').dropdown('clear')
-            eventData.division.forEach(item => {
-                $('#division-dropdown').dropdown('set selected', item)
-            })
+            $('#division-dropdown').dropdown('set selected', eventData.division)
             $('#category-dropdown').dropdown('set selected', eventData.category)
-            console.log(eventData.category)
             $('#in-rotation').attr('checked', eventData.inRotation)
             $('#impound').attr('checked', eventData.impound)
             $('#state-event').attr('checked', eventData.stateEvent)
@@ -118,6 +115,7 @@ block scripts
         $('#new-event').click(() => {
             $('#event-modal .header').text('Create New Event')
             $('#name').val('')
+            $('#division-dropdown').dropdown('clear')
             $('#in-rotation').attr('checked', false)
             $('#impound').attr('checked', false)
             $('#state-event').attr('checked', false)
