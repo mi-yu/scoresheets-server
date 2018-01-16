@@ -1,5 +1,5 @@
 const ScoresheetEntry = require('../../models/ScoresheetEntry');
-const Team = require('../../models/Team')
+const Team = require('../../models/Team');
 
 exports.getScoresheetsInTournament = (req, res, next) => {
     ScoresheetEntry
@@ -56,15 +56,10 @@ exports.populateTotalsAndRankTeams = (req, res, next) => {
     // TODO: handle tiebreakers for sweepstakes
     teams.forEach((team, i) => {
         team.rank = i + 1;
-        Team.findByIdAndUpdate(team._id, {
-            $set: {
-                totalScore: team.totalScore,
-                rank: team.rank
-            }
-        }, (err, updated) => {
+        Team.findByIdAndUpdate(team._id, { $set: { totalScore: team.totalScore, rank: team.rank } }, (err, updated) => {
             if (err)
-                console.log(err)
-        })
+                console.log(err);
+        });
     });
 
     next();
@@ -82,8 +77,8 @@ exports.getTopTeamsPerEvent = (req, res, next) => {
 exports.getTopTeams = (req, res, next) => {
     Team.getTopTeams(4, req.params.tournamentId, (err, topTeams) => {
         if (err)
-            next(err)
-        res.locals.topTeams = topTeams
-        next()
-    })
-}
+            next(err);
+        res.locals.topTeams = topTeams;
+        next();
+    });
+};

@@ -1,5 +1,6 @@
 TODOS
 	-5 HANDLE HIGH/LOW SCORE WINS
+	-4 add scoresheet entry if adding event after tournament creation
 	-4 powerpoint making
 	-4 tiebreaking for sweepstakes
 	-3 fix results formating (not inlined CSS...)

@@ -24,16 +24,12 @@ Team.post('remove', doc => {
 });
 
 Team.statics.getTopTeams = function(n, id, cb) {
-    return this
-        .find({tournament: id})
-        .sort('rank')
-        .limit(n)
-        .exec((err, teams) => {
-            if (err)
-                cb(err)
-            else
-                cb(null, teams)
-        })
-}
+    return this.find({ tournament: id }).sort('rank').limit(n).exec((err, teams) => {
+        if (err)
+            cb(err);
+        else
+            cb(null, teams);
+    });
+};
 
 module.exports = mongoose.model('Team', Team);

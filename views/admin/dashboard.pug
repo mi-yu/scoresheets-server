@@ -36,6 +36,36 @@ block content
                 button#new-event.ui.button.green.opens-modal(data-target='#event-modal')
                     i.icon.plus
                     | New Event
+                .ui.dropdown.labeled.icon.button
+                    input(type='hidden', name='filters')
+                    i.filter.icon
+                    span.text Filter View
+                    .menu
+                        .item(data-value='important')
+                            .ui.red.empty.circular.label
+                            |         Important
+                        .item(data-value='announcement')
+                            .ui.blue.empty.circular.label
+                            |         Announcement
+                        .item(data-value='cannotfix')
+                            .ui.black.empty.circular.label
+                            |         Cannot Fix
+                        .item(data-value='news')
+                            .ui.purple.empty.circular.label
+                            |         News
+                        .item(data-value='enhancement')
+                            .ui.orange.empty.circular.label
+                            |         Enhancement
+                        .item(data-value='off-topic')
+                            .ui.yellow.empty.circular.label
+                            |         Off Topic
+                        .item(data-value='interesting')
+                            .ui.pink.empty.circular.label
+                            |         Interesting
+                        .item(data-value='discussion')
+                            .ui.green.empty.circular.label
+                            |         Discussion
+
                 .spacer
                 .ui.grid
                     each event in events
