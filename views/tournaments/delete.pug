@@ -10,7 +10,7 @@ block content
             | .
         p This cannot be undone. Proceed?
         br
-        form.ui.form(action='/tournaments/delete/' + tournament._id method='POST')
+        form.ui.form(action='/tournaments/' + tournament._id + '/delete' method='POST')
             .field
                 button.ui.button.red(type='submit') Delete
                 a.ui.button(href='/admin/dashboard') Cancel

@@ -2,14 +2,8 @@ extends ../layouts/basic
 
 block content
     #content(style='overflow-x: auto;'): .ui.container
-        //- a.ui.primary.button(href='/tournaments/manage/' + scoresheetEntry.tournament._id)
-        //-     i.angle.left.icon
-        //-     | Back to Tournament
-        //- h1.ui.header= scoresheetEntry.event.name
-        //-     .sub.header= scoresheetEntry.tournament.name
-        //- .spacer
         h1.ui.header #{entries[0].tournament.name} Results
-        a.ui.button.primary(href='/tournaments/manage/' + entries[0].tournament._id)
+        a.ui.button.primary(href='/tournaments/' + entries[0].tournament._id + '/manage')
             i.icon.angle.left
             | Back to Tournament
         a.ui.button.primary(href='/tournaments/' + entries[0].tournament._id + '/slideshow')

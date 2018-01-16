@@ -1,12 +1,9 @@
 TODOS
-	-5 HANDLE HIGH/LOW SCORE WINS
-	-4 add scoresheet entry if adding event after tournament creation
-	-4 powerpoint making
-	-4 tiebreaking for sweepstakes
+	-5 add scoresheet entry if adding event after tournament creation
+	-5 tiebreaking for sweepstakes
+	-4 powerpoint making (alternate divisions?)
 	-3 fix results formating (not inlined CSS...)
-	-3 event categories (bio, earth, life, inquiry, etc) for deeper analysis
 	-2 add division param to scoresheet routes
 	-2 mongoose schema statics
 	-2 improved error handling middleware
-	-2 update scoresheetEntries when adding/removing events from tournament
 	-1 research API naming/design

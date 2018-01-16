@@ -2,7 +2,7 @@ extends ../layouts/basic
 
 block content
     #content: .ui.container
-        a.ui.primary.button(href='/tournaments/manage/' + scoresheetEntry.tournament._id)
+        a.ui.primary.button(href='/tournaments/' + scoresheetEntry.tournament._id + '/manage')
             i.angle.left.icon
             | Back to Tournament
         h1.ui.header= scoresheetEntry.event.name

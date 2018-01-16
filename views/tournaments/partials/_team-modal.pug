@@ -2,7 +2,7 @@
     .close.icon
     .header Create New Team
     .content
-        form#new-team-form.ui.form(action = '/tournaments/edit/' + tournament._id + '/addTeam' method = 'post')
+        form#new-team-form.ui.form(action = '/tournaments/' + tournament._id + '/edit/addTeam' method = 'post')
             .field.required
                 label School
                 select#school.ui.search.dropdown(name='school' required autcomplete='false')

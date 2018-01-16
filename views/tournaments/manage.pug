@@ -40,7 +40,7 @@ block content
                                         button.ui.compact.button.opens-modal.edit-team(data-target='#team-modal' data-teamid=team._id)
                                             i.icon.edit
                                             | Edit
-                                        a.ui.compact.red.button(href='/tournaments/edit/' + tournament._id + '/' + team.division + '/deleteTeam/' + team.teamNumber)
+                                        a.ui.compact.red.button(href='/tournaments/' + tournament._id + '/edit/' + team.division + '/deleteTeam/' + team.teamNumber)
                                             i.icon.remove
                                             | Delete
 
@@ -60,10 +60,20 @@ block content
                                 .content
                                     .header= event.name
                                     .description
-                                        if (event.building)
-                                            .ui.tiny.brown.label Building
+                                        if (event.category === 'bio')
+                                            .ui.tiny.green.label Biology
+                                        if (event.category === 'earth')
+                                            .ui.tiny.brown.label Earth/Space
+                                        if (event.category === 'phys/chem')
+                                            .ui.tiny.orange.label Physics/Chemistry
+                                        if (event.category === 'building')
+                                            .ui.tiny.violet.label Building
+                                        if (event.category === 'inquiry')
+                                            .ui.tiny.pink.label Inquiry
+                                        if (event.stateEvent)
+                                            .ui.tiny.teal.label State/Trial
                                         if (event.impound)
-                                            .ui.tiny.orange.label Impound
+                                            .ui.tiny.grey.label Impound
                                         if (!event.done)
                                             .ui.tiny.grey.label Scoring in progress
                                 .extra.content
@@ -71,7 +81,8 @@ block content
                                         i.icon.trophy
                                         | Input/Manage Scores
         .ui.divider
-        a.ui.button.red(href='/tournaments/delete/' + tournament._id) Delete Tournament
+        a.ui.button.red(href='/tournaments/' + tournament._id + '/delete') Delete Tournament
+    br
     include partials/_tournament-modal
     include partials/_team-modal
 
@@ -132,7 +143,7 @@ block scripts
             $('#team-number-input').val(teamData.teamNumber)
 
             // Change form action
-            $('#team-modal form').attr('action', '/tournaments/edit/' + tournament._id + '/' + teamData.division + '/editTeam/' + teamData.teamNumber)
+            $('#team-modal form').attr('action', '/tournaments/' + tournament._id + '/edit/' + teamData.division + '/editTeam/' + teamData.teamNumber)
         })
 
         // Change form action and clear fields when opening new team modal
@@ -141,5 +152,5 @@ block scripts
             $('#add-school-input').val('')
             $('#team-number-input').val('')
 
-            $('#team-modal form').attr('action', '/tournaments/edit/' + tournament._id + '/addTeam')
+            $('#team-modal form').attr('action', '/tournaments/' + tournament._id + '/edit/addTeam')
         })

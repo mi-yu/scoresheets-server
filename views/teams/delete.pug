@@ -10,7 +10,7 @@ block content
             | .
         p This cannot be undone. Proceed?
         br
-        form.ui.form(action='/tournaments/edit/' + team.tournament._id + '/' + team.division + '/deleteTeam/' + team.teamNumber method='POST')
+        form.ui.form(action='/tournaments/' + team.tournament._id + '/edit/' + team.division + '/deleteTeam/' + team.teamNumber method='POST')
             .field
                 button.ui.button.red(type='submit') Delete
                 a.ui.button(href='javascript:history.back()') Cancel

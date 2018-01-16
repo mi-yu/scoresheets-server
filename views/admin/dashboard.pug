@@ -24,7 +24,7 @@ block content
                                 code.center.aligned= tournament.joinCode
 
                         .extra.content: .ui.two.buttons
-                            a.ui.button(href='/tournaments/manage/' + tournament._id) Manage
+                            a.ui.button(href='/tournaments/' + tournament._id + '/manage') Manage
                             a.ui.button(href='#') Edit Details
         .ui.divider
         h2.ui.header 2017-18 Season Events
@@ -66,6 +66,8 @@ block content
                                 .ui.tiny.pink.label Inquiry
                             if (event.stateEvent)
                                 .ui.tiny.teal.label State/Trial
+                            if (event.impound)
+                                .ui.tiny.grey.label Impound
                             each division in event.division
                                 .ui.tiny.grey.label= division
                     .extra.content

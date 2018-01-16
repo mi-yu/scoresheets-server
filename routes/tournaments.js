@@ -50,7 +50,7 @@ router.post('/new', needsGroup('admin'), (req, res, next) => {
     });
 });
 
-router.get('/delete/:id', needsGroup('admin'), (req, res, next) => {
+router.get('/:id/delete', needsGroup('admin'), (req, res, next) => {
     Tournament.findById(req.params.id, (err, result) => {
         if (err)
             req.flash('error', 'The requested tournament could not be found.');
@@ -58,7 +58,7 @@ router.get('/delete/:id', needsGroup('admin'), (req, res, next) => {
     });
 });
 
-router.post('/delete/:id', needsGroup('admin'), (req, res, next) => {
+router.post('/:id/delete', needsGroup('admin'), (req, res, next) => {
     Tournament.findByIdAndRemove(req.params.id, (err, deleted) => {
         deleted.remove();
         if (err)
@@ -70,7 +70,7 @@ router.post('/delete/:id', needsGroup('admin'), (req, res, next) => {
     });
 });
 
-router.get('/manage/:tournamentId', needsGroup('admin'), getCurrentEventsList, getSchoolsList, getTeamsInTournament, (
+router.get('/:tournamentId/manage', needsGroup('admin'), getCurrentEventsList, getSchoolsList, getTeamsInTournament, (
     req,
     res,
     next
@@ -88,12 +88,12 @@ router.get('/manage/:tournamentId', needsGroup('admin'), getCurrentEventsList, g
                         return 1;
                     return 0;
                 });
-                res.render('tournaments/manage', { tournament: result, action: '/tournaments/edit/' + result._id });
+                res.render('tournaments/manage', { tournament: result, action: '/tournaments/' + result._id + '/edit' });
             }
         });
     });
 
-router.post('/edit/:id', needsGroup('admin'), (req, res, next) => {
+router.post('/:id/edit', needsGroup('admin'), (req, res, next) => {
     Tournament.findByIdAndUpdate(
         req.params.id,
         {
@@ -110,13 +110,13 @@ router.post('/edit/:id', needsGroup('admin'), (req, res, next) => {
                 req.flash('error', 'There was an error updating the tournament details: ' + err);
             else
                 req.flash('success', 'Successfully updated tournament ' + updated.name);
-            res.redirect('/tournaments/manage/' + req.params.id);
+            res.redirect('/tournaments/' + req.params.id + '/manage');
         }
     );
 });
 
 router.post(
-    '/edit/:id/addTeam',
+    '/:id/edit/addTeam',
     needsGroup('admin'),
     (req, res, next) => {
         const team = new Team({
@@ -133,10 +133,10 @@ router.post(
             {
                 if (err) {
                     req.flash('error', 'An unknown error occurred: ' + err);
-                    res.redirect('/tournaments/manage/' + req.params.id);
+                    res.redirect('/tournaments/' + req.params.id + '/manage');
                 } else if (result) {
                     req.flash('error', 'A team with team number ' + req.body.teamNumber + ' already exists.');
-                    res.redirect('/tournaments/manage/' + req.params.id);
+                    res.redirect('/tournaments/' + req.params.id + '/manage');
                 } else {
                     team.save(err => {
                         if (err)
@@ -156,7 +156,7 @@ router.post(
     (req, res) => {
         if (req.error) {
             req.flash('error', req.error.message);
-            res.redirect('/tournaments/manage/' + req.params.id);
+            res.redirect('/tournaments/' + req.params.id + '/manage');
         } else {
             ScoresheetEntry.update(
                 { tournament: req.params.id },
@@ -165,14 +165,14 @@ router.post(
                 err => {
                     if (err)
                         req.flash('error', 'An unknown error occurred: ' + err);
-                    res.redirect('/tournaments/manage/' + req.params.id);
+                    res.redirect('/tournaments/' + req.params.id + '/manage');
                 }
             );
         }
     }
 );
 
-router.get('/edit/:tournamentId/:division/deleteTeam/:teamNumber', (req, res, next) => {
+router.get('/:tournamentId/edit/:division/deleteTeam/:teamNumber', (req, res, next) => {
     Team
         .findOne({
             tournament: req.params.tournamentId,
@@ -188,19 +188,21 @@ router.get('/edit/:tournamentId/:division/deleteTeam/:teamNumber', (req, res, ne
         });
 });
 
-router.post('/edit/:tournamentId/:division/deleteTeam/:teamNumber', (req, res, next) => {
+router.post('/:tournamentId/edit/:division/deleteTeam/:teamNumber', (req, res, next) => {
     Team.findOne(
         { tournament: req.params.tournamentId, teamNumber: req.params.teamNumber, division: req.params.division },
         (err, result) => {
             result.remove();
             if (err)
                 req.flash('error', 'Unable to find team ' + req.params.teamNumber + ': ' + err);
-            res.redirect('/tournaments/manage/' + req.params.tournamentId);
+            else
+                req.flash('success', 'Successfully deleted team ' + req.params.division + req.params.teamNumber)
+            res.redirect('/tournaments/' + req.params.tournamentId + '/manage');
         }
     );
 });
 
-router.post('/edit/:tournamentId/:division/editTeam/:teamNumber', (req, res, next) => {
+router.post('/:tournamentId/edit/:division/editTeam/:teamNumber', (req, res, next) => {
     Team.findOne(
         { tournament: req.params.tournamentId, teamNumber: req.params.teamNumber, division: req.params.division },
         (err, result) => {
@@ -215,7 +217,7 @@ router.post('/edit/:tournamentId/:division/editTeam/:teamNumber', (req, res, nex
                     req.flash('error', 'There was an error saving team ' + result.teamNumber + ': ' + err);
                 else
                     req.flash('success', 'Successfully updated team ' + result.teamNumber);
-                res.redirect('/tournaments/manage/' + req.params.tournamentId);
+                res.redirect('/tournaments/' + req.params.tournamentId + '/manage');
             });
         }
     );
