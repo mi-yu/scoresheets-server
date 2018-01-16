@@ -74,11 +74,20 @@ exports.getTopTeamsPerEvent = (req, res, next) => {
     });
 };
 
-exports.getTopTeams = (req, res, next) => {
-    Team.getTopTeams(4, req.params.tournamentId, req.params.division, (err, topTeams) => {
+exports.getTopBTeams = (req, res, next) => {
+    Team.getTopTeams(4, req.params.tournamentId, 'B', (err, topTeams) => {
         if (err)
             next(err);
-        res.locals.topTeams = topTeams;
+        res.locals.topBTeams = topTeams;
+        next();
+    });
+};
+
+exports.getTopCTeams = (req, res, next) => {
+    Team.getTopTeams(4, req.params.tournamentId, 'C', (err, topTeams) => {
+        if (err)
+            next(err);
+        res.locals.topCTeams = topTeams;
         next();
     });
 };

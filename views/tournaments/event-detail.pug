@@ -2,7 +2,6 @@ extends ../layouts/basic
 
 block content
     #content: .ui.container
-        pre= JSON.stringify(teams)
         a.ui.primary.button(href='/tournaments/' + scoresheetEntry.tournament._id + '/manage')
             i.angle.left.icon
             | Back to Tournament

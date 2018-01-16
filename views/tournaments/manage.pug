@@ -17,6 +17,9 @@ block content
         a.ui.button.primary(href='/tournaments/' + tournament._id + '/C/results')
             i.icon.trophy
             | C Results
+        a.ui.button.primary(href='/tournaments/' + tournament._id + '/slideshow')
+            i.icon.trophy
+            | Awards Slideshow
         .ui.divider
         .ui.accordion
             h3.ui.title.active
@@ -27,9 +30,10 @@ block content
                     i.plus.icon
                     | New Team
                 .spacer
-                if (teams)
-                    .ui.grid
-                        each team in teams
+                h3.ui.header B Teams
+                .ui.grid
+                    each team in teams
+                        if (team.division === 'B')
                             .four.wide.column: .ui.card
                                 .content
                                     .header= team.division + team.teamNumber
@@ -37,7 +41,28 @@ block content
                                         span= team.school
                                 .extra.content
                                     .ui.three.icon.buttons
-                                        a.ui.compact.button(href='#') 
+                                        a.ui.compact.disabled.button(href='#') 
+                                            i.icon.trophy
+                                            | Scores
+                                        button.ui.compact.button.opens-modal.edit-team(data-target='#team-modal' data-teamid=team._id)
+                                            i.icon.edit
+                                            | Edit
+                                        a.ui.compact.red.button(href='/tournaments/' + tournament._id + '/edit/' + team.division + '/deleteTeam/' + team.teamNumber)
+                                            i.icon.remove
+                                            | Delete
+                .ui.divider
+                h3.ui.header C Teams
+                .ui.grid
+                    each team in teams
+                        if (team.division === 'C')
+                            .four.wide.column: .ui.card
+                                .content
+                                    .header= team.division + team.teamNumber
+                                    .meta
+                                        span= team.school
+                                .extra.content
+                                    .ui.three.icon.buttons
+                                        a.ui.compact.disabled.button(href='#') 
                                             i.icon.trophy
                                             | Scores
                                         button.ui.compact.button.opens-modal.edit-team(data-target='#team-modal' data-teamid=team._id)
@@ -82,7 +107,7 @@ block content
                                 .extra.content
                                     if (event.division === 'BC')
                                         .ui.dropdown.labeled.icon.button.fluid
-                                            i.filter.icon
+                                            i.dropdown.icon
                                             span.text Select Division
                                             .menu
                                                 a.item(href='/scoresheets/' + tournament._id + '/scores/B/' + event._id)
@@ -152,8 +177,9 @@ block scripts
             let teamData = teams.find(team => team._id === $this.data('teamid'))
 
             // Populate data
-            $('#team-modal .header').text('Edit team ' + teamData.teamNumber)
+            $('#team-modal .header').text('Edit team ' + teamData.division + teamData.teamNumber)
             $schoolDropdown.dropdown('set selected', teamData.school)
+            $('#division-dropdown').dropdown('set selected', teamData.division)
             $('#add-school-input').val('')
             $('#team-number-input').val(teamData.teamNumber)
 

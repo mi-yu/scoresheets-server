@@ -36,6 +36,7 @@ router.get('/:tournamentId/scores/:division/:eventId', needsGroup('admin'), getT
 
 router.post('/:scoresheetId/updateEvent/:eventName', needsGroup('admin'), (req, res, next) => {
     ScoresheetEntry.findById(req.params.scoresheetId, (err, sse) => {
+        console.log(sse)
         if (err)
             req.flash('error', 'An unknown error occurred: ' + err);
         Object.keys(req.body).forEach(id => {
@@ -54,12 +55,12 @@ router.post('/:scoresheetId/updateEvent/:eventName', needsGroup('admin'), (req, 
                     req.flash('error', err.message);
                 else
                     req.flash('success', 'Successfully updated scores for ' + req.params.eventName);
-                res.redirect('/scoresheets/' + sse.tournament + '/scores/' + sse.event);
+                res.redirect('/scoresheets/' + sse.tournament + '/scores/' + sse.division + '/' + sse.event);
             });
         } catch (err) {
             console.log('thrown error');
             req.flash('error', err.message);
-            res.redirect('/scoresheets/' + sse.tournament + '/scores/' + sse.event);
+            res.redirect('/scoresheets/' + sse.tournament + '/scores/' + sse.division + '/' + sse.event);
         }
     });
 });

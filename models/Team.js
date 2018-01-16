@@ -24,7 +24,12 @@ Team.post('remove', doc => {
 });
 
 Team.statics.getTopTeams = function(n, id, d, cb) {
-    return this.find({ tournament: id, division: d}).sort('rank').limit(n).exec((err, teams) => {
+    let regex;
+    if (!d)
+        regex = /(B|C)/
+    else
+        regex = d
+    return this.find({ tournament: id, division: regex}).sort('rank').limit(n).exec((err, teams) => {
         if (err)
             cb(err);
         else

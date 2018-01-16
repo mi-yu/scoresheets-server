@@ -92,9 +92,14 @@ ScoresheetEntry.methods.rank = function(cb) {
 };
 
 ScoresheetEntry.statics.getTopTeamsPerEvent = function(n, id, d, cb) {
+    let regex;
+    if (!d)
+        regex = /(B|C)/
+    else
+        regex = d
     return this
-        .find({ tournament: id, division: d })
-        .select('event scores')
+        .find({ tournament: id, division: regex })
+        .select('event scores division')
         .populate('event scores.team')
         .lean()
         .exec((err, entries) => {
