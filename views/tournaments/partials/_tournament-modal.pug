@@ -68,7 +68,7 @@
                 input#date(type='date' name='date' required autocomplete='false')
             .field.required
                 label Events
-                select#events.ui.fluid.search.dropdown(name='events' multiple required autocomplete='false')
+                select#events-dropdown.ui.fluid.search.dropdown(name='events' multiple required autocomplete='false')
                     each event in events
                         if (event.inRotation)
                             option(value=event._id)= event.name
@@ -76,6 +76,18 @@
                 a#add-all-events.ui.primary.button
                     i.icon.plus
                     | All Events
+                a#add-b-only.ui.button.teal
+                    i.icon.plus
+                    | B only
+                a#add-b-and-trials.ui.button.teal
+                    i.icon.plus
+                    | B only + trials
+                a#add-c-only.ui.button.teal
+                    i.icon.plus
+                    | C only
+                a#add-c-and-trials.ui.button.teal
+                    i.icon.plus
+                    | C only + trials
                 a#clear-events.ui.button
                     i.icon.delete
                     | Clear Events
