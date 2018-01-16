@@ -7,10 +7,11 @@
 				label Name
 				input#name(type='text' name='name' required)
 			.field.required
-				label Division (select all applicable)
-				select#division-dropdown.ui.dropdown(name='division' multiple required)
+				label Division
+				select#division-dropdown.ui.dropdown(name='division' required)
 					option(value='B') B
 					option(value='C') C
+					option(value='BC') B and C
 			.field.required
 				label Category
 				select#category-dropdown.ui.dropdown(name='category' required)

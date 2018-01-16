@@ -6,11 +6,11 @@ const Team = require('../models/Team');
 const ScoresheetEntry = require('../models/ScoresheetEntry');
 const helpers = require('./helpers');
 const needsGroup = helpers.needsGroup;
-const getTeamsInTournament = helpers.getTeamsInTournament;
+const getTeamsInTournamentByDivision = helpers.getTeamsInTournamentByDivision;
 
-router.get('/:tournamentId/scores/:eventId', needsGroup('admin'), getTeamsInTournament, (req, res, next) => {
+router.get('/:tournamentId/scores/:division/:eventId', needsGroup('admin'), getTeamsInTournamentByDivision, (req, res, next) => {
     ScoresheetEntry
-        .findOne({ tournament: req.params.tournamentId, event: req.params.eventId })
+        .findOne({ tournament: req.params.tournamentId, event: req.params.eventId, division: req.params.division })
         .populate('tournament event scores.team')
         .exec((err, result) => {
             if (err)

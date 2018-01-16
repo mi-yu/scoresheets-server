@@ -44,12 +44,20 @@ module.exports = {
             next();
         });
     },
-    getTeamsInTournament: (req, res, next) => {
-        Team.find({ tournament: req.params.tournamentId }).lean().sort('teamNumber').exec((err, results) => {
+    getTeamsInTournamentByDivision: (req, res, next) => {
+        Team.find({ tournament: req.params.tournamentId, division: req.params.division }).lean().sort('teamNumber').exec((err, results) => {
             if (err)
                 req.flash('error', 'Could not load teams: ' + err);
             res.locals.teams = results;
             next();
         });
+    },
+    getAllTeamsInTournament: (req, res, next) => {
+        Team.find({tournament: req.params.tournamentId}).lean().sort('teamNumber').exec((err, results) => {
+            if (err)
+                req.flash('error', err.message)
+            res.locals.teams = results
+            next();
+        })
     }
 };

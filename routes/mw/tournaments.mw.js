@@ -3,7 +3,7 @@ const Team = require('../../models/Team');
 
 exports.getScoresheetsInTournament = (req, res, next) => {
     ScoresheetEntry
-        .find({ tournament: req.params.tournamentId })
+        .find({ tournament: req.params.tournamentId, division: req.params.division })
         .populate('tournament scores.team')
         .populate({ path: 'event', select: 'name' })
         .exec((err, entries) => {
@@ -66,7 +66,7 @@ exports.populateTotalsAndRankTeams = (req, res, next) => {
 };
 
 exports.getTopTeamsPerEvent = (req, res, next) => {
-    ScoresheetEntry.getTopTeamsPerEvent(4, req.params.tournamentId, (err, topTeamsPerEvent) => {
+    ScoresheetEntry.getTopTeamsPerEvent(4, req.params.tournamentId, req.params.division, (err, topTeamsPerEvent) => {
         if (err)
             next(err);
         res.locals.topTeamsPerEvent = topTeamsPerEvent;
@@ -75,7 +75,7 @@ exports.getTopTeamsPerEvent = (req, res, next) => {
 };
 
 exports.getTopTeams = (req, res, next) => {
-    Team.getTopTeams(4, req.params.tournamentId, (err, topTeams) => {
+    Team.getTopTeams(4, req.params.tournamentId, req.params.division, (err, topTeams) => {
         if (err)
             next(err);
         res.locals.topTeams = topTeams;

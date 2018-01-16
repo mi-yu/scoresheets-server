@@ -11,9 +11,12 @@ block content
         button.ui.button.primary.opens-modal(data-target='#tournament-modal')
             i.icon.edit
             | Edit Details
-        a.ui.button.primary(href='/tournaments/' + tournament._id + '/results')
+        a.ui.button.primary(href='/tournaments/' + tournament._id + '/B/results')
             i.icon.trophy
-            | Results
+            | B Results
+        a.ui.button.primary(href='/tournaments/' + tournament._id + '/C/results')
+            i.icon.trophy
+            | C Results
         .ui.divider
         .ui.accordion
             h3.ui.title.active
@@ -77,9 +80,21 @@ block content
                                         if (!event.done)
                                             .ui.tiny.grey.label Scoring in progress
                                 .extra.content
-                                    a.fluid.ui.button(href='/scoresheets/' + tournament._id + '/scores/' + event._id)
-                                        i.icon.trophy
-                                        | Input/Manage Scores
+                                    if (event.division === 'BC')
+                                        .ui.dropdown.labeled.icon.button.fluid
+                                            i.filter.icon
+                                            span.text Select Division
+                                            .menu
+                                                a.item(href='/scoresheets/' + tournament._id + '/scores/B/' + event._id)
+                                                    i.icon.trophy
+                                                    | Manage B Scores
+                                                a.item(href='/scoresheets/' + tournament._id + '/scores/C/' + event._id)
+                                                    i.icon.trophy
+                                                    | Manage C Scores
+                                    else
+                                        a.fluid.ui.button(href='/scoresheets/' + tournament._id + '/scores/' + event.division + '/' + event._id)
+                                            i.icon.trophy
+                                            | Manage Scores
         .ui.divider
         a.ui.button.red(href='/tournaments/' + tournament._id + '/delete') Delete Tournament
     br

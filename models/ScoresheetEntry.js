@@ -16,6 +16,7 @@ const Score = new Schema({
 const ScoresheetEntry = new Schema({
     tournament: { type: Schema.Types.ObjectId, ref: 'Tournament', required: true },
     event: { type: Schema.Types.ObjectId, ref: 'Event', required: true },
+    division: { type: String, required: true, enum: ['B', 'C']},
     scores: [ Score ],
     maxScore: Number,
     locked: { type: Boolean, default: false }
@@ -90,9 +91,9 @@ ScoresheetEntry.methods.rank = function(cb) {
 
 };
 
-ScoresheetEntry.statics.getTopTeamsPerEvent = function(n, id, cb) {
+ScoresheetEntry.statics.getTopTeamsPerEvent = function(n, id, d, cb) {
     return this
-        .find({ tournament: id })
+        .find({ tournament: id, division: d })
         .select('event scores')
         .populate('event scores.team')
         .lean()

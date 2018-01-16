@@ -9,7 +9,8 @@ const helpers = require('./helpers');
 const needsGroup = helpers.needsGroup;
 const getCurrentEventsList = helpers.getCurrentEventsList;
 const getSchoolsList = helpers.getSchoolsList;
-const getTeamsInTournament = helpers.getTeamsInTournament;
+const getTeamsInTournamentByDivision = helpers.getTeamsInTournamentByDivision;
+const getAllTeamsInTournament = helpers.getAllTeamsInTournament;
 const mw = require('./mw/tournaments.mw.js');
 
 /* GET users listing. */
@@ -26,11 +27,6 @@ router.post('/new', needsGroup('admin'), (req, res, next) => {
         events: req.body.events
     });
 
-    let entries = [];
-    req.body.events.forEach(eventId => {
-        entries.push({ tournament: tournament._id, event: eventId });
-    });
-
     tournament.save(err => {
         if (err && err.code === 11000) {
             req.flash('error', 'A tournament named "' + tournament.name + '" already exists.');
@@ -39,13 +35,8 @@ router.post('/new', needsGroup('admin'), (req, res, next) => {
             req.flash('error', 'An unknown error occurred: ' + err);
             res.redirect('/admin/dashboard');
         } else {
-            ScoresheetEntry.create(entries, err => {
-                if (err)
-                    req.flash('error', 'An unknown error occurred: ' + err);
-                else
-                    req.flash('success', 'Successfully created tournament "' + tournament.name + '"');
-                res.redirect('/admin/dashboard');
-            });
+            req.flash('success', 'Successfully created tournament "' + tournament.name + '"');
+            res.redirect('/admin/dashboard');
         }
     });
 });
@@ -70,7 +61,7 @@ router.post('/:id/delete', needsGroup('admin'), (req, res, next) => {
     });
 });
 
-router.get('/:tournamentId/manage', needsGroup('admin'), getCurrentEventsList, getSchoolsList, getTeamsInTournament, (
+router.get('/:tournamentId/manage', needsGroup('admin'), getCurrentEventsList, getSchoolsList, getAllTeamsInTournament, (
     req,
     res,
     next
@@ -146,7 +137,7 @@ router.post(
                                 'success',
                                 'Successfully created team ' + team.teamNumber + ' (' + team.school + ').'
                             );
-                            res.locals.teamId = team._id;
+                            res.locals.addedTeam = team;
                         }
                         next();
                     });
@@ -159,8 +150,8 @@ router.post(
             res.redirect('/tournaments/' + req.params.id + '/manage');
         } else {
             ScoresheetEntry.update(
-                { tournament: req.params.id },
-                { $push: { scores: { team: res.locals.teamId } } },
+                { tournament: req.params.id, division: res.locals.addedTeam.division },
+                { $push: { scores: { team: res.locals.addedTeam._id } } },
                 { multi: true },
                 err => {
                     if (err)
@@ -224,17 +215,18 @@ router.post('/:tournamentId/edit/:division/editTeam/:teamNumber', (req, res, nex
 });
 
 router.get(
-    '/:tournamentId/results',
-    getTeamsInTournament,
+    '/:tournamentId/:division/results',
+    getTeamsInTournamentByDivision,
     mw.getScoresheetsInTournament,
     mw.populateTotalsAndRankTeams,
     (req, res, next) => {
+        res.locals.division = req.params.division
         res.render('tournaments/results');
     }
 );
 
 //TODO: variable top ranks
-router.get('/:tournamentId/slideshow', mw.getTopTeamsPerEvent, mw.getTopTeams, (req, res, next) => {
+router.get('/:tournamentId/:division/slideshow', mw.getTopTeamsPerEvent, mw.getTopTeams, (req, res, next) => {
     res.render('tournaments/slideshow');
 });
 

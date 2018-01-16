@@ -8,7 +8,7 @@ const divisionValidator = [ val => /^(B|C)$/.test(val), 'Division must be either
 const Team = new Schema({
     tournament: { type: Schema.Types.ObjectId, ref: 'Tournament', required: true },
     school: String,
-    division: { type: String, required: true, validate: divisionValidator },
+    division: { type: String, required: true, enum: ['B', 'C'] },
     teamNumber: { type: Number, required: true, min: 1 },
     totalScore: Number,
     rank: Number
@@ -23,8 +23,8 @@ Team.post('remove', doc => {
     });
 });
 
-Team.statics.getTopTeams = function(n, id, cb) {
-    return this.find({ tournament: id }).sort('rank').limit(n).exec((err, teams) => {
+Team.statics.getTopTeams = function(n, id, d, cb) {
+    return this.find({ tournament: id, division: d}).sort('rank').limit(n).exec((err, teams) => {
         if (err)
             cb(err);
         else
