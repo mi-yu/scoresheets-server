@@ -2,7 +2,7 @@ const mongoose = require('mongoose'), Schema = mongoose.Schema, Event = require(
 
 const Score = new Schema({
     team: { type: Schema.Types.ObjectId, ref: 'Team', required: true },
-    rawScore: {type: Number, min: 0},
+    rawScore: { type: Number, min: 0 },
     tiebreaker: Number,
     tier: { type: Number, default: 1, required: true },
     dq: { type: Boolean, default: false },
@@ -16,7 +16,7 @@ const Score = new Schema({
 const ScoresheetEntry = new Schema({
     tournament: { type: Schema.Types.ObjectId, ref: 'Tournament', required: true },
     event: { type: Schema.Types.ObjectId, ref: 'Event', required: true },
-    division: { type: String, required: true, enum: ['B', 'C']},
+    division: { type: String, required: true, enum: [ 'B', 'C' ] },
     scores: [ Score ],
     maxScore: Number,
     locked: { type: Boolean, default: false }
@@ -64,8 +64,8 @@ ScoresheetEntry.methods.rank = function(cb) {
             if (s1.rawScore === s2.rawScore && s1.tiebreaker > s2.tiebreaker)
                 return -1;
             throw new Error('Tie must be broken between');
-        })
-    
+        });
+
         scores.forEach((score, i) => {
             if (!score.dq && !score.noShow && !score.participationOnly && !score.dropped && score.rawScore !== 0)
                 score.rank = i + 1;
@@ -88,15 +88,14 @@ ScoresheetEntry.methods.rank = function(cb) {
                 cb();
         });
     });
-
 };
 
 ScoresheetEntry.statics.getTopTeamsPerEvent = function(n, id, d, cb) {
     let regex;
     if (!d)
-        regex = /(B|C)/
+        regex = /(B|C)/;
     else
-        regex = d
+        regex = d;
     return this
         .find({ tournament: id, division: regex })
         .select('event scores division')
@@ -132,22 +131,22 @@ ScoresheetEntry.statics.getTopTeamsPerEvent = function(n, id, d, cb) {
             });
 
             // Order B events before C events
-            const sortedEntries = []
-            let b = 0
-            let c = 0
-            while(sortedEntries.length < entries.length) {
-                while(entries[b].division !== 'B')
-                    b++
+            const sortedEntries = [];
+            let b = 0;
+            let c = 0;
+            while (sortedEntries.length < entries.length) {
+                while (entries[b].division !== 'B')
+                    b++;
                 if (b < entries.length) {
-                    sortedEntries.push(entries[b])
-                    b++
+                    sortedEntries.push(entries[b]);
+                    b++;
                 }
 
-                while(entries[c].division !== 'C')
-                    c++
+                while (entries[c].division !== 'C')
+                    c++;
                 if (c < entries.length) {
-                    sortedEntries.push(entries[c])
-                    c++
+                    sortedEntries.push(entries[c]);
+                    c++;
                 }
             }
 

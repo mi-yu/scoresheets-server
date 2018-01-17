@@ -15,33 +15,25 @@ const Tournament = new Schema({
 
 // Create ScoresheetEntries after successful save
 Tournament.post('save', doc => {
-    Event
-        .find({_id: {$in: doc.events}})
-        .select('division name')
-        .lean()
-        .exec((err, events) => {
+    Event.find({ _id: { $in: doc.events } }).select('division name').lean().exec((err, events) => {
+        if (err)
+            console.log(err);
+
+        let entries = [];
+        events.forEach(event => {
+            event.division.split('').forEach(div => {
+                entries.push({ tournament: doc._id, event: event._id, division: div });
+            });
+        });
+
+        ScoresheetEntry.collection.insert(entries, (err, docs) => {
             if (err)
-                console.log(err)
-
-            let entries = []
-            events.forEach(event => {
-                event.division.split('').forEach(div => {
-                    entries.push({
-                        tournament: doc._id,
-                        event: event._id,
-                        division: div
-                    })
-                })
-            })
-
-            ScoresheetEntry.collection.insert(entries, (err, docs) => {
-                if (err)
-                    throw new Error(err)
-                else
-                    console.info('%d documents inserted', docs)
-            })
-        })
-})
+                throw new Error(err);
+            else
+                console.info('%d documents inserted', docs);
+        });
+    });
+});
 
 // Remove all scoresheet entries that reference deleted tournament.
 Tournament.post('remove', doc => {
@@ -50,7 +42,7 @@ Tournament.post('remove', doc => {
         if (err)
             console.log(err);
         else
-            console.log('removed ' + numRemoved.n + ' documents')
+            console.log('removed ' + numRemoved.n + ' documents');
     });
 });
 
@@ -61,7 +53,7 @@ Tournament.post('remove', doc => {
         if (err)
             console.log(err);
         else
-            console.log('removed ' + numRemoved.n + ' documents')
+            console.log('removed ' + numRemoved.n + ' documents');
     });
 });
 

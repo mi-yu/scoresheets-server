@@ -8,35 +8,40 @@ const helpers = require('./helpers');
 const needsGroup = helpers.needsGroup;
 const getTeamsInTournamentByDivision = helpers.getTeamsInTournamentByDivision;
 
-router.get('/:tournamentId/scores/:division/:eventId', needsGroup('admin'), getTeamsInTournamentByDivision, (req, res, next) => {
-    ScoresheetEntry
-        .findOne({ tournament: req.params.tournamentId, event: req.params.eventId, division: req.params.division })
-        .populate('tournament event scores.team')
-        .exec((err, result) => {
-            if (err)
-                req.flash('error', 'An unknown error occurred: ' + err);
-            else if (!result)
-                req.flash('error', 'Could not get scoresheet entry')
-            else {
-                // Sort scores by team number
-                result.scores.sort((s1, s2) => {
-                    let t1 = s1.team.teamNumber;
-                    let t2 = s2.team.teamNumber;
-                    if (t1 > t2)
-                        return 1;
-                    if (t1 === t2)
-                        return 0;
-                    if (t1 < t2)
-                        return -1;
-                });
-            }
-            res.render('tournaments/event-detail', { scoresheetEntry: result });
-        });
-});
+router.get('/:tournamentId/scores/:division/:eventId', needsGroup('admin'), getTeamsInTournamentByDivision, (
+    req,
+    res,
+    next
+) =>
+    {
+        ScoresheetEntry
+            .findOne({ tournament: req.params.tournamentId, event: req.params.eventId, division: req.params.division })
+            .populate('tournament event scores.team')
+            .exec((err, result) => {
+                if (err)
+                    req.flash('error', 'An unknown error occurred: ' + err);
+                else if (!result)
+                    req.flash('error', 'Could not get scoresheet entry');
+                else {
+                    // Sort scores by team number
+                    result.scores.sort((s1, s2) => {
+                        let t1 = s1.team.teamNumber;
+                        let t2 = s2.team.teamNumber;
+                        if (t1 > t2)
+                            return 1;
+                        if (t1 === t2)
+                            return 0;
+                        if (t1 < t2)
+                            return -1;
+                    });
+                }
+                res.render('tournaments/event-detail', { scoresheetEntry: result });
+            });
+    });
 
 router.post('/:scoresheetId/updateEvent/:eventName', needsGroup('admin'), (req, res, next) => {
     ScoresheetEntry.findById(req.params.scoresheetId, (err, sse) => {
-        console.log(sse)
+        console.log(sse);
         if (err)
             req.flash('error', 'An unknown error occurred: ' + err);
         Object.keys(req.body).forEach(id => {

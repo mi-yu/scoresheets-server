@@ -61,12 +61,13 @@ router.post('/:id/delete', needsGroup('admin'), (req, res, next) => {
     });
 });
 
-router.get('/:tournamentId/manage', needsGroup('admin'), getCurrentEventsList, getSchoolsList, getAllTeamsInTournament, (
-    req,
-    res,
-    next
-) =>
-    {
+router.get(
+    '/:tournamentId/manage',
+    needsGroup('admin'),
+    getCurrentEventsList,
+    getSchoolsList,
+    getAllTeamsInTournament,
+    (req, res, next) => {
         Tournament.findById(req.params.tournamentId).populate('events').exec((err, result) => {
             if (err) {
                 req.flash('error', 'The requested tournament could not be found.');
@@ -79,10 +80,15 @@ router.get('/:tournamentId/manage', needsGroup('admin'), getCurrentEventsList, g
                         return 1;
                     return 0;
                 });
-                res.render('tournaments/manage', { tournament: result, action: '/tournaments/' + result._id + '/edit' });
+                res.locals.title = result.name + ': Manage';
+                res.render('tournaments/manage', {
+                    tournament: result,
+                    action: '/tournaments/' + result._id + '/edit'
+                });
             }
         });
-    });
+    }
+);
 
 router.post('/:id/edit', needsGroup('admin'), (req, res, next) => {
     Tournament.findByIdAndUpdate(
@@ -187,7 +193,7 @@ router.post('/:tournamentId/edit/:division/deleteTeam/:teamNumber', (req, res, n
             if (err)
                 req.flash('error', 'Unable to find team ' + req.params.teamNumber + ': ' + err);
             else
-                req.flash('success', 'Successfully deleted team ' + req.params.division + req.params.teamNumber)
+                req.flash('success', 'Successfully deleted team ' + req.params.division + req.params.teamNumber);
             res.redirect('/tournaments/' + req.params.tournamentId + '/manage');
         }
     );
@@ -220,7 +226,7 @@ router.get(
     mw.getScoresheetsInTournament,
     mw.populateTotalsAndRankTeams,
     (req, res, next) => {
-        res.locals.division = req.params.division
+        res.locals.division = req.params.division;
         res.render('tournaments/results');
     }
 );

@@ -1,46 +1,46 @@
 #event-modal.ui.modal
-	.close.icon
-	.header= 'New Event'
-	.content
-		form#new-event-form.ui.form(action='/events/new' method='post')
-			.field.required
-				label Name
-				input#name(type='text' name='name' required)
-			.field.required
-				label Division
-				select#division-dropdown.ui.dropdown(name='division' required)
-					option(value='B') B
-					option(value='C') C
-					option(value='BC') B and C
-			.field.required
-				label Category
-				select#category-dropdown.ui.dropdown(name='category' required)
-					option(value='bio') Life, Personal & Social
-					option(value='earth') Earth and Space
-					option(value='phys/chem') Physical Science and Chemistry
-					option(value='building') Technology & Engineering
-					option(value='inquiry') Inquiry & Nature of Science
-			.field
-				label Resources Allowed (1 binder, 4 sheets of paper, etc)
-				input#resources(type='text' name='resources')
-			p: strong Other Options
-			.inline.fields
-				.field: .ui.checkbox
-					input#in-rotation(type='checkbox' name='inRotation')
-					label In rotation?
-				.field: .ui.checkbox
-					input#impound(type='checkbox' name='impound')
-					label Requires Impound?
-				.field: .ui.checkbox
-					input#state-event(type='checkbox' name='stateEvent')
-					label State/Trial Event?
-				.field: .ui.checkbox
-					input#high-score-wins(type='checkbox' name='highScoreWins')
-					label High Score Wins?
-			.field
-				.field
-					label Current Topic (tectonics, stellar evolution, etc)
-					input#current-topic(type='text' name='currentTopic')
-	.actions
-		button.ui.green.button(type='submit' form='new-event-form') Save
-		button.ui.cancel.button Cancel
+    .close.icon
+    .header= 'New Event'
+    .content
+        form#new-event-form.ui.form(action='/events/new' method='post')
+            .field.required
+                label Name
+                input#name(type='text' name='name' required)
+            .field.required
+                label Division
+                select#division-dropdown.ui.dropdown(name='division' required)
+                    option(value='B') B
+                    option(value='C') C
+                    option(value='BC') B and C
+            .field.required
+                label Category
+                select#category-dropdown.ui.dropdown(name='category' required)
+                    option(value='bio') Life, Personal & Social
+                    option(value='earth') Earth and Space
+                    option(value='phys/chem') Physical Science and Chemistry
+                    option(value='building') Technology & Engineering
+                    option(value='inquiry') Inquiry & Nature of Science
+            .field
+                label Resources Allowed (1 binder, 4 sheets of paper, etc)
+                input#resources(type='text' name='resources')
+            p: strong Other Options
+            .inline.fields
+                .field: .ui.checkbox
+                    input#in-rotation(type='checkbox' name='inRotation')
+                    label In rotation?
+                .field: .ui.checkbox
+                    input#impound(type='checkbox' name='impound')
+                    label Requires Impound?
+                .field: .ui.checkbox
+                    input#state-event(type='checkbox' name='stateEvent')
+                    label State/Trial Event?
+                .field: .ui.checkbox
+                    input#high-score-wins(type='checkbox' name='highScoreWins')
+                    label High Score Wins?
+            .field
+                .field
+                    label Current Topic (tectonics, stellar evolution, etc)
+                    input#current-topic(type='text' name='currentTopic')
+    .actions
+        button.ui.green.button(type='submit' form='new-event-form') Save
+        button.ui.cancel.button Cancel

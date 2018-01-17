@@ -140,7 +140,7 @@ block scripts
 
         // Pre-fill events field in tournament form
         tournament.events.forEach((event) => {
-            $('#events').dropdown('set selected', event.name)
+            $('#events-dropdown').dropdown('set selected', event._id)
         })
         let date = new Date(tournament.date)
         $('#date').val(date.toISOString().substr(0, 10))

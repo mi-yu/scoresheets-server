@@ -65,8 +65,8 @@ mongoose.Promise = global.Promise;
 app.use((req, res, next) => {
     res.locals.user = req.user;
     if (process.env.NODE_ENV === 'development') {
-        res.locals.user = {}
-        res.locals.user.group = 'admin'
+        res.locals.user = {};
+        res.locals.user.group = 'admin';
     }
     next();
 });

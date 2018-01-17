@@ -2,7 +2,7 @@ extends ../layouts/basic
 
 block content
     #content(style='overflow-x: auto;'): .ui.container
-        h1.ui.header #{entries[0].tournament.name} Results
+        h1.ui.header #{entries[0].tournament.name} Results Division #{division}
         a.ui.button.primary(href='/tournaments/' + entries[0].tournament._id + '/manage')
             i.icon.angle.left
             | Back to Tournament
@@ -22,10 +22,4 @@ block content
                             td.center.aligned= score
                         td.center.aligned= team.totalScore
                         td.center.aligned= team.rank
-
-
         .spacer
-
-
-
-
