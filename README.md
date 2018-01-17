@@ -3,7 +3,7 @@ A scorekeeping and judging system for Science Olympiad tournaments.
 
 ### Features:
 - [x] Allows event supervisors to submit scores
-- [ ] Automatic generation of scoresheets and awards presentation
+- [x] Automatic generation of scoresheets and awards presentation
 - [ ] ESUS-like time slot registration
 - [ ] Team, schedule, and room management system
 
