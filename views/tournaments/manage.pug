@@ -134,7 +134,9 @@ block scripts
 
         // Initialize dropdowns and accordions
         $('.ui.dropdown').dropdown()
-        $('.ui.accordion').accordion()
+        $('.ui.accordion').accordion({
+            'animateChildren': false
+        })
 
         // Pre-fill events field in tournament form
         tournament.events.forEach((event) => {

@@ -50,6 +50,18 @@ exports.populateTotalsAndRankTeams = (req, res, next) => {
             return 1;
         if (a.totalScore < b.totalScore)
             return -1;
+
+        // Tiebreaker
+        for (let i = 1; i < teams.length + 1; i++) {
+            const countA = countOccurrences(a.scores, i)
+            const countB = countOccurrences(b.scores, i)
+
+            if (countA > countB)
+                return -1
+            if (countA < countB)
+                return 1
+        }
+
         return 0;
     });
 
@@ -64,6 +76,15 @@ exports.populateTotalsAndRankTeams = (req, res, next) => {
 
     next();
 };
+
+function countOccurrences(arr, n) {
+    let count = 0
+    arr.forEach(i => {
+        if (i === n)
+            count++
+    })
+    return count
+}
 
 exports.getTopTeamsPerEvent = (req, res, next) => {
     ScoresheetEntry.getTopTeamsPerEvent(4, req.params.tournamentId, req.params.division, (err, topTeamsPerEvent) => {

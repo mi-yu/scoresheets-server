@@ -131,7 +131,27 @@ ScoresheetEntry.statics.getTopTeamsPerEvent = function(n, id, d, cb) {
                 return a.event.name.localeCompare(b.event.name);
             });
 
-            cb(null, entries);
+            // Order B events before C events
+            const sortedEntries = []
+            let b = 0
+            let c = 0
+            while(sortedEntries.length < entries.length) {
+                while(entries[b].division !== 'B')
+                    b++
+                if (b < entries.length) {
+                    sortedEntries.push(entries[b])
+                    b++
+                }
+
+                while(entries[c].division !== 'C')
+                    c++
+                if (c < entries.length) {
+                    sortedEntries.push(entries[c])
+                    c++
+                }
+            }
+
+            cb(null, sortedEntries);
         });
 };
 
