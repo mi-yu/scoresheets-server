@@ -1,5 +1,6 @@
 TODOS
 	-5 add scoresheet entry if adding event after tournament creation
+	-5 variable awards for slideshow
 	-3 fix results formating (not inlined CSS...)
 	-2 mongoose schema statics
 	-2 improved error handling middleware

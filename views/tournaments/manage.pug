@@ -17,9 +17,19 @@ block content
         a.ui.button.primary(href='/tournaments/' + tournament._id + '/C/results')
             i.icon.trophy
             | C Results
-        a.ui.button.primary(href='/tournaments/' + tournament._id + '/slideshow')
-            i.icon.trophy
-            | Awards Slideshow
+        .ui.buttons
+            form(action='/tournaments/' + tournament._id + '/slideshow' method='get')
+                .ui.dropdown.labeled.icon.button.primary
+                    input#num-awards(type='hidden' name='numAwards')
+                    i.dropdown.icon
+                    span.text Number of awards
+                    .menu
+                        .item(data-value=4)= 4
+                        .item(data-value=5)= 5
+                        .item(data-value=6)= 6
+                button#start-presentation.ui.button(type='submit')
+                    | Start Awards Presentation
+                    i.icon.right.arrow
         .ui.divider
         .ui.accordion
             h3.ui.title.active

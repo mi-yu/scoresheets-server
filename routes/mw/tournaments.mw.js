@@ -87,16 +87,20 @@ function countOccurrences(arr, n) {
 }
 
 exports.getTopTeamsPerEvent = (req, res, next) => {
-    ScoresheetEntry.getTopTeamsPerEvent(4, req.params.tournamentId, req.params.division, (err, topTeamsPerEvent) => {
-        if (err)
-            next(err);
-        res.locals.topTeamsPerEvent = topTeamsPerEvent;
-        next();
-    });
+    ScoresheetEntry.getTopTeamsPerEvent(req.query.numAwards, req.params.tournamentId, req.params.division, (
+        err,
+        topTeamsPerEvent
+    ) =>
+        {
+            if (err)
+                next(err);
+            res.locals.topTeamsPerEvent = topTeamsPerEvent;
+            next();
+        });
 };
 
 exports.getTopBTeams = (req, res, next) => {
-    Team.getTopTeams(4, req.params.tournamentId, 'B', (err, topTeams) => {
+    Team.getTopTeams(req.query.numAwards, req.params.tournamentId, 'B', (err, topTeams) => {
         if (err)
             next(err);
         res.locals.topBTeams = topTeams;
@@ -105,7 +109,7 @@ exports.getTopBTeams = (req, res, next) => {
 };
 
 exports.getTopCTeams = (req, res, next) => {
-    Team.getTopTeams(4, req.params.tournamentId, 'C', (err, topTeams) => {
+    Team.getTopTeams(req.query.numAwards, req.params.tournamentId, 'C', (err, topTeams) => {
         if (err)
             next(err);
         res.locals.topCTeams = topTeams;

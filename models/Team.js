@@ -29,6 +29,11 @@ Team.statics.getTopTeams = function(n, id, d, cb) {
         regex = /(B|C)/;
     else
         regex = d;
+
+    // Default number of awards
+    if (!n)
+        n = 4;
+
     return this.find({ tournament: id, division: regex }).sort('rank').lean().exec((err, teams) => {
         if (err)
             cb(err);
