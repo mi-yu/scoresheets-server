@@ -1,8 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import ParamsExample from './App';
-import registerServiceWorker from './registerServiceWorker';
+import Base from './components/Base'
+import 'semantic-ui-css/semantic.min.css'
 
-ReactDOM.render(<ParamsExample />, document.getElementById('root'));
-registerServiceWorker();
+ReactDOM.render(<Base/>, document.getElementById('root'))

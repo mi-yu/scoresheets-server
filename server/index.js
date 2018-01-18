@@ -41,8 +41,8 @@ if ('development' == env) {
 }
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+// app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'pug');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
@@ -51,6 +51,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'dist')));
+app.use(express.static(path.join(__dirname, 'client/build')));
 app.use(passport.initialize());
 app.use(flash());
 
@@ -62,27 +63,12 @@ passport.use('local-login', LoginStrategy)
 mongoose.Promise = global.Promise;
 
 // Use routes
-app.use((req, res, next) => {
-    res.locals.message = {}
-    res.locals.user = req.user;
-    if (req.app.get('env') === 'development') {
-        res.locals.user = {};
-        res.locals.user.group = 'admin';
-    }
-    next();
-});
-
 app.use('/', basic);
 app.use('/users', users);
 app.use('/admin', admin);
 app.use('/tournaments', tournaments);
 app.use('/scoresheets', scoresheets);
 app.use('/events', events);
-
-app.use((req, res, next) => {
-    res.locals.message = req.flash();
-    next();
-});
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
