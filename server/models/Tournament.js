@@ -26,11 +26,11 @@ Tournament.post('save', doc => {
             });
         });
 
-        ScoresheetEntry.collection.insert(entries, (err, docs) => {
+        ScoresheetEntry.collection.insertMany(entries, (err, docs) => {
             if (err)
                 throw new Error(err);
             else
-                console.info('%d documents inserted', docs);
+                console.info('%d documents inserted', docs.insertedCount);
         });
     });
 });

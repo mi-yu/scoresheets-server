@@ -8,7 +8,7 @@ router.get('/dashboard', helpers.needsGroup('admin'), helpers.getTournamentList,
     res,
     next
 ) {
-    res.render('admin/dashboard');
+    res.json(res.locals)
 });
 
 module.exports = router;

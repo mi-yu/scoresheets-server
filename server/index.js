@@ -17,7 +17,8 @@ const events = require('./routes/events');
 // DB and authentication
 const mongoose = require('mongoose');
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
+const RegisterStrategy = require('./passport/register')
+const LoginStrategy = require('./passport/login')
 
 // Create Express app
 const app = express();
@@ -27,7 +28,9 @@ const env = process.env.NODE_ENV;
 
 if ('development' == env) {
     const logger = require('morgan');
-    require('dotenv').config();
+    require('dotenv').config({
+        path: './.env'
+    });
     app.use(logger('dev'));
     mongoose.connection.openUri(process.env.DB_LOCAL_URL);
     mongoose.set('debug', true);
@@ -49,22 +52,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'dist')));
 app.use(passport.initialize());
-app.use(passport.session());
 app.use(flash());
 
 // Passport config 
-var User = require('./models/User');
-passport.use(User.createStrategy());
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+passport.use('local-register', RegisterStrategy)
+passport.use('local-login', LoginStrategy)
 
 // Mongoose
 mongoose.Promise = global.Promise;
 
 // Use routes
 app.use((req, res, next) => {
+    res.locals.message = {}
     res.locals.user = req.user;
-    if (process.env.NODE_ENV === 'development') {
+    if (req.app.get('env') === 'development') {
         res.locals.user = {};
         res.locals.user.group = 'admin';
     }
@@ -85,7 +86,7 @@ app.use((req, res, next) => {
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-    let err = new Error('Not Found');
+    const err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
@@ -98,7 +99,9 @@ app.use((err, req, res, next) => {
 
     // render the error page
     res.status(err.status || 500);
-    res.render('error');
+    res.locals.title = 'Error: ' + res.status
+    // res.render('error');
+    res.json(err)
 });
 
 module.exports = app;
