@@ -1,29 +1,41 @@
 import React from 'react';
-import PropTypes from 'prop-types'
 import Nav from './Nav'
+import PropTypes from 'prop-types'
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 import { Container } from 'semantic-ui-react'
 
 import routes from '../routes.js'
 
-const Base = ({children}) => (
-	<div>
-		<Router>
+class Base extends React.Component {
+	state = {
+		token: '',
+		user: {}
+	}
+
+	render() {
+		const { token, user } = this.state
+		return (
 			<div>
-				<Nav/>
-				<Container>
-					{routes.map((route, i) => (
-						<Route exact path={route.path} component={route.component}/>
-					))}
-				</Container>
-				{children}
+				<Router>
+					<div>
+						<Nav token={token} user={user}/>
+						<Container>
+							{routes.map((route, i) => (
+								<Route exact path={route.path} component={route.component}/>
+							))}
+						</Container>
+					</div>
+				</Router>
+				<pre>{this.state.token}</pre>
 			</div>
-		</Router>
-	</div>	
-)
+		)	
+	}
+}
 
 Base.propTypes = {
-	children: PropTypes.object.isRequired
+	token: PropTypes.string,
+	user: PropTypes.object
 }
+
 
 export default Base

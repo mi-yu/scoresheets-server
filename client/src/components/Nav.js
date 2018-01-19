@@ -1,12 +1,19 @@
 import React, { Component } from 'react'
 import { Menu } from 'semantic-ui-react'
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import Auth from '../modules/Auth'
 
 export default class Nav extends Component {
     state = {}
 
     handleClick = (e, { name }) => this.setState({ activeItem: name })
+
+    handleLogout = () => {
+        Auth.deauthenticate()
+        return (
+            <Redirect to='/'/>
+        )
+    }
 
     render() {
         const { activeItem } = this.state
@@ -26,7 +33,7 @@ export default class Nav extends Component {
                             <Link to='/users/me'>Profile</Link>
                         </Menu.Item>
                         <Menu.Item name='Logout' active={activeItem === 'Logout'} onClick={this.handleClick}>
-                            <Link to='/users/logout'>Logout</Link>
+                            <Link to='/users/logout' onClick={this.handleLogout}>Logout</Link>
                         </Menu.Item>
                     </Menu.Menu>
                 ) : (

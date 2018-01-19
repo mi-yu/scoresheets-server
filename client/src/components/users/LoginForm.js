@@ -1,9 +1,21 @@
 import React from 'react'
 import { Button, Form } from 'semantic-ui-react'
+import { Redirect } from 'react-router-dom'
 import Auth from '../../modules/Auth'
 
 class LoginForm extends React.Component {
-    state = { email: '', password: '', errors: {}, user: {}, token: '' }
+    constructor(props) {
+        super(props)
+        this.state = { 
+            email: '', 
+            password: '',
+            errors: {}, 
+            user: props.user, 
+            token: props.token,
+            redirect: false
+        }
+    }
+
 
     handleChange = (e, { name, value }) => this.setState({ [name]: value })
 
@@ -26,15 +38,15 @@ class LoginForm extends React.Component {
         }).then(data => data.json())
         .catch(err => console.err(err))
         .then(res => {
-            this.setState({user: res.user, token: res.token})
             Auth.authenticate(res.token)
+            this.setState({
+                redirect: true
+            })
         })
-
-        this.setState({ email: email, password: password })
     }
 
     render() {
-        const { password, email, user, token } = this.state
+        const { password, email, user, token, redirect } = this.state
 
         return (
             <div>
@@ -49,8 +61,9 @@ class LoginForm extends React.Component {
                     </Form.Field>
                     <Form.Button content='Submit' color='primary'/>
                 </Form>
-                <pre>{JSON.stringify(user)}</pre>
-                <pre>{token}</pre>
+                { redirect && (
+                    <Redirect to='/users/me' />
+                )}
             </div>
         )
     }
