@@ -63,7 +63,7 @@ class LoginForm extends React.Component {
                         <label>Password</label>
                         <Form.Input type='password' name='password' value={password} onChange={this.handleChange}/>
                     </Form.Field>
-                    <Form.Button content='Submit' color='primary'/>
+                    <Form.Button content='Submit' color='blue'/>
                 </Form>
                 { redirect && (
                     <Redirect to='/users/me' />

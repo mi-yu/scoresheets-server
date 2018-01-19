@@ -1,13 +1,14 @@
 const router = require('express').Router();
 const User = require('../models/User');
 const passport = require('passport');
+const auth = require('./middleware/auth')
 
 /* GET users listing. */
 router.get('/', (req, res, next) => {
     res.redirect('/users/me');
 });
 
-router.get('/me', (req, res, next) => {
+router.get('/me', auth.ensureAuthenticated, (req, res, next) => {
     if (req.user.group === 'admin')
         res.json({user: req.user})
     else if (req.user)
