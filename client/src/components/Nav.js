@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
-import { Menu } from 'semantic-ui-react'
+import { Menu, Item } from 'semantic-ui-react'
 import { Link, Redirect } from 'react-router-dom';
 import Auth from '../modules/Auth'
 
 export default class Nav extends Component {
     state = {}
 
-    handleClick = (e, { name }) => this.setState({ activeItem: name })
+    handleClick = (e) => this.setState({ activeItem: e.target.name })
 
     handleLogout = () => {
-        Auth.deauthenticate()
+        Auth.removeToken()
         return (
             <Redirect to='/'/>
         )
@@ -20,30 +20,30 @@ export default class Nav extends Component {
 
         return (
             <Menu attached='top' inverted={true}>
-                <Menu.Item name='Scribe' active={activeItem === 'Scribe'} onClick={this.handleClick}>
+                <Item name='Scribe' active={activeItem === 'Scribe'} onClick={this.handleClick}>
                     <Link to='/'>Scribe</Link>
-                </Menu.Item>
+                </Item>
                 
                 {Auth.isAuthenticated() ? (
                     <Menu.Menu position='right'>
-                        <Menu.Item name='Dashboard' active={activeItem === 'Dashboard'} onClick={this.handleClick}>
+                        <Item name='Dashboard' active={activeItem === 'Dashboard'} onClick={this.handleClick}>
                             <Link to='/admin/dashboard'>Dashboard</Link>
-                        </Menu.Item>
-                        <Menu.Item name='Profile' active={activeItem === 'Profile'} onClick={this.handleClick}>
+                        </Item>
+                        <Item name='Profile' active={activeItem === 'Profile'} onClick={this.handleClick}>
                             <Link to='/users/me'>Profile</Link>
-                        </Menu.Item>
-                        <Menu.Item name='Logout' active={activeItem === 'Logout'} onClick={this.handleClick}>
+                        </Item>
+                        <Item name='Logout' active={activeItem === 'Logout'} onClick={this.handleClick}>
                             <Link to='/users/logout' onClick={this.handleLogout}>Logout</Link>
-                        </Menu.Item>
+                        </Item>
                     </Menu.Menu>
                 ) : (
                     <Menu.Menu position='right'>
-                        <Menu.Item name='Login' active={activeItem === 'Login'} onClick={this.handleClick}>
+                        <Item name='Login' active={activeItem === 'Login'} onClick={this.handleClick}>
                             <Link to='/users/login'>Login</Link>
-                        </Menu.Item>
-                        <Menu.Item name='Register' active={activeItem === 'Register'} onClick={this.handleClick}>
+                        </Item>
+                        <Item name='Register' active={activeItem === 'Register'} onClick={this.handleClick}>
                             <Link to='/users/register'>Register</Link>
-                        </Menu.Item>
+                        </Item>
                     </Menu.Menu>
                 )}
             </Menu>

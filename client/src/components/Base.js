@@ -8,25 +8,31 @@ import routes from '../routes.js'
 
 class Base extends React.Component {
 	state = {
-		token: '',
 		user: {}
 	}
 
+	setUser = (newUser) => {
+		this.setState({
+			user: newUser
+		})
+	}
+
 	render() {
-		const { token, user } = this.state
+		const { user } = this.state
 		return (
 			<div>
 				<Router>
 					<div>
-						<Nav token={token} user={user}/>
+						<Nav user={user}/>
 						<Container>
 							{routes.map((route, i) => (
-								<Route exact path={route.path} component={route.component}/>
+								<Route exact key={i} path={route.path} render={props =>(
+									<route.component setUser={this.setUser} user={this.state.user} {...props} />
+								)}/>
 							))}
 						</Container>
 					</div>
 				</Router>
-				<pre>{this.state.token}</pre>
 			</div>
 		)	
 	}

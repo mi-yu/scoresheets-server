@@ -14,6 +14,8 @@ class LoginForm extends React.Component {
             token: props.token,
             redirect: false
         }
+
+        this.setUser = props.setUser.bind(this)
     }
 
 
@@ -38,10 +40,12 @@ class LoginForm extends React.Component {
         }).then(data => data.json())
         .catch(err => console.err(err))
         .then(res => {
-            Auth.authenticate(res.token)
+            Auth.storeToken(res.token)
             this.setState({
                 redirect: true
             })
+
+            this.setUser(res.user)
         })
     }
 

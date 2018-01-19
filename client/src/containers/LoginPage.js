@@ -1,11 +1,14 @@
 import React from 'react'
 import LoginForm from '../components/users/LoginForm'
 
-const LoginPage = () => (
-	<div>
-		<h1> Login </h1>
-		<LoginForm/>
-	</div>
-)
+const LoginPage = (props) => {
+	console.log(props)
+	return (
+		<div>
+			<h1> Login </h1>
+			<LoginForm setUser={props.setUser}/>
+		</div>
+	)
+}
 
 export default LoginPage

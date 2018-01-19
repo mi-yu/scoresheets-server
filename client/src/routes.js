@@ -1,6 +1,7 @@
 import React from 'react'
 import HomePage from './containers/HomePage.js';
 import LoginPage from './containers/LoginPage.js';
+import ProfilePage from './containers/ProfilePage.js'
 import Auth from './modules/Auth';
 import { Redirect } from 'react-router-dom'
 
@@ -17,20 +18,13 @@ const routes = [
     },
 
     {
-        path: '/users/logout',
-        render: () => {
-            const authenticated = Auth.isAuthenticated()
-            if (authenticated) Auth.deauthenticate()
-
-            return (
-                <Redirect to='/'/>
-            )
-        }
+        path: '/users/register',
+        component: HomePage
     },
 
     {
-        path: '/users/register',
-        component: HomePage
+        path: '/users/me',
+        component: ProfilePage
     }
 ]
 
