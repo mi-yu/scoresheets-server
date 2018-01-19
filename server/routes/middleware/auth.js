@@ -13,7 +13,7 @@ exports.ensureAuthenticated = (req, res, next) => {
 		const userId = decoded.sub
 		console.log(decoded)
 
-		User.findById(userId, '-hash', (userErr, user) => {
+		User.findById(userId, '-password', (userErr, user) => {
 			if (userErr || !user)
 				res.status(401).end()
 			req.user = user

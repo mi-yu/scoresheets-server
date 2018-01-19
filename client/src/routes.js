@@ -19,13 +19,18 @@ const routes = [
     {
         path: '/users/logout',
         render: () => {
-            const authenticated = Auth.isAuthenticated
+            const authenticated = Auth.isAuthenticated()
             if (authenticated) Auth.deauthenticate()
 
             return (
                 <Redirect to='/'/>
             )
         }
+    },
+
+    {
+        path: '/users/register',
+        component: HomePage
     }
 ]
 

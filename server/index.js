@@ -55,8 +55,7 @@ app.use(express.static(path.join(__dirname, 'client/build')));
 app.use(passport.initialize());
 app.use(flash());
 
-// Passport config 
-passport.use('local-register', RegisterStrategy)
+// Passport config
 passport.use('local-login', LoginStrategy)
 
 // Mongoose

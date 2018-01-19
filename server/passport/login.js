@@ -8,11 +8,12 @@ module.exports = new PassportLocalStrategy({
 	session: false,
 	passReqToCallback: true
 }, (req, email, password, done) => {
+	console.log(req.headers)
 	const userData = {
-		email: email.trim(),
-		password: password.trim()
+		email: req.body.email.trim(),
+		password: req.body.password.trim()
 	}
-
+	console.log('BEFORE FINDONE')
 	return User.findOne({email: userData.email}, (err, user) => {
 		if (err)
 			return done(err)
@@ -24,6 +25,7 @@ module.exports = new PassportLocalStrategy({
 		}
 
 		return user.comparePassword(userData.password, (passwordErr, isMatch) => {
+			console.log(isMatch)
 			if (err)
 				return done(err)
 			if (!isMatch) {
@@ -38,8 +40,10 @@ module.exports = new PassportLocalStrategy({
 			}
 
 			const token = jwt.sign(payload, process.env.JWT_SECRET)
+			console.log(token)
 			const data = {
-				name: user.name
+				name: user.name,
+				email: user.email
 			}
 
 			return done(null, token, data)
