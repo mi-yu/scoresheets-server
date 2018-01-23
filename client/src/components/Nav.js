@@ -20,28 +20,28 @@ export default class Nav extends Component {
 
         return (
             <Menu attached='top' inverted={true}>
-                <Item name='Scribe' active={activeItem === 'Scribe'} onClick={this.handleClick}>
+                <Item name='Scribe' active={(activeItem === 'Scribe').toString()} onClick={this.handleClick}>
                     <Link to='/'>Scribe</Link>
                 </Item>
                 
                 {Auth.isAuthenticated() ? (
                     <Menu.Menu position='right'>
-                        <Item name='Dashboard' active={activeItem === 'Dashboard'} onClick={this.handleClick}>
+                        <Item name='Dashboard' active={(activeItem === 'Dashboard').toString()} onClick={this.handleClick}>
                             <Link to='/admin/dashboard'>Dashboard</Link>
                         </Item>
-                        <Item name='Profile' active={activeItem === 'Profile'} onClick={this.handleClick}>
+                        <Item name='Profile' active={(activeItem === 'Profile').toString()} onClick={this.handleClick}>
                             <Link to='/users/me'>Profile</Link>
                         </Item>
-                        <Item name='Logout' active={activeItem === 'Logout'} onClick={this.handleClick}>
-                            <Link to='/users/logout' onClick={this.handleLogout}>Logout</Link>
+                        <Item name='Logout' active={(activeItem === 'Logout').toString()} onClick={this.handleClick}>
+                            <Link to='/' onClick={this.handleLogout}>Logout</Link>
                         </Item>
                     </Menu.Menu>
                 ) : (
                     <Menu.Menu position='right'>
-                        <Item name='Login' active={activeItem === 'Login'} onClick={this.handleClick}>
+                        <Item name='Login' active={(activeItem === 'Login').toString()} onClick={this.handleClick}>
                             <Link to='/users/login'>Login</Link>
                         </Item>
-                        <Item name='Register' active={activeItem === 'Register'} onClick={this.handleClick}>
+                        <Item name='Register' active={(activeItem === 'Register').toString()} onClick={this.handleClick}>
                             <Link to='/users/register'>Register</Link>
                         </Item>
                     </Menu.Menu>

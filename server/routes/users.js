@@ -18,7 +18,8 @@ router.get('/me', auth.ensureAuthenticated, (req, res, next) => {
 });
 
 router.get('/login', (req, res, next) => {
-    res.render('user/login', { 'message': req.flash() });
+    console.log(res.locals)
+    res.json({ 'message': req.flash() });
 });
 
 router.post('/login', (req, res, next) => {

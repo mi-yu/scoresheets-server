@@ -1,11 +1,14 @@
 import React from 'react'
 import Auth from '../modules/Auth'
+import { Redirect } from 'react-router-dom'
 
 class ProfilePage extends React.Component {
 	constructor(props) {
 		super(props)
 		this.setUser = props.setUser.bind(this)
-
+		this.state = {
+			redirectToLogin: false
+		}
 	}
 
 	componentDidMount() {
@@ -17,9 +20,21 @@ class ProfilePage extends React.Component {
 				headers: new Headers({
 					'Authorization': 'Bearer ' + token
 				})
-			}).then(data => data.json())
-			.then(res => this.setUser(res.user))
-			.catch(err => console.log(err))
+			}).then(data => {
+				if (data.ok)
+					return data.json()
+				else
+					throw new Error()
+			})
+			.then(res => {
+				return this.setUser(res.user)
+			})
+			.catch(err => {
+				console.log(err)
+				this.setState({
+					redirectToLogin: true
+				})
+			})
 		}
 	}
 
@@ -27,8 +42,10 @@ class ProfilePage extends React.Component {
 		console.log(this.props.user)
 		const {user} = this.props
 
-		if (!user)
-			return null
+		if (!user || this.state.redirectToLogin)
+			return (
+				<Redirect to='/users/login'/>
+			)
 
 		return (
 			<div>

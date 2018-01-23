@@ -1,9 +1,7 @@
-import React from 'react'
-import HomePage from './containers/HomePage.js';
-import LoginPage from './containers/LoginPage.js';
+import HomePage from './containers/HomePage.js'
+import LoginPage from './containers/LoginPage.js'
 import ProfilePage from './containers/ProfilePage.js'
-import Auth from './modules/Auth';
-import { Redirect } from 'react-router-dom'
+import DashboardPage from './containers/DashboardPage.js'
 
 
 const routes = [
@@ -25,7 +23,12 @@ const routes = [
     {
         path: '/users/me',
         component: ProfilePage
+    },
+
+    {
+        path: '/admin/dashboard',
+        component: DashboardPage
     }
 ]
 
-export default routes;
+export default routes

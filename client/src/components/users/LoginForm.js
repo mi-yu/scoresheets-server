@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Form } from 'semantic-ui-react'
+import { Form } from 'semantic-ui-react'
 import { Redirect } from 'react-router-dom'
 import Auth from '../../modules/Auth'
 
@@ -50,7 +50,7 @@ class LoginForm extends React.Component {
     }
 
     render() {
-        const { password, email, user, token, redirect } = this.state
+        const { password, email, redirect } = this.state
 
         return (
             <div>
