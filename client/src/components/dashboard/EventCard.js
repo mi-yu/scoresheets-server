@@ -2,7 +2,7 @@ import React from 'react'
 import Auth from '../../modules/Auth'
 import { Card, Label, Button, Grid } from 'semantic-ui-react'
 
-const EventCard = ({ _id, name, category, stateEvent, impound, division, setEditingEvent }) => {
+const EventCard = ({ _id, name, category, stateEvent, impound, division, setCurrentEvent }) => {
 	let color = ''
 	switch(category) {
 		case 'bio':
@@ -38,7 +38,7 @@ const EventCard = ({ _id, name, category, stateEvent, impound, division, setEdit
 					</Card.Description>
 				</Card.Content>
 				<Card.Content>
-					<Button fluid color='blue' onClick={(e) => setEditingEvent(e, _id)}>Edit</Button>
+					<Button fluid color='blue' onClick={(e) => setCurrentEvent(e, _id)}>Edit</Button>
 				</Card.Content>
 			</Card>
 		</Grid.Column>

@@ -22,7 +22,10 @@ router.post('/new', needsGroup('admin'), (req, res, next) => {
             req.flash('error', err.message);
         else
             req.flash('success', 'Successfully created new event: ' + event.name);
-        res.redirect('/admin/dashboard');
+        res.json({
+            message: req.flash(),
+            newEvent: event
+        })
     });
 });
 
@@ -42,13 +45,18 @@ router.post('/:eventId/edit', needsGroup('admin'), (req, res, next) => {
                 highScoreWins: req.body.highScoreWins,
                 currentTopic: req.body.currentTopic
             }
+        }, {
+            new: true
         },
         (err, updated) => {
             if (err)
                 req.flash('error', err.message);
             else
                 req.flash('success', 'Successfully updated ' + updated.name);
-            res.redirect('/admin/dashboard');
+            res.json({
+                message: req.flash(),
+                updatedEvent: updated
+            })
         }
     );
 });
