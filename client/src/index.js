@@ -5,3 +5,7 @@ import 'semantic-ui-css/semantic.min.css'
 import './styles/style.css'
 
 ReactDOM.render(<Base/>, document.getElementById('root'))
+
+if (module.hot) {
+	module.hot.accept()
+}

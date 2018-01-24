@@ -59,6 +59,13 @@ export default class DashboardPage extends React.Component {
 		})
 	}
 
+	clearEditingEvent = () => {
+		this.setState({
+			editingEvent: {},
+			eventsModalOpen: true
+		})
+	}
+
 	render() {
 		const { tournaments, events, redirectToLogin, editingEvent, eventsModalOpen } = this.state
 
@@ -82,7 +89,7 @@ export default class DashboardPage extends React.Component {
 				<Divider/>
 
 				<Header as='h1'>2017-18 Season Events</Header>
-				<EventsModal {...editingEvent} modalOpen={eventsModalOpen}/>
+				<EventsModal editingEvent={{...editingEvent}} modalOpen={eventsModalOpen} clearEditingEvent={this.clearEditingEvent}/>
 				<Grid>
 					{events.map(event => 
 						<EventCard 
