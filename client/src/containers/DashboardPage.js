@@ -1,7 +1,10 @@
 import React from 'react'
 import Auth from '../modules/Auth'
 import EventCard from '../components/dashboard/EventCard'
-import { Grid } from 'semantic-ui-react'
+import TournamentCard from '../components/dashboard/TournamentCard'
+import { Grid, Header, Divider } from 'semantic-ui-react'
+import { Redirect } from 'react-router-dom'
+import EventsModal from '../components/events/EventsModal'
 
 export default class DashboardPage extends React.Component {
 	constructor(props) {
@@ -10,12 +13,14 @@ export default class DashboardPage extends React.Component {
 		this.state = {
 			tournaments: [],
 			events: [],
-			user: props.user
+			user: props.user,
+			redirectToLogin: false,
+			eventsModalOpen: false,
+			editingEvent: {}
 		}
 	}
 
-	componentDidMount() {		
-		const { user } = this.props
+	componentDidMount() {
 		const { tournaments, events } = this.state
 
 		if (tournaments.length === 0 || events.length === 0) {
@@ -37,24 +42,57 @@ export default class DashboardPage extends React.Component {
 					events: res.events 
 				})
 			})
-			.catch(err => console.log(err))
+			.catch(err => {
+				console.log(err)
+				this.setState({
+					redirectToLogin: true
+				})
+			})
 		}
 	}
 
-	render() {
-		const { tournaments, events, user } = this.state
-		console.log(tournaments)
-		console.log(events)
+	setEditingEvent = (e, id) => {
+		const event = this.state.events.find(event => event._id === id)
+		this.setState({
+			editingEvent: event,
+			eventsModalOpen: true
+		})
+	}
 
-		if (tournaments === null || events.length === 0)
+	render() {
+		const { tournaments, events, redirectToLogin, editingEvent, eventsModalOpen } = this.state
+
+		if (redirectToLogin)
+			return (
+				<Redirect to='/users/login'/>
+			)
+		
+		else if (tournaments === null || events.length === 0)
 			return null
 
+
 		return (
-			<Grid>
-				{events.map((event, i) => 
-					<EventCard {...event}/>
-				)}
-			</Grid>
+			<div>
+				<Header as='h1'>Tournaments</Header>
+				<Grid>
+					{tournaments.map(event => 
+						<TournamentCard key={event._id} {...event}/>
+					)}
+				</Grid>
+				<Divider/>
+
+				<Header as='h1'>2017-18 Season Events</Header>
+				<EventsModal {...editingEvent} modalOpen={eventsModalOpen}/>
+				<Grid>
+					{events.map(event => 
+						<EventCard 
+							key={event._id} 
+							{...event} 
+							setEditingEvent={this.setEditingEvent}
+						/>
+					)}
+				</Grid>
+			</div>
 		)
 	}
 }
