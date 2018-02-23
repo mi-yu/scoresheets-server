@@ -23,7 +23,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const app = express();
 
 // Set environment
-const env = process.env.NODE_ENV;
+const env = process.env.NODE_ENV || 'development';
 
 if ('development' == env) {
     const logger = require('morgan');
@@ -31,8 +31,6 @@ if ('development' == env) {
     app.use(logger('dev'));
     mongoose.connection.openUri(process.env.DB_LOCAL_URL);
     mongoose.set('debug', true);
-} else if ('test' == env) {
-    require('dotenv').config();
 } else {
     mongoose.connection.openUri(process.env.DB_URL);
 }

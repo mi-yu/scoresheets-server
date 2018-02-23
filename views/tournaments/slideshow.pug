@@ -1,17 +1,19 @@
 extends ../layouts/slideshow
 
 block content
+    #slides-logo(style='position: absolute; bottom: 0; margin: 30px;')
+        img(src='/images/UTIG-logo.png')
     .reveal: .slides
-        each entry in topTeamsPerEvent
+            each entry in topTeamsPerEvent
+                section
+                    strong= entry.event.name + ' ' + entry.division
+                    each score, i in entry.scores
+                        p.fragment(data-fragment-index=(entry.scores.length-i-1))= (i+1) + '. ' + score.team.division + score.team.teamNumber + ' (' + score.team.school + ')'
             section
-                strong= entry.event.name + ' ' + entry.division
-                each score, i in entry.scores
-                    p.fragment(data-fragment-index=(entry.scores.length-i-1))= (i+1) + '. ' + score.team.division + score.team.teamNumber + ' (' + score.team.school + ')'
-        section
-            strong Sweepstakes B
-            each team, i in topBTeams
-                p.fragment(data-fragment-index=(topTeamsPerEvent[0].scores.length-i-1))= (i+1) + '. ' + team.school
-        section
-            strong Sweepstakes C
-            each team, i in topCTeams
-                p.fragment(data-fragment-index=(topTeamsPerEvent[0].scores.length-i-1))= (i+1) + '. ' + team.school
+                strong Sweepstakes B
+                each team, i in topBTeams
+                    p.fragment(data-fragment-index=(topTeamsPerEvent[0].scores.length-i-1))= (i+1) + '. ' + team.school
+            section
+                strong Sweepstakes C
+                each team, i in topCTeams
+                    p.fragment(data-fragment-index=(topTeamsPerEvent[0].scores.length-i-1))= (i+1) + '. ' + team.school

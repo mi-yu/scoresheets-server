@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "start-dev": "set NODE_ENV=development&&run-p start-server watch",
+    "start-dev": "run-p start-server watch",
     "start-server": "nodemon ./bin/www",
     "watch": "gulp watch",
     "test": "set NODE_ENV=test&&mocha --exit"
