@@ -26,45 +26,49 @@ ScoresheetEntry.methods.rank = function(cb) {
     let scores = this.scores;
 
     Event.findById(this.event).exec((err, event) => {
-        scores.sort((s1, s2) => {
-            if (s1.dropped > s2.dropped)
-                return 1;
-            if (s1.dropped < s2.dropped)
-                return -1;
-            if (s1.dq > s2.dq)
-                return 1;
-            if (s1.dq < s2.dq)
-                return -1;
-            if (s1.noShow > s2.noShow)
-                return 1;
-            if (s1.noShow < s2.noShow)
-                return -1;
-            if (s1.participationOnly > s2.participationOnly)
-                return 1;
-            if (s1.participationOnly < s2.participationOnly)
-                return -1;
-            if (s1.tier > s2.tier)
-                return 1;
-            if (s1.tier < s2.tier)
-                return -1;
-            if (s1.rawScore === 0)
-                return 1;
-            if (s1.rawScore > s2.rawScore)
-                if (event.highScoreWins)
-                    return -1;
-                else
+        try {
+            scores.sort((s1, s2) => {
+                if (s1.dropped > s2.dropped)
                     return 1;
-            if (s1.rawScore < s2.rawScore)
-                if (event.highScoreWins)
-                    return 1;
-                else
+                if (s1.dropped < s2.dropped)
                     return -1;
-            if (s1.rawScore === s2.rawScore && s1.tiebreaker < s2.tiebreaker)
-                return 1;
-            if (s1.rawScore === s2.rawScore && s1.tiebreaker > s2.tiebreaker)
-                return -1;
-            throw new Error('Tie must be broken between');
-        });
+                if (s1.dq > s2.dq)
+                    return 1;
+                if (s1.dq < s2.dq)
+                    return -1;
+                if (s1.noShow > s2.noShow)
+                    return 1;
+                if (s1.noShow < s2.noShow)
+                    return -1;
+                if (s1.participationOnly > s2.participationOnly)
+                    return 1;
+                if (s1.participationOnly < s2.participationOnly)
+                    return -1;
+                if (s1.tier > s2.tier)
+                    return 1;
+                if (s1.tier < s2.tier)
+                    return -1;
+                if (s1.rawScore === 0)
+                    return 1;
+                if (s1.rawScore > s2.rawScore)
+                    if (event.highScoreWins)
+                        return -1;
+                    else
+                        return 1;
+                if (s1.rawScore < s2.rawScore)
+                    if (event.highScoreWins)
+                        return 1;
+                    else
+                        return -1;
+                if (s1.rawScore === s2.rawScore && s1.tiebreaker < s2.tiebreaker)
+                    return 1;
+                if (s1.rawScore === s2.rawScore && s1.tiebreaker > s2.tiebreaker)
+                    return -1;
+                throw new Error('Tie must be broken between');
+            });
+        } catch(err) {
+            return cb(err);
+        }
 
         scores.forEach((score, i) => {
             if (!score.dq && !score.noShow && !score.participationOnly && !score.dropped && score.rawScore !== 0)
