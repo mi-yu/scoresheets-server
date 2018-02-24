@@ -108,7 +108,7 @@ ScoresheetEntry.statics.getTopTeamsPerEvent = function(n, id, d, cb) {
     return this
         .find({ tournament: id, division: regex })
         .select('event scores division')
-        .populate('event scores.team')
+        .populate('event scores.team scores')
         .lean()
         .exec((err, entries) => {
             if (err)
@@ -116,7 +116,8 @@ ScoresheetEntry.statics.getTopTeamsPerEvent = function(n, id, d, cb) {
             let drops = 0;
             entries.forEach(entry => {
                 entry.scores.forEach(score => {
-                    if (!score.rank)
+                    console.log(score);
+                    if (!score.rank || score.dq || score.participationOnly || score.noShow || score.dropped)
                         drops++;
                 });
                 entry.scores.sort((a, b) => {
