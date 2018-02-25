@@ -10,10 +10,21 @@ block content
                     each score, i in entry.scores
                         p.fragment(data-fragment-index=(entry.scores.length-i-1))= (i+1) + '. ' + score.team.division + score.team.teamNumber + ' (' + score.team.school + ')'
             section
-                strong Sweepstakes B
-                each team, i in topBTeams
-                    p.fragment(data-fragment-index=(topTeamsPerEvent[0].scores.length-i-1))= (i+1) + '. ' + team.school
+                strong Sweepstakes B - 3rd place
+                p.fragment(data-fragment-index=1) temp
             section
-                strong Sweepstakes C
-                each team, i in topCTeams
-                    p.fragment(data-fragment-index=(topTeamsPerEvent[0].scores.length-i-1))= (i+1) + '. ' + team.school
+                strong Sweepstakes C - 3rd place
+                p.fragment(data-fragment-index=1) temp
+            section
+                strong Sweepstakes B - 2nd place
+                p.fragment(data-fragment-index=1) temp
+            section
+                strong Sweepstakes C - 2nd place
+                p.fragment(data-fragment-index=1) temp
+            section
+                strong Sweepstakes B - 1st place
+                p.fragment(data-fragment-index=1) temp
+            section
+                strong Sweepstakes C - 1st place
+                p.fragment(data-fragment-index=1) temp
+
