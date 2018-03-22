@@ -17,7 +17,8 @@ const events = require('./routes/events');
 // DB and authentication
 const mongoose = require('mongoose');
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
+const RegisterStrategy = require('./passport/register')
+const LoginStrategy = require('./passport/login')
 
 // Create Express app
 const app = express();
@@ -27,7 +28,9 @@ const env = process.env.NODE_ENV || 'development';
 
 if ('development' == env) {
     const logger = require('morgan');
-    require('dotenv').config();
+    require('dotenv').config({
+        path: './.env'
+    });
     app.use(logger('dev'));
     mongoose.connection.openUri(process.env.DB_LOCAL_URL);
     mongoose.set('debug', true);
@@ -36,8 +39,8 @@ if ('development' == env) {
 }
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+// app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'pug');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
@@ -46,29 +49,26 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'dist')));
+app.use(express.static(path.join(__dirname, 'client/build')));
 app.use(passport.initialize());
-app.use(passport.session());
 app.use(flash());
 
-// Passport config 
-var User = require('./models/User');
-passport.use(User.createStrategy());
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+// Passport config
+passport.use('local-login', LoginStrategy)
 
 // Mongoose
 mongoose.Promise = global.Promise;
 
 // Use routes
-app.use((req, res, next) => {
-    res.locals.user = req.user;
-    if (process.env.NODE_ENV === 'development') {
-        res.locals.user = {};
-        res.locals.user.group = 'admin';
-    }
-    next();
-});
-
+// app.use((req, res, next) => {
+//     const json = res.json
+//     res.json = function(data) {
+//         data.message = req.flash()
+//         json.call(this, data)
+//     }
+//     next()
+// })
+ 
 app.use('/', basic);
 app.use('/users', users);
 app.use('/admin', admin);
@@ -76,14 +76,9 @@ app.use('/tournaments', tournaments);
 app.use('/scoresheets', scoresheets);
 app.use('/events', events);
 
-app.use((req, res, next) => {
-    res.locals.message = req.flash();
-    next();
-});
-
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-    let err = new Error('Not Found');
+    const err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
@@ -96,7 +91,9 @@ app.use((err, req, res, next) => {
 
     // render the error page
     res.status(err.status || 500);
-    res.render('error');
+    res.locals.title = 'Error: ' + res.status
+    // res.render('error');
+    res.json(err)
 });
 
 module.exports = app;

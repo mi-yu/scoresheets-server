@@ -11,7 +11,7 @@ const getCurrentEventsList = helpers.getCurrentEventsList;
 const getSchoolsList = helpers.getSchoolsList;
 const getTeamsInTournamentByDivision = helpers.getTeamsInTournamentByDivision;
 const getAllTeamsInTournament = helpers.getAllTeamsInTournament;
-const mw = require('./mw/tournaments.mw.js');
+const mw = require('./middleware/tournaments.mw.js');
 
 /* GET users listing. */
 router.post('/new', needsGroup('admin'), (req, res, next) => {
