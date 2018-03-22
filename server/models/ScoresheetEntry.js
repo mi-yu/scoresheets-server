@@ -1,8 +1,9 @@
 const mongoose = require('mongoose'), Schema = mongoose.Schema, Event = require('./Event');
+require('mongoose-double')(mongoose);
 
 const Score = new Schema({
     team: { type: Schema.Types.ObjectId, ref: 'Team', required: true },
-    rawScore: { type: Number, min: 0 },
+    rawScore: { type: Number },
     tiebreaker: Number,
     tier: { type: Number, default: 1, required: true },
     dq: { type: Boolean, default: false },
