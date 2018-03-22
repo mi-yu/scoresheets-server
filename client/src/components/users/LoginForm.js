@@ -38,7 +38,7 @@ class LoginForm extends React.Component {
             }),
             body: JSON.stringify(payload)
         }).then(data => data.json())
-        .catch(err => console.log(err))
+        .catch(err => console.err(err))
         .then(res => {
             Auth.storeToken(res.token)
             this.setState({

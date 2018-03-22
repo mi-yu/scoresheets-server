@@ -16,8 +16,7 @@ export default class DashboardPage extends React.Component {
 			user: props.user,
 			redirectToLogin: false,
 			eventsModalOpen: false,
-			editingEvent: false,
-			currentEvent: {}
+			editingEvent: {}
 		}
 	}
 
@@ -52,35 +51,23 @@ export default class DashboardPage extends React.Component {
 		}
 	}
 
-	setCurrentEvent = (e, id) => {
+	setEditingEvent = (e, id) => {
 		const event = this.state.events.find(event => event._id === id)
 		this.setState({
-			currentEvent: event,
-			eventsModalOpen: true,
-			editingEvent: true
+			editingEvent: event,
+			eventsModalOpen: true
 		})
 	}
 
-	clearCurrentEvent = () => {
+	clearEditingEvent = () => {
 		this.setState({
-			currentEvent: {},
-			eventsModalOpen: true,
-			editingEvent: false
-		})
-	}
-
-	updateEvent = (updatedEvent) => {
-		const events = this.state.events
-		const index = events.map(event => event._id).indexOf(updatedEvent._id)
-		events[index] = updatedEvent
-		console.log(this.state.events[index])
-		this.setState({
-			events
+			editingEvent: {},
+			eventsModalOpen: true
 		})
 	}
 
 	render() {
-		const { tournaments, events, redirectToLogin, currentEvent, eventsModalOpen, editingEvent } = this.state
+		const { tournaments, events, redirectToLogin, editingEvent, eventsModalOpen } = this.state
 
 		if (redirectToLogin)
 			return (
@@ -102,18 +89,13 @@ export default class DashboardPage extends React.Component {
 				<Divider/>
 
 				<Header as='h1'>2017-18 Season Events</Header>
-				<EventsModal 
-					currentEvent={{...currentEvent}} 
-					editingEvent={editingEvent} 
-					modalOpen={eventsModalOpen} 
-					clearCurrentEvent={this.clearCurrentEvent}
-					updateEvent={this.updateEvent}/>
+				<EventsModal editingEvent={{...editingEvent}} modalOpen={eventsModalOpen} clearEditingEvent={this.clearEditingEvent}/>
 				<Grid>
 					{events.map(event => 
 						<EventCard 
 							key={event._id} 
 							{...event} 
-							setCurrentEvent={this.setCurrentEvent}
+							setEditingEvent={this.setEditingEvent}
 						/>
 					)}
 				</Grid>

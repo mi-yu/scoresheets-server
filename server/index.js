@@ -60,15 +60,6 @@ passport.use('local-login', LoginStrategy)
 mongoose.Promise = global.Promise;
 
 // Use routes
-// app.use((req, res, next) => {
-//     const json = res.json
-//     res.json = function(data) {
-//         data.message = req.flash()
-//         json.call(this, data)
-//     }
-//     next()
-// })
- 
 app.use('/', basic);
 app.use('/users', users);
 app.use('/admin', admin);
