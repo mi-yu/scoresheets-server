@@ -15,8 +15,9 @@ exports.ensureAuthenticated = (req, res, next) => {
 	jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
 		console.log('verifying token')
 		if (err) {
+			console.log(err)
 			return res.status(401).json({
-				message: 'Unauthorized, please log in.'
+				error: 'Incorrect credentials, please try again.'
 			})
 		}
 

@@ -1,3 +1,21 @@
 .container {
 	padding-top:  50px;
 }
+
+/* temp modals fix */
+.ui.page.modals.transition.visible {
+    display: flex !important;
+}
+
+.padded-button {
+	margin: 25px 0 25px 0 !important;
+}
+
+.message {
+	position: fixed !important;
+	margin-bottom: 25px !important;
+	bottom: 0 !important;
+	width: 500px !important;
+	z-index: 100 !important;
+	text-align: center !important;
+}

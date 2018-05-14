@@ -2,7 +2,7 @@ import React from 'react'
 import Auth from '../modules/Auth'
 import EventCard from '../components/dashboard/EventCard'
 import TournamentCard from '../components/dashboard/TournamentCard'
-import { Grid, Header, Divider } from 'semantic-ui-react'
+import { Grid, Header, Divider, Message } from 'semantic-ui-react'
 import { Redirect } from 'react-router-dom'
 import EventsModal from '../components/events/EventsModal'
 
@@ -17,6 +17,8 @@ export default class DashboardPage extends React.Component {
 			redirectToLogin: false,
 			eventsModalOpen: false,
 			editingEvent: false,
+			message: '',
+			messageVisible: false,
 			currentEvent: {}
 		}
 	}
@@ -79,8 +81,36 @@ export default class DashboardPage extends React.Component {
 		})
 	}
 
+	setMessage = (msg) => {
+		this.setState({
+			message: msg,
+			messageVisible: true
+		})
+	}
+
+	handleDismissMessage = () => {
+		this.setState({
+			messageVisible: false
+		})
+	}
+
+	closeModalParent = () => {
+		this.setState({
+			eventsModalOpen: false
+		})
+	}
+
 	render() {
-		const { tournaments, events, redirectToLogin, currentEvent, eventsModalOpen, editingEvent } = this.state
+		const { 
+			tournaments, 
+			events, 
+			redirectToLogin, 
+			currentEvent, 
+			eventsModalOpen, 
+			message, 
+			messageVisible, 
+			editingEvent 
+		} = this.state
 
 		if (redirectToLogin)
 			return (
@@ -102,12 +132,16 @@ export default class DashboardPage extends React.Component {
 				<Divider/>
 
 				<Header as='h1'>2017-18 Season Events</Header>
+				<Divider/>
 				<EventsModal 
 					currentEvent={{...currentEvent}} 
 					editingEvent={editingEvent} 
 					modalOpen={eventsModalOpen} 
 					clearCurrentEvent={this.clearCurrentEvent}
-					updateEvent={this.updateEvent}/>
+					updateEvent={this.updateEvent}
+					setMessage={this.setMessage}
+					closeModalParent={this.closeModalParent}
+				/>
 				<Grid>
 					{events.map(event => 
 						<EventCard 
@@ -117,6 +151,12 @@ export default class DashboardPage extends React.Component {
 						/>
 					)}
 				</Grid>
+				{messageVisible && (
+					<Message
+						onDismiss={this.handleDismissMessage}
+						content={message}
+					/>
+				)}
 			</div>
 		)
 	}

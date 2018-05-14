@@ -32,7 +32,7 @@ if ('development' == env) {
         path: './.env'
     });
     app.use(logger('dev'));
-    mongoose.connection.openUri(process.env.DB_LOCAL_URL);
+    mongoose.connection.openUri(process.env.DB_REACT_LOCAL_URL);
     mongoose.set('debug', true);
 } else {
     mongoose.connection.openUri(process.env.DB_URL);

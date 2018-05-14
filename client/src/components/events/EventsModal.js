@@ -19,6 +19,7 @@ class EventsModal extends React.Component {
 	}
 
 	closeModal = () => {
+		this.state.closeModalParent()
 		this.setState({
 			modalOpen: false
 		})
@@ -45,9 +46,8 @@ class EventsModal extends React.Component {
 	}
 
 	handleSubmitEvent = () => {
-		const { editingEvent, currentEvent, updateEvent } = this.state
+		const { editingEvent, currentEvent, updateEvent, setMessage } = this.state
 		const url = editingEvent ? `/events/${currentEvent._id}/edit` : '/events/new'
-		console.log(url)
 		const token = Auth.getToken()
 
         fetch(url, {
@@ -67,6 +67,7 @@ class EventsModal extends React.Component {
 		}).then(res => {
 			console.log(res)
 			updateEvent(res.updatedEvent)
+			setMessage(res.message.success)
 			this.closeModal()
 		}).catch(err => {
 			console.log(err)
