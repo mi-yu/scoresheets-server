@@ -7,10 +7,14 @@ const TournamentCard = ({ _id, name, city, state, date }) => (
 		<Card>
 			<Card.Content>
 				<Card.Header>{name}</Card.Header>
-				<Card.Meta>{city}, {state} on {date}</Card.Meta>
+				<Card.Meta>
+					{city}, {state} on {date}
+				</Card.Meta>
 			</Card.Content>
 			<Card.Content extra>
-				<Button fluid color='blue'>Manage</Button>
+				<Button fluid color="blue">
+					Manage
+				</Button>
 			</Card.Content>
 		</Card>
 	</Grid.Column>

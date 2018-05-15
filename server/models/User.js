@@ -20,16 +20,12 @@ User.pre('save', function(next) {
 
 	bcrypt.genSalt((saltError, salt) => {
 		if (saltError) {
-			console.log(saltError)
 			return next(saltError)
 		}
 		bcrypt.hash(user.password, salt, (hashError, password) => {
-			console.log('password', user.password)
-			console.log('salt', salt)
 			if (hashError) next(hashError)
 
 			user.password = password
-			console.log(password)
 			next()
 		})
 	})

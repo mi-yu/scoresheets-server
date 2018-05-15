@@ -1,10 +1,10 @@
 .container {
-	padding-top:  50px;
+	padding-top: 50px;
 }
 
 /* temp modals fix */
 .ui.page.modals.transition.visible {
-    display: flex !important;
+	display: flex !important;
 }
 
 .padded-button {

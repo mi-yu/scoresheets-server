@@ -25,8 +25,7 @@ exports.ensureAuthenticated = (req, res, next) => {
 		console.log(decoded)
 
 		User.findById(userId, '-password', (userErr, user) => {
-			if (userErr || !user)
-				res.status(401).end()
+			if (userErr || !user) res.status(401).end()
 			req.user = user
 			res.locals.user = user
 			next()
@@ -35,8 +34,6 @@ exports.ensureAuthenticated = (req, res, next) => {
 }
 
 exports.needsGroup = group => (req, res, next) => {
-	if (req.user && req.user.group === group)
-		next()
-	else
-		return res.status(401).end()
+	if (req.user && req.user.group === group) next()
+	else return res.status(401).end()
 }

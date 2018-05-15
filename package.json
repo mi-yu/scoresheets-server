@@ -8,6 +8,7 @@
     "start-dev": "set NODE_ENV=development&&run-p start-server watch",
     "start-dev-server": "set NODE_ENV=development&&npm run start-server",
     "start-server": "nodemon ./bin/www",
+    "prettier-watch": "onchange '**/*.js' -- prettier --write --single-quote --tab-width 4 --use-tabs --no-semi --print-width 80 '{!(dist)/**/, models/**/, routes/**/}*.js'",
     "watch": "gulp watch",
     "test": "set NODE_ENV=test&&mocha --exit"
   },

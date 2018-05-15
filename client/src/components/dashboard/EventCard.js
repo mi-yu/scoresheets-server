@@ -4,7 +4,7 @@ import { Card, Label, Button, Grid } from 'semantic-ui-react'
 
 const EventCard = ({ _id, name, category, stateEvent, impound, division, setCurrentEvent }) => {
 	let color = ''
-	switch(category) {
+	switch (category) {
 		case 'bio':
 			color = 'green'
 			break
@@ -31,14 +31,20 @@ const EventCard = ({ _id, name, category, stateEvent, impound, division, setCurr
 				<Card.Content>
 					<Card.Header>{name}</Card.Header>
 					<Card.Description>
-						<Label size='tiny' color={color}>{category}</Label>
-						{division.split('').map((div, i) => 
-							<Label size='tiny' key={i}>{div}</Label>
-						)}
+						<Label size="tiny" color={color}>
+							{category}
+						</Label>
+						{division.split('').map((div, i) => (
+							<Label size="tiny" key={i}>
+								{div}
+							</Label>
+						))}
 					</Card.Description>
 				</Card.Content>
 				<Card.Content>
-					<Button fluid color='blue' onClick={(e) => setCurrentEvent(e, _id)}>Edit</Button>
+					<Button fluid color="blue" onClick={e => setCurrentEvent(e, _id)}>
+						Edit
+					</Button>
 				</Card.Content>
 			</Card>
 		</Grid.Column>

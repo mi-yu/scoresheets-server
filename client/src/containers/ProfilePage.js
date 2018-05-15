@@ -18,34 +18,30 @@ class ProfilePage extends React.Component {
 			fetch('/users/me', {
 				method: 'GET',
 				headers: new Headers({
-					'Authorization': 'Bearer ' + token
-				})
-			}).then(data => {
-				if (data.ok)
-					return data.json()
-				else
-					throw new Error()
-			})
-			.then(res => {
-				return this.setUser(res.user)
-			})
-			.catch(err => {
-				console.log(err)
-				this.setState({
-					redirectToLogin: true
+					Authorization: 'Bearer ' + token
 				})
 			})
+				.then(data => {
+					if (data.ok) return data.json()
+					else throw new Error()
+				})
+				.then(res => {
+					return this.setUser(res.user)
+				})
+				.catch(err => {
+					console.log(err)
+					this.setState({
+						redirectToLogin: true
+					})
+				})
 		}
 	}
 
 	render() {
 		console.log(this.props.user)
-		const {user} = this.props
+		const { user } = this.props
 
-		if (!user || this.state.redirectToLogin)
-			return (
-				<Redirect to='/users/login'/>
-			)
+		if (!user || this.state.redirectToLogin) return <Redirect to="/users/login" />
 
 		return (
 			<div>

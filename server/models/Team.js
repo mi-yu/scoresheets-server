@@ -1,58 +1,108 @@
 const mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     ScoresheetEntry = require('./ScoresheetEntry'),
-    ObjectId = mongoose.Types.ObjectId;
-
-const divisionValidator = [ val => /^(B|C)$/.test(val), 'Division must be either B or C.' ];
+    ObjectId = mongoose.Types.ObjectId
 
 const Team = new Schema({
-    tournament: { type: Schema.Types.ObjectId, ref: 'Tournament', required: true },
-    school: String,
-    division: { type: String, required: true, enum: [ 'B', 'C' ] },
-    teamNumber: { type: Number, required: true, min: 1 },
-    totalScore: Number,
-    rank: Number
-});
+    tournament: {
+        type: Schema.Types.ObjectId,
+        ref: 'Tournament',
+        required: true
+    } /* Tournament that this team belongs to. */,
+    school: String /* TODO: add field for team name detail (Team A/B/C, Team Red/Green/Blue, etc) */,
+    division: {
+        type: String,
+        required: true,
+        enum: ['B', 'C']
+    } /* A team can either be in division B or C. */,
+    teamNumber: {
+        type: Number,
+        required: true,
+        min: 1
+    } /* Must be unique within a tournament. */,
+    totalScore: Number /* Overall team score (currently only supports lowest overall score wins). */,
+    rank: Number /* Overall sweepstakes rank (calculation triggered by user). */
+})
 
+/**
+ * This code runs after the removal of a Team object.
+ * @param  {Team} doc            the removed team
+ */
 Team.post('remove', doc => {
-    console.log('removing all scoresheet entries with team id ' + doc._id);
-    ScoresheetEntry.update({}, { $pull: { scores: { team: doc._id } } }, { multi: true }, (err, affected) => {
-        if (err)
-            console.log(err.message);
-        console.log(affected);
-    });
-});
+    console.log('Removing all scoresheet entries with team id ' + doc._id + '.')
 
-Team.statics.getTopTeams = function(n, id, d, cb) {
-    let regex;
-    if (!d)
-        regex = /(B|C)/;
-    else
-        regex = d;
+    // Remove the deleted team from all ScoresheetEntries that include this team.
+    ScoresheetEntry.update(
+        {
+            /* TODO: optimize this query first filter for ScoresheetEntries that belong to same tournament as deleted team. */
+        },
+        { $pull: { scores: { team: doc._id } } },
+        { multi: true },
+        (err, affected) => {
+            // TODO: better error handling.
+            if (err) console.log(err.message)
 
-    // Default number of awards
-    if (!n)
-        n = 4;
-
-    return this.find({ tournament: id, division: regex }).sort('rank').lean().exec((err, teams) => {
-        if (err)
-            cb(err);
-        else {
-            const usedSchools = new Set();
-            let finalTeams = [];
-
-            for (let i = 0; i < teams.length; i++) {
-                if (!usedSchools.has(teams[i].school)) {
-                    finalTeams.push(teams[i]);
-                    usedSchools.add(teams[i].school);
+            // Rerank teams to reflect removal of team.
+            ScoresheetEntry.find(
+                {
+                    tournament: doc.tournament,
+                    division: doc.division
+                },
+                (err, entries) => {
+                    console.log('found entries ' + entries.length)
+                    entries.forEach(entry =>
+                        entry.rank(err => {
+                            console.log('reranking entry ' + entry._id)
+                            if (err) console.log(err)
+                        })
+                    )
                 }
-            }
-
-            finalTeams = finalTeams.splice(0, Math.min(finalTeams.length, n));
-
-            cb(null, finalTeams);
+            )
         }
-    });
-};
+    )
+})
 
-module.exports = mongoose.model('Team', Team);
+/**
+ * Get the top n teams in a given division for overall sweepstakes.
+ * @param  {Number}   n  number of teams
+ * @param  {String}   id tournament ID to calculate sweepstakes results for
+ * @param  {String}   d  division
+ * @param  {Function} cb handler that returns the top n teams per division and an optional error
+ */
+Team.statics.getTopTeams = function (n, id, d, cb) {
+    // TODO: throw error if bad regex.
+    const regex = d ? d : /(B|C)/
+
+    // Default number of awards is 4.
+    n = n ? n : 4
+
+    return this.find({
+        tournament: id,
+        division: regex
+    })
+        .sort('rank')
+        .lean()
+        .exec((err, teams) => {
+            if (err) cb(err)
+            else {
+                const usedSchools = new Set()
+                let finalTeams = []
+
+                for (let i = 0; i < teams.length; i++) {
+                    if (!usedSchools.has(teams[i].school)) {
+                        finalTeams.push(teams[i])
+                        usedSchools.add(teams[i].school)
+                    }
+                }
+
+                finalTeams = finalTeams.splice(
+                    0,
+                    Math.min(finalTeams.length, n)
+                )
+
+                cb(null, finalTeams)
+            }
+        })
+}
+
+module.exports = mongoose.model('Team', Team)
