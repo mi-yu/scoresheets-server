@@ -30,21 +30,25 @@ router.post('/new', needsGroup('admin'), (req, res, next) => {
 	tournament.save(err => {
 		if (err && err.code === 11000) {
 			req.flash('error', 'A tournament named "' + tournament.name + '" already exists.')
-			res.redirect('/admin/dashboard')
 		} else if (err) {
 			req.flash('error', 'An unknown error occurred: ' + err)
-			res.redirect('/admin/dashboard')
 		} else {
 			req.flash('success', 'Successfully created tournament "' + tournament.name + '"')
-			res.redirect('/admin/dashboard')
 		}
+
+		res.json({
+			message: req.flash()
+		})
 	})
 })
 
 router.get('/:id/delete', needsGroup('admin'), (req, res, next) => {
 	Tournament.findById(req.params.id, (err, result) => {
 		if (err) req.flash('error', 'The requested tournament could not be found.')
-		res.render('tournaments/delete', { tournament: result })
+		res.json({
+			message: req.flash(),
+			tournament: result
+		})
 	})
 })
 
@@ -54,7 +58,9 @@ router.post('/:id/delete', needsGroup('admin'), (req, res, next) => {
 		if (err) req.flash('error', 'The requested tournament could not be deleted.')
 		else if (deleted) req.flash('success', 'Successfully deleted tournament ' + deleted.name)
 
-		res.redirect('/admin/dashboard')
+		res.json({
+			message: req.flash()
+		})
 	})
 })
 
@@ -77,10 +83,11 @@ router.get(
 						if (a.name > b.name) return 1
 						return 0
 					})
-					res.locals.title = result.name + ': Manage'
-					res.render('tournaments/manage', {
+					res.json({
 						tournament: result,
-						action: '/tournaments/' + result._id + '/edit'
+						events: res.locals.events,
+						schools: res.locals.schools,
+						teams: res.locals.teams
 					})
 				}
 			})

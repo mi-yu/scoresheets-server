@@ -10,12 +10,10 @@ module.exports = new PassportLocalStrategy(
 		passReqToCallback: true
 	},
 	(req, email, password, done) => {
-		console.log(req.headers)
 		const userData = {
 			email: req.body.email.trim(),
 			password: req.body.password.trim()
 		}
-		console.log('BEFORE FINDONE')
 		return User.findOne({ email: userData.email }, (err, user) => {
 			if (err) return done(err)
 			if (!user) {
@@ -26,7 +24,6 @@ module.exports = new PassportLocalStrategy(
 			}
 
 			return user.comparePassword(userData.password, (passwordErr, isMatch) => {
-				console.log(isMatch)
 				if (err) return done(err)
 				if (!isMatch) {
 					const error = new Error('Incorrect email or password')
@@ -40,7 +37,6 @@ module.exports = new PassportLocalStrategy(
 				}
 
 				const token = jwt.sign(payload, process.env.JWT_SECRET)
-				console.log(token)
 				const userObj = user.toObject()
 				delete userObj.password
 

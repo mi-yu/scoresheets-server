@@ -5,6 +5,7 @@ import TournamentCard from '../components/dashboard/TournamentCard'
 import { Grid, Header, Divider, Message } from 'semantic-ui-react'
 import { Redirect } from 'react-router-dom'
 import EventsModal from '../components/events/EventsModal'
+import TournamentsModal from '../components/tournaments/TournamentsModal'
 
 export default class DashboardPage extends React.Component {
 	constructor(props) {
@@ -19,7 +20,8 @@ export default class DashboardPage extends React.Component {
 			editingEvent: false,
 			message: '',
 			messageVisible: false,
-			currentEvent: {}
+			currentEvent: {},
+			currentTournament: {}
 		}
 	}
 
@@ -108,7 +110,8 @@ export default class DashboardPage extends React.Component {
 			eventsModalOpen,
 			message,
 			messageVisible,
-			editingEvent
+			editingEvent,
+			currentTournament
 		} = this.state
 
 		if (redirectToLogin) return <Redirect to="/users/login" />
@@ -117,8 +120,18 @@ export default class DashboardPage extends React.Component {
 		return (
 			<div>
 				<Header as="h1">Tournaments</Header>
+				<TournamentsModal
+					currentTournament={{ ...currentTournament }}
+					modalOpen={eventsModalOpen}
+					clearCurrentEvent={this.clearCurrentEvent}
+					updateEvent={this.updateEvent}
+					setMessage={this.setMessage}
+					closeModalParent={this.closeModalParent}
+				/>
 				<Grid>
-					{tournaments.map(event => <TournamentCard key={event._id} {...event} />)}
+					{tournaments.map(tournament => (
+						<TournamentCard key={tournament._id} {...tournament} />
+					))}
 				</Grid>
 				<Divider />
 

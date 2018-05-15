@@ -9,7 +9,6 @@ module.exports = new PassportLocalStrategy(
 		passReqToCallback: true
 	},
 	(req, email, password, done) => {
-		console.log('Fffffffffffffff')
 		const newUser = new User({
 			email: email.trim(),
 			password: password.trim(),

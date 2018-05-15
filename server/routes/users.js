@@ -15,12 +15,10 @@ router.get('/me', auth.ensureAuthenticated, (req, res, next) => {
 })
 
 router.get('/login', (req, res, next) => {
-	console.log(res.locals)
 	res.json({ message: req.flash() })
 })
 
 router.post('/login', (req, res, next) => {
-	console.log(req.body)
 	passport.authenticate('local-login', (err, token, userData) => {
 		if (err) {
 			if (err.name === 'IncorrectCredentialsError')
