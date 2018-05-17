@@ -17,7 +17,9 @@ export default class DashboardPage extends React.Component {
 			user: props.user,
 			redirectToLogin: false,
 			eventsModalOpen: false,
+			tournamentsModalOpen: false,
 			editingEvent: false,
+			editingTournament: false,
 			message: '',
 			messageVisible: false,
 			currentEvent: {},
@@ -75,10 +77,37 @@ export default class DashboardPage extends React.Component {
 	updateEvent = updatedEvent => {
 		const events = this.state.events
 		const index = events.map(event => event._id).indexOf(updatedEvent._id)
-		events[index] = updatedEvent
-		console.log(this.state.events[index])
+		if (index > -1) events[index] = updatedEvent
+		else events.push(updatedEvent)
 		this.setState({
 			events
+		})
+	}
+
+	setCurrentTournament = (e, id) => {
+		const t = this.state.tournaments.find(t => t._id === id)
+		this.setState({
+			currentTournament: t,
+			tournamentsModalOpen: true,
+			editingTournament: true
+		})
+	}
+
+	clearCurrentTournament = () => {
+		this.setState({
+			currentTournament: {},
+			editingTournament: false,
+			tournamentsModalOpen: true
+		})
+	}
+
+	updateTournament = updated => {
+		const tournaments = this.state.tournaments
+		const index = tournaments.map(t => t._id).indexOf(updated._id)
+		if (index > -1) tournaments[index] = updated
+		else tournaments.push(updated)
+		this.setState({
+			tournaments
 		})
 	}
 
@@ -97,7 +126,10 @@ export default class DashboardPage extends React.Component {
 
 	closeModalParent = () => {
 		this.setState({
-			eventsModalOpen: false
+			eventsModalOpen: false,
+			tournamentsModalOpen: false,
+			editingEvent: false,
+			editingTournament: false
 		})
 	}
 
@@ -108,9 +140,11 @@ export default class DashboardPage extends React.Component {
 			redirectToLogin,
 			currentEvent,
 			eventsModalOpen,
+			tournamentsModalOpen,
 			message,
 			messageVisible,
 			editingEvent,
+			editingTournament,
 			currentTournament
 		} = this.state
 
@@ -122,15 +156,21 @@ export default class DashboardPage extends React.Component {
 				<Header as="h1">Tournaments</Header>
 				<TournamentsModal
 					currentTournament={{ ...currentTournament }}
-					modalOpen={eventsModalOpen}
-					clearCurrentEvent={this.clearCurrentEvent}
-					updateEvent={this.updateEvent}
+					editingTournament={editingTournament}
+					modalOpen={tournamentsModalOpen}
 					setMessage={this.setMessage}
+					clearCurrentTournament={this.clearCurrentTournament}
+					updateTournament={this.updateTournament}
 					closeModalParent={this.closeModalParent}
+					events={events}
 				/>
 				<Grid>
 					{tournaments.map(tournament => (
-						<TournamentCard key={tournament._id} {...tournament} />
+						<TournamentCard
+							key={tournament._id}
+							{...tournament}
+							setCurrentTournament={this.setCurrentTournament}
+						/>
 					))}
 				</Grid>
 				<Divider />

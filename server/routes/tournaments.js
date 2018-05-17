@@ -37,6 +37,7 @@ router.post('/new', needsGroup('admin'), (req, res, next) => {
 		}
 
 		res.json({
+			updatedTournament: tournament,
 			message: req.flash()
 		})
 	})

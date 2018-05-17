@@ -4,7 +4,7 @@ import OpenModalButton from '../modals/OpenModalButton'
 import Auth from '../../modules/Auth'
 import states from './StatesList.js'
 
-class EventsModal extends React.Component {
+class TournamentsModal extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
@@ -46,8 +46,16 @@ class EventsModal extends React.Component {
 	}
 
 	handleSubmitEvent = () => {
-		const { editingEvent, currentTournament, updateEvent, setMessage } = this.state
-		const url = editingEvent ? `/events/${currentTournament._id}/edit` : '/events/new'
+		const {
+			editingTournament,
+			currentTournament,
+			updateTournament,
+			setMessage,
+			openModal
+		} = this.state
+		const url = editingTournament
+			? `/tournaments/${currentTournament._id}/edit`
+			: '/tournaments/new'
 		const token = Auth.getToken()
 
 		fetch(url, {
@@ -60,18 +68,15 @@ class EventsModal extends React.Component {
 		})
 			.then(data => {
 				if (data.ok) return data.json()
-				else {
-					console.log(data)
-					throw new Error()
-				}
+				else this.closeModal()
 			})
 			.then(res => {
-				updateEvent(res.updatedEvent)
-				setMessage(res.message.success)
+				updateTournament(res.updatedTournament)
+				if (res.message.success) setMessage(res.message.success)
+				else setMessage(res.message.error)
 				this.closeModal()
 			})
 			.catch(err => {
-				console.log(err)
 				this.setState({
 					redirectToLogin: true
 				})
@@ -87,7 +92,18 @@ class EventsModal extends React.Component {
 	}
 
 	render() {
-		const { modalOpen, currentTournament, clearCurrentTournament, events } = this.state
+		const { modalOpen, currentTournament, openModal, clearCurrentTournament } = this.state
+		let eventsOptions = []
+
+		if (this.state.events) {
+			eventsOptions = this.state.events.map(event => {
+				return {
+					text: event.name,
+					value: event._id
+				}
+			})
+		}
+
 		return (
 			<Modal
 				trigger={
@@ -134,17 +150,13 @@ class EventsModal extends React.Component {
 								search
 								name="state"
 								options={states}
+								defaultValue={currentTournament.state}
 								onChange={this.handleChange}
 							/>
 						</Form.Field>
 						<Form.Field required>
 							<label>Date</label>
-							<Form.Input
-								type="date"
-								name="date"
-								value={currentTournament.date}
-								onChange={this.handleChange}
-							/>
+							<Form.Input type="date" name="date" onChange={this.handleChange} />
 						</Form.Field>
 						<Form.Field required>
 							<label>Events</label>
@@ -154,7 +166,8 @@ class EventsModal extends React.Component {
 								multiple
 								search
 								name="events"
-								options={events}
+								options={eventsOptions}
+								defaultValue={currentTournament.events}
 								onChange={this.handleChange}
 							/>
 						</Form.Field>
@@ -171,4 +184,4 @@ class EventsModal extends React.Component {
 	}
 }
 
-export default EventsModal
+export default TournamentsModal
