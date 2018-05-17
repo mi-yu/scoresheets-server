@@ -66,9 +66,9 @@ class EventsModal extends React.Component {
 				}
 			})
 			.then(res => {
-				console.log(res)
 				updateEvent(res.updatedEvent)
-				setMessage(res.message.success)
+				if (res.message.success) setMessage(res.message.success, 'success')
+				else setMessage(res.message.error, 'error')
 				this.closeModal()
 			})
 			.catch(err => {

@@ -4,6 +4,7 @@
 
 /* temp modals fix */
 .ui.page.modals.transition.visible {
+	padding-top: 10% !important;
 	display: flex !important;
 }
 

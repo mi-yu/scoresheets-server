@@ -66,7 +66,7 @@ router.post('/:id/delete', needsGroup('admin'), (req, res, next) => {
 })
 
 router.get(
-	'/:tournamentId/manage',
+	'/:tournamentId/allData',
 	needsGroup('admin'),
 	getCurrentEventsList,
 	getSchoolsList,
@@ -111,7 +111,10 @@ router.post('/:id/edit', needsGroup('admin'), (req, res, next) => {
 			if (err)
 				req.flash('error', 'There was an error updating the tournament details: ' + err)
 			else req.flash('success', 'Successfully updated tournament ' + updated.name)
-			res.redirect('/tournaments/' + req.params.id + '/manage')
+			res.json({
+				message: req.flash(),
+				updatedTournament: updated
+			})
 		}
 	)
 })

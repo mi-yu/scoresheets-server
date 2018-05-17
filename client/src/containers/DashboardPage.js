@@ -22,6 +22,7 @@ export default class DashboardPage extends React.Component {
 			editingTournament: false,
 			message: '',
 			messageVisible: false,
+			messageStatus: 'info',
 			currentEvent: {},
 			currentTournament: {}
 		}
@@ -111,9 +112,10 @@ export default class DashboardPage extends React.Component {
 		})
 	}
 
-	setMessage = msg => {
+	setMessage = (msg, status) => {
 		this.setState({
 			message: msg,
+			messageStatus: status,
 			messageVisible: true
 		})
 	}
@@ -143,10 +145,14 @@ export default class DashboardPage extends React.Component {
 			tournamentsModalOpen,
 			message,
 			messageVisible,
+			messageStatus,
 			editingEvent,
 			editingTournament,
 			currentTournament
 		} = this.state
+
+		const messageColor =
+			messageStatus === 'info' ? 'blue' : messageStatus === 'success' ? 'green' : 'red'
 
 		if (redirectToLogin) return <Redirect to="/users/login" />
 		else if (tournaments === null || events.length === 0) return null
@@ -158,9 +164,9 @@ export default class DashboardPage extends React.Component {
 					currentTournament={{ ...currentTournament }}
 					editingTournament={editingTournament}
 					modalOpen={tournamentsModalOpen}
-					setMessage={this.setMessage}
 					clearCurrentTournament={this.clearCurrentTournament}
 					updateTournament={this.updateTournament}
+					setMessage={this.setMessage}
 					closeModalParent={this.closeModalParent}
 					events={events}
 				/>
@@ -196,7 +202,11 @@ export default class DashboardPage extends React.Component {
 					))}
 				</Grid>
 				{messageVisible && (
-					<Message onDismiss={this.handleDismissMessage} content={message} />
+					<Message
+						onDismiss={this.handleDismissMessage}
+						content={message}
+						color={messageColor}
+					/>
 				)}
 			</div>
 		)
