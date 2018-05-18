@@ -1,7 +1,16 @@
 import React from 'react'
-import { Card, Label, Button, Grid } from 'semantic-ui-react'
+import { Card, Label, Button, Grid, Dropdown, Menu } from 'semantic-ui-react'
 
-const EventCard = ({ _id, name, category, stateEvent, impound, division, setCurrentEvent }) => {
+const EventCard = ({
+	_id,
+	name,
+	category,
+	stateEvent,
+	impound,
+	division,
+	finished,
+	setCurrentEvent
+}) => {
 	let color = ''
 	switch (category) {
 		case 'bio':
@@ -38,12 +47,26 @@ const EventCard = ({ _id, name, category, stateEvent, impound, division, setCurr
 								{div}
 							</Label>
 						))}
+						<Label size="tiny" color={finished ? 'green' : 'grey'}>
+							{finished ? 'finished' : 'in progress'}
+						</Label>
 					</Card.Description>
 				</Card.Content>
 				<Card.Content>
-					<Button fluid color="blue" onClick={e => setCurrentEvent(e, _id)}>
-						Edit
-					</Button>
+					{division.length === 1 ? (
+						<Button fluid color="blue">
+							Manage Scores
+						</Button>
+					) : (
+						<Menu color="blue" inverted>
+							<Dropdown item fluid text="Choose a division">
+								<Dropdown.Menu>
+									<Dropdown.Item>Manage B Scores</Dropdown.Item>
+									<Dropdown.Item>Manage C Scores</Dropdown.Item>
+								</Dropdown.Menu>
+							</Dropdown>
+						</Menu>
+					)}
 				</Card.Content>
 			</Card>
 		</Grid.Column>

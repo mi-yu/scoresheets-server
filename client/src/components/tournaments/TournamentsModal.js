@@ -46,13 +46,7 @@ class TournamentsModal extends React.Component {
 	}
 
 	handleSubmitEvent = () => {
-		const {
-			editingTournament,
-			currentTournament,
-			updateTournament,
-			setMessage,
-			openModal
-		} = this.state
+		const { editingTournament, currentTournament, updateTournament, setMessage } = this.state
 		const url = editingTournament
 			? `/tournaments/${currentTournament._id}/edit`
 			: '/tournaments/new'
@@ -92,7 +86,7 @@ class TournamentsModal extends React.Component {
 	}
 
 	render() {
-		const { modalOpen, currentTournament, openModal, clearCurrentTournament } = this.state
+		const { modalOpen, currentTournament, clearCurrentTournament } = this.state
 		let eventsOptions = []
 
 		if (this.state.events) {

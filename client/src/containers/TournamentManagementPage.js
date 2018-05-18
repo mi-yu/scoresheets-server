@@ -1,13 +1,34 @@
 import React from 'react'
 import Auth from '../modules/Auth'
 import { Redirect } from 'react-router-dom'
-import { Grid, Header, Divider, Message } from 'semantic-ui-react'
+import { Grid, Header, Divider, Message, Button, Icon, Dropdown } from 'semantic-ui-react'
+import TournamentEventCard from '../components/tournaments/TournamentEventCard.js'
+
+const awardsOptions = [
+	{
+		text: '3',
+		value: 3
+	},
+	{
+		text: '4',
+		value: 4
+	},
+	{
+		text: '5',
+		value: 5
+	},
+	{
+		text: '6',
+		value: 6
+	}
+]
 
 export default class TournamentManagementPage extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			redirectToLogin: false
+			redirectToLogin: false,
+			numAwards: 0
 		}
 	}
 
@@ -41,10 +62,50 @@ export default class TournamentManagementPage extends React.Component {
 			})
 	}
 
+	handleChange = (e, { name, value }) => this.setState({ [name]: value })
+
 	render() {
-		const { tournament, events, teams, schools, redirectToLogin } = this.state
+		const { tournament, teams, schools, redirectToLogin, numAwards } = this.state
 		if (redirectToLogin) return <Redirect to="/users/login" />
 		else if (!tournament) return null
-		return <Header as="h1"> Manage {tournament.name} </Header>
+		return (
+			<div>
+				<Header as="h1"> {tournament.name} </Header>
+				<p> {new Date(tournament.date).toLocaleDateString()} </p>
+				<p>
+					{' '}
+					{tournament.city}, {tournament.state}{' '}
+				</p>
+				<Button primary>
+					<Icon name="trophy" />
+					B Results
+				</Button>
+				<Button primary>
+					<Icon name="trophy" />
+					C Results
+				</Button>
+				<Button.Group>
+					<Dropdown
+						button
+						text={numAwards || 'Choose number of awards'}
+						name="numAwards"
+						primary
+						options={awardsOptions}
+						onChange={this.handleChange}
+						value={numAwards}
+					/>
+					<Button primary icon labelPosition="right">
+						Start Awards Presentation <Icon name="right arrow" />
+					</Button>
+				</Button.Group>
+				<Divider />
+				<Header as="h2">Events</Header>
+				<Grid>
+					{tournament.events.map(event => (
+						<TournamentEventCard key={event._id} {...event} />
+					))}
+				</Grid>
+			</div>
+		)
 	}
 }

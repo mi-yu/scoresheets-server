@@ -1,6 +1,5 @@
 import React from 'react'
-import Auth from '../../modules/Auth'
-import { Card, Label, Button, Grid } from 'semantic-ui-react'
+import { Card, Button, Grid } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 
 const TournamentCard = ({ _id, name, city, state, date, setCurrentTournament }) => (
@@ -9,7 +8,7 @@ const TournamentCard = ({ _id, name, city, state, date, setCurrentTournament }) 
 			<Card.Content>
 				<Card.Header>{name}</Card.Header>
 				<Card.Meta>
-					{city}, {state} on {date}
+					{city}, {state} on {new Date(date).toLocaleDateString()}
 				</Card.Meta>
 			</Card.Content>
 			<Card.Content extra>
