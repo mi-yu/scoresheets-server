@@ -3,6 +3,7 @@ import Auth from '../modules/Auth'
 import { Redirect } from 'react-router-dom'
 import { Grid, Header, Divider, Message, Button, Icon, Dropdown } from 'semantic-ui-react'
 import TournamentEventCard from '../components/tournaments/TournamentEventCard.js'
+import TeamsModal from '../components/tournaments/TeamsModal.js'
 
 const awardsOptions = [
 	{
@@ -28,7 +29,10 @@ export default class TournamentManagementPage extends React.Component {
 		super(props)
 		this.state = {
 			redirectToLogin: false,
-			numAwards: 0
+			numAwards: 0,
+			editingTeam: false,
+			currentTeam: {},
+			setMessage: props.setMessage
 		}
 	}
 
@@ -64,8 +68,49 @@ export default class TournamentManagementPage extends React.Component {
 
 	handleChange = (e, { name, value }) => this.setState({ [name]: value })
 
+	clearCurrentTeam = () => {
+		this.setState({
+			currentTeam: {},
+			editingTeam: false,
+			teamModalOpen: true
+		})
+	}
+
+	setCurrentTeam = (e, id) => {
+		const team = this.state.teams.find(t => t._id === id)
+		this.setState({
+			editingTeam: true,
+			currentTeam: team,
+			teamModalOpen: true
+		})
+	}
+
+	closeModalParent = () => {
+		this.setState({
+			editingTeam: false,
+			teamModalOpen: false
+		})
+	}
+
+	setMessage = (msg, status) => {
+		this.setState({
+			message: msg,
+			messageStatus: status,
+			messageVisible: true
+		})
+	}
+
 	render() {
-		const { tournament, teams, schools, redirectToLogin, numAwards } = this.state
+		const {
+			tournament,
+			teams,
+			schools,
+			redirectToLogin,
+			numAwards,
+			teamModalOpen,
+			editingTeam,
+			currentTeam
+		} = this.state
 		if (redirectToLogin) return <Redirect to="/users/login" />
 		else if (!tournament) return null
 		return (
@@ -99,6 +144,15 @@ export default class TournamentManagementPage extends React.Component {
 					</Button>
 				</Button.Group>
 				<Divider />
+				<Header as="h2">Teams</Header>
+				<TeamsModal
+					currentTeam={currentTeam}
+					tournament={tournament}
+					editingTeam={editingTeam}
+					modalOpen={teamModalOpen}
+					closeModalParent={this.closeModalParent}
+					clearCurrentTeam={this.clearCurrentTeam}
+				/>
 				<Header as="h2">Events</Header>
 				<Grid>
 					{tournament.events.map(event => (

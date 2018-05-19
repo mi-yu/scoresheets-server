@@ -2,13 +2,16 @@ import React from 'react'
 import Nav from './Nav'
 import PropTypes from 'prop-types'
 import { Route, BrowserRouter as Router } from 'react-router-dom'
-import { Container } from 'semantic-ui-react'
+import { Container, Message } from 'semantic-ui-react'
 
 import routes from '../routes.js'
 
 class Base extends React.Component {
 	state = {
-		user: {}
+		user: {},
+		messageVisible: false,
+		message: '',
+		messageStatus: ''
 	}
 
 	setUser = newUser => {
@@ -17,8 +20,24 @@ class Base extends React.Component {
 		})
 	}
 
+	handleDismissMessage = () => {
+		this.setState({
+			messageVisible: false
+		})
+	}
+
+	setMessage = (msg, status) => {
+		this.setState({
+			message: msg,
+			messageStatus: status,
+			messageVisible: true
+		})
+	}
+
 	render() {
-		const { user } = this.state
+		const { user, message, messageStatus, messageVisible } = this.state
+		const messageColor =
+			messageStatus === 'info' ? 'blue' : messageStatus === 'success' ? 'green' : 'red'
 		return (
 			<div>
 				<Router>
@@ -33,12 +52,20 @@ class Base extends React.Component {
 									render={props => (
 										<route.component
 											setUser={this.setUser}
-											user={this.state.user}
+											setMessage={this.setMessage}
+											user={user}
 											{...props}
 										/>
 									)}
 								/>
 							))}
+							{messageVisible && (
+								<Message
+									onDismiss={this.handleDismissMessage}
+									content={message}
+									color={messageColor}
+								/>
+							)}
 						</Container>
 					</div>
 				</Router>

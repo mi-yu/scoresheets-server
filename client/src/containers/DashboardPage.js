@@ -20,11 +20,9 @@ export default class DashboardPage extends React.Component {
 			tournamentsModalOpen: false,
 			editingEvent: false,
 			editingTournament: false,
-			message: '',
-			messageVisible: false,
-			messageStatus: 'info',
 			currentEvent: {},
-			currentTournament: {}
+			currentTournament: {},
+			setMessage: props.setMessage
 		}
 	}
 
@@ -112,20 +110,6 @@ export default class DashboardPage extends React.Component {
 		})
 	}
 
-	setMessage = (msg, status) => {
-		this.setState({
-			message: msg,
-			messageStatus: status,
-			messageVisible: true
-		})
-	}
-
-	handleDismissMessage = () => {
-		this.setState({
-			messageVisible: false
-		})
-	}
-
 	closeModalParent = () => {
 		this.setState({
 			eventsModalOpen: false,
@@ -143,16 +127,11 @@ export default class DashboardPage extends React.Component {
 			currentEvent,
 			eventsModalOpen,
 			tournamentsModalOpen,
-			message,
-			messageVisible,
-			messageStatus,
 			editingEvent,
 			editingTournament,
-			currentTournament
+			currentTournament,
+			setMessage
 		} = this.state
-
-		const messageColor =
-			messageStatus === 'info' ? 'blue' : messageStatus === 'success' ? 'green' : 'red'
 
 		if (redirectToLogin) return <Redirect to="/users/login" />
 		else if (tournaments === null || events.length === 0) return null
@@ -166,7 +145,7 @@ export default class DashboardPage extends React.Component {
 					modalOpen={tournamentsModalOpen}
 					clearCurrentTournament={this.clearCurrentTournament}
 					updateTournament={this.updateTournament}
-					setMessage={this.setMessage}
+					setMessage={setMessage}
 					closeModalParent={this.closeModalParent}
 					events={events}
 				/>
@@ -189,7 +168,7 @@ export default class DashboardPage extends React.Component {
 					modalOpen={eventsModalOpen}
 					clearCurrentEvent={this.clearCurrentEvent}
 					updateEvent={this.updateEvent}
-					setMessage={this.setMessage}
+					setMessage={setMessage}
 					closeModalParent={this.closeModalParent}
 				/>
 				<Grid>
@@ -201,13 +180,6 @@ export default class DashboardPage extends React.Component {
 						/>
 					))}
 				</Grid>
-				{messageVisible && (
-					<Message
-						onDismiss={this.handleDismissMessage}
-						content={message}
-						color={messageColor}
-					/>
-				)}
 			</div>
 		)
 	}
