@@ -1,7 +1,7 @@
 import React from 'react'
 import Auth from '../modules/Auth'
 import { Redirect } from 'react-router-dom'
-import { Grid, Header, Divider, Message, Button, Icon, Dropdown } from 'semantic-ui-react'
+import { Grid, Header, Divider, Message, Button, Icon, Dropdown, Input } from 'semantic-ui-react'
 import TournamentEventCard from '../components/tournaments/TournamentEventCard.js'
 import TeamsModal from '../components/tournaments/TeamsModal.js'
 
@@ -32,7 +32,8 @@ export default class TournamentManagementPage extends React.Component {
 			numAwards: 0,
 			editingTeam: false,
 			currentTeam: {},
-			setMessage: props.setMessage
+			setMessage: props.setMessage,
+			eventFilter: ''
 		}
 	}
 
@@ -92,11 +93,9 @@ export default class TournamentManagementPage extends React.Component {
 		})
 	}
 
-	setMessage = (msg, status) => {
+	handleFilterEvents = (e, { value }) => {
 		this.setState({
-			message: msg,
-			messageStatus: status,
-			messageVisible: true
+			eventFilter: value.toLowerCase()
 		})
 	}
 
@@ -109,7 +108,8 @@ export default class TournamentManagementPage extends React.Component {
 			numAwards,
 			teamModalOpen,
 			editingTeam,
-			currentTeam
+			currentTeam,
+			eventFilter
 		} = this.state
 		if (redirectToLogin) return <Redirect to="/users/login" />
 		else if (!tournament) return null
@@ -153,11 +153,28 @@ export default class TournamentManagementPage extends React.Component {
 					closeModalParent={this.closeModalParent}
 					clearCurrentTeam={this.clearCurrentTeam}
 				/>
-				<Header as="h2">Events</Header>
+				<Divider />
 				<Grid>
-					{tournament.events.map(event => (
-						<TournamentEventCard key={event._id} {...event} />
-					))}
+					<Grid.Column floated="left" width={4}>
+						<Header as="h2">Events</Header>
+					</Grid.Column>
+					<Grid.Column floated="right" width={4} textAlign="right">
+						<Input
+							name="eventFilter"
+							placeholder="Filter events..."
+							icon="search"
+							onChange={this.handleFilterEvents}
+						/>
+					</Grid.Column>
+				</Grid>
+				<Grid>
+					{tournament.events.map(event => {
+						if (
+							event.name.toLowerCase().includes(eventFilter) ||
+							event.category.toLowerCase().includes(eventFilter)
+						)
+							return <TournamentEventCard key={event._id} {...event} />
+					})}
 				</Grid>
 			</div>
 		)
