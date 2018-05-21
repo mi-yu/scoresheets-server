@@ -57,15 +57,14 @@ export default class TeamsModal extends React.Component {
 				else this.closeModal()
 			})
 			.then(res => {
-				updateTeam(currentTeam)
-				if (res.message.success) setMessage(res.message.success, 'success')
-				else setMessage(res.message.error, 'error')
+				if (res.message.success) {
+					setMessage(res.message.success, 'success')
+					updateTeam(res.team)
+				} else setMessage(res.message.error, 'error')
 				this.closeModal()
 			})
 			.catch(err => {
-				this.setState({
-					redirectToLogin: true
-				})
+				setMessage(err, 'error')
 			})
 	}
 
@@ -107,13 +106,26 @@ export default class TeamsModal extends React.Component {
 								onChange={this.handleChange}
 							/>
 						</Form.Field>
+						<Form.Field>
+							<label>Identifier (optional)</label>
+							<small>
+								Use this to distinguish between two teams from the same school (team
+								A/B/C, team Red/Green, etc)
+							</small>
+							<Form.Input
+								required
+								name="identifier"
+								value={currentTeam.identifier}
+								onChange={this.handleChange}
+							/>
+						</Form.Field>
 						<Form.Field required>
 							<label>Division</label>
 							<Form.Select
 								fluid
 								name="division"
-								options={[{ text: 'B', value: 'B' }, { text: 'C', value: ' C' }]}
-								defaultValue={currentTeam.division}
+								options={[{ text: 'B', value: 'B' }, { text: 'C', value: 'C' }]}
+								value={currentTeam.division}
 								onChange={this.handleChange}
 							/>
 						</Form.Field>
@@ -121,7 +133,8 @@ export default class TeamsModal extends React.Component {
 							<label>Team Number</label>
 							<Form.Input
 								name="teamNumber"
-								value={currentTeam.events}
+								type="number"
+								value={currentTeam.teamNumber}
 								onChange={this.handleChange}
 							/>
 						</Form.Field>

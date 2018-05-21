@@ -127,7 +127,8 @@ router.post(
 			tournament: req.params.id,
 			school: req.body.school,
 			teamNumber: req.body.teamNumber,
-			division: req.body.division
+			division: req.body.division,
+			identifier: req.body.identifier
 		})
 
 		Team.findOne(
@@ -139,24 +140,25 @@ router.post(
 			(err, result) => {
 				if (err) {
 					req.flash('error', 'An unknown error occurred: ' + err)
-					res.redirect('/tournaments/' + req.params.id + '/manage')
+					res.json({
+						message: req.flash()
+					})
 				} else if (result) {
 					req.flash(
 						'error',
 						'A team with team number ' + req.body.teamNumber + ' already exists.'
 					)
-					res.redirect('/tournaments/' + req.params.id + '/manage')
+					res.json({
+						message: req.flash()
+					})
 				} else {
 					team.save(err => {
 						if (err) req.error = err
 						else {
 							req.flash(
 								'success',
-								'Successfully created team ' +
-									team.teamNumber +
-									' (' +
-									team.school +
-									').'
+								`Successfully created team ${team.school} ${team.identifier ||
+									''} (${team.division + team.teamNumber})`
 							)
 							res.locals.addedTeam = team
 						}
@@ -169,7 +171,9 @@ router.post(
 	(req, res) => {
 		if (req.error) {
 			req.flash('error', req.error.message)
-			res.redirect('/tournaments/' + req.params.id + '/manage')
+			res.json({
+				message: req.flash()
+			})
 		} else {
 			ScoresheetEntry.update(
 				{ tournament: req.params.id, division: res.locals.addedTeam.division },
@@ -177,7 +181,10 @@ router.post(
 				{ multi: true },
 				err => {
 					if (err) req.flash('error', 'An unknown error occurred: ' + err)
-					res.redirect('/tournaments/' + req.params.id + '/manage')
+					res.json({
+						team: res.locals.addedTeam,
+						message: req.flash()
+					})
 				}
 			)
 		}

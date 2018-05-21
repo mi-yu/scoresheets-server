@@ -161,7 +161,6 @@ export default class DashboardPage extends React.Component {
 				<Divider />
 
 				<Header as="h1">2017-18 Season Events</Header>
-				<Divider />
 				<EventsModal
 					currentEvent={{ ...currentEvent }}
 					editingEvent={editingEvent}

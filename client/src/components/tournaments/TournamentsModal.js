@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Modal, Form, Dropdown } from 'semantic-ui-react'
+import { Button, Modal, Form, Dropdown, Icon } from 'semantic-ui-react'
 import OpenModalButton from '../modals/OpenModalButton'
 import Auth from '../../modules/Auth'
 import states from './StatesList.js'
@@ -65,9 +65,10 @@ class TournamentsModal extends React.Component {
 				else this.closeModal()
 			})
 			.then(res => {
-				updateTournament(currentTournament)
-				if (res.message.success) setMessage(res.message.success, 'success')
-				else setMessage(res.message.error, 'error')
+				if (res.message.success) {
+					setMessage(res.message.success, 'success')
+					updateTournament(currentTournament)
+				} else setMessage(res.message.error, 'error')
 				this.closeModal()
 			})
 			.catch(err => {
@@ -75,6 +76,44 @@ class TournamentsModal extends React.Component {
 					redirectToLogin: true
 				})
 			})
+	}
+
+	handleQuickAddEvent = key => {
+		const { events } = this.state
+		let newEvents = events
+		switch (key) {
+			case 0: // only B events
+				newEvents = events.filter(
+					event => event.division.includes('B') && !event.stateEvent
+				)
+				break
+			case 1: // only C events
+				newEvents = events.filter(
+					event => event.division.includes('C') && !event.stateEvent
+				)
+				break
+			case 2: // B events + trials
+				newEvents = events.filter(event => event.division.includes('B'))
+				break
+			case 3: // C events + trials
+				newEvents = events.filter(event => event.division.includes('C'))
+				break
+			case 4: // only B/C events
+				newEvents = events.filter(event => !event.stateEvent)
+				break
+			case 5:
+			default:
+				break
+		}
+
+		newEvents = newEvents.map(event => event._id)
+
+		this.setState({
+			currentTournament: {
+				...this.state.currentTournament,
+				events: newEvents
+			}
+		})
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -161,9 +200,65 @@ class TournamentsModal extends React.Component {
 								search
 								name="events"
 								options={eventsOptions}
-								defaultValue={currentTournament.events}
+								value={currentTournament.events}
 								onChange={this.handleChange}
 							/>
+						</Form.Field>
+						<Form.Field>
+							<Button
+								icon
+								size="tiny"
+								color="teal"
+								onClick={() => this.handleQuickAddEvent(0)}
+							>
+								<Icon name="plus" />
+								B events (no trials)
+							</Button>
+							<Button
+								icon
+								size="tiny"
+								color="teal"
+								onClick={() => this.handleQuickAddEvent(1)}
+							>
+								<Icon name="plus" />
+								C events (no trials)
+							</Button>
+							<Button
+								icon
+								size="tiny"
+								color="teal"
+								onClick={() => this.handleQuickAddEvent(2)}
+							>
+								<Icon name="plus" />
+								B events + trials
+							</Button>
+							<Button
+								icon
+								size="tiny"
+								color="teal"
+								onClick={() => this.handleQuickAddEvent(3)}
+							>
+								<Icon name="plus" />
+								C events + trials
+							</Button>
+							<Button
+								icon
+								size="tiny"
+								color="teal"
+								onClick={() => this.handleQuickAddEvent(4)}
+							>
+								<Icon name="plus" />
+								B/C events (no trials)
+							</Button>
+							<Button
+								icon
+								size="tiny"
+								color="teal"
+								onClick={() => this.handleQuickAddEvent(5)}
+							>
+								<Icon name="plus" />
+								B/C events + trials
+							</Button>
 						</Form.Field>
 					</Form>
 				</Modal.Content>

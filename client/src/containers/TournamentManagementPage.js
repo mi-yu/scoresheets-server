@@ -3,6 +3,7 @@ import Auth from '../modules/Auth'
 import { Redirect } from 'react-router-dom'
 import { Grid, Header, Divider, Message, Button, Icon, Dropdown, Input } from 'semantic-ui-react'
 import TournamentEventCard from '../components/tournaments/TournamentEventCard.js'
+import TeamCard from '../components/tournaments/TeamCard.js'
 import TeamsModal from '../components/tournaments/TeamsModal.js'
 
 const awardsOptions = [
@@ -86,6 +87,16 @@ export default class TournamentManagementPage extends React.Component {
 		})
 	}
 
+	updateTeam = updatedTeam => {
+		const teams = this.state.teams
+		const index = teams.map(team => team._id).indexOf(updatedTeam._id)
+		if (index > -1) teams[index] = updatedTeam
+		else teams.push(updatedTeam)
+		this.setState({
+			teams
+		})
+	}
+
 	closeModalParent = () => {
 		this.setState({
 			editingTeam: false,
@@ -134,12 +145,11 @@ export default class TournamentManagementPage extends React.Component {
 						button
 						text={numAwards || 'Choose number of awards'}
 						name="numAwards"
-						primary
 						options={awardsOptions}
 						onChange={this.handleChange}
 						value={numAwards}
 					/>
-					<Button primary icon labelPosition="right">
+					<Button icon primary labelPosition="right">
 						Start Awards Presentation <Icon name="right arrow" />
 					</Button>
 				</Button.Group>
@@ -151,8 +161,26 @@ export default class TournamentManagementPage extends React.Component {
 					editingTeam={editingTeam}
 					modalOpen={teamModalOpen}
 					closeModalParent={this.closeModalParent}
+					updateTeam={this.updateTeam}
 					clearCurrentTeam={this.clearCurrentTeam}
+					setMessage={this.state.setMessage}
 				/>
+				<Header as="h3">B Teams</Header>
+				<Grid>
+					{teams.length &&
+						teams.map(team => {
+							if (team.division === 'B')
+								return <TeamCard key={team._id} team={team} />
+						})}
+				</Grid>
+				<Header as="h3">C Teams</Header>
+				<Grid>
+					{teams.length &&
+						teams.map(team => {
+							if (team.division === 'C')
+								return <TeamCard key={team._id} team={team} />
+						})}
+				</Grid>
 				<Divider />
 				<Grid>
 					<Grid.Column floated="left" width={4}>
