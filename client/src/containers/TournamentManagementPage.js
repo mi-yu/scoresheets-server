@@ -1,6 +1,6 @@
 import React from 'react'
 import Auth from '../modules/Auth'
-import { Redirect } from 'react-router-dom'
+import { Redirect, Link } from 'react-router-dom'
 import { Grid, Header, Divider, Message, Button, Icon, Dropdown, Input } from 'semantic-ui-react'
 import TournamentEventCard from '../components/tournaments/TournamentEventCard.js'
 import TeamCard from '../components/tournaments/TeamCard.js'
@@ -24,6 +24,10 @@ const awardsOptions = [
 		value: 6
 	}
 ]
+
+const bulkAddStyle = {
+	marginLeft: '4px'
+}
 
 export default class TournamentManagementPage extends React.Component {
 	constructor(props) {
@@ -165,6 +169,19 @@ export default class TournamentManagementPage extends React.Component {
 					clearCurrentTeam={this.clearCurrentTeam}
 					setMessage={this.state.setMessage}
 				/>
+				<Button
+					as={Link}
+					to={{
+						pathname: `/tournaments/${tournament._id}/edit/bulkAddTeams`,
+						state: { ...tournament }
+					}}
+					style={bulkAddStyle}
+					color="green"
+				>
+					<Icon name="plus" />
+					<Icon name="zip" />
+					Bulk Add Teams
+				</Button>
 				<Header as="h3">B Teams</Header>
 				<Grid>
 					{teams.length &&
