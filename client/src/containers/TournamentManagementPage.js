@@ -25,10 +25,6 @@ const awardsOptions = [
 	}
 ]
 
-const bulkAddStyle = {
-	marginLeft: '4px'
-}
-
 export default class TournamentManagementPage extends React.Component {
 	constructor(props) {
 		super(props)
@@ -175,29 +171,31 @@ export default class TournamentManagementPage extends React.Component {
 						pathname: `/tournaments/${tournament._id}/edit/bulkAddTeams`,
 						state: { ...tournament }
 					}}
-					style={bulkAddStyle}
 					color="green"
 				>
 					<Icon name="plus" />
 					<Icon name="zip" />
 					Bulk Add Teams
 				</Button>
-				<Header as="h3">B Teams</Header>
-				<Grid>
-					{teams.length &&
-						teams.map(team => {
-							if (team.division === 'B')
-								return <TeamCard key={team._id} team={team} />
-						})}
-				</Grid>
-				<Header as="h3">C Teams</Header>
-				<Grid>
-					{teams.length &&
-						teams.map(team => {
-							if (team.division === 'C')
-								return <TeamCard key={team._id} team={team} />
-						})}
-				</Grid>
+
+				{teams.length > 0 && (
+					<div>
+						<Header as="h3">B Teams</Header>
+						<Grid>
+							{teams.map(team => {
+								if (team.division === 'B')
+									return <TeamCard key={team._id} team={team} />
+							})}
+						</Grid>
+						<Header as="h3">C Teams</Header>
+						<Grid>
+							{teams.map(team => {
+								if (team.division === 'C')
+									return <TeamCard key={team._id} team={team} />
+							})}
+						</Grid>
+					</div>
+				)}
 				<Divider />
 				<Grid>
 					<Grid.Column floated="left" width={4}>

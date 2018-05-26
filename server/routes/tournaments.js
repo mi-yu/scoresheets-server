@@ -37,7 +37,7 @@ router.post('/new', needsGroup('admin'), (req, res, next) => {
 		}
 
 		res.json({
-			updatedTournament: tournament,
+			newTournament: tournament,
 			message: req.flash()
 		})
 	})
@@ -131,42 +131,29 @@ router.post(
 			identifier: req.body.identifier
 		})
 
-		Team.findOne(
-			{
-				tournament: req.params.id,
-				teamNumber: req.body.teamNumber,
-				division: req.body.division
-			},
-			(err, result) => {
-				if (err) {
-					req.flash('error', 'An unknown error occurred: ' + err)
-					res.json({
-						message: req.flash()
-					})
-				} else if (result) {
+		team.save(err => {
+			if (err) {
+				if (err.code === 11000)
 					req.flash(
 						'error',
-						'A team with team number ' + req.body.teamNumber + ' already exists.'
+						`A team with team number ${
+							req.body.teamNumber
+						} already exists for division ${req.body.division}`
 					)
-					res.json({
-						message: req.flash()
-					})
-				} else {
-					team.save(err => {
-						if (err) req.error = err
-						else {
-							req.flash(
-								'success',
-								`Successfully created team ${team.school} ${team.identifier ||
-									''} (${team.division + team.teamNumber})`
-							)
-							res.locals.addedTeam = team
-						}
-						next()
-					})
-				}
+				else req.flash('error', `An unknown error occurred: ${err.errmsg}`)
+				return res.json({
+					message: req.flash()
+				})
+			} else {
+				req.flash(
+					'success',
+					`Successfully created team ${team.school} ${team.identifier ||
+						''} (${team.division + team.teamNumber})`
+				)
+				res.locals.addedTeam = team
+				next()
 			}
-		)
+		})
 	},
 	(req, res) => {
 		if (req.error) {

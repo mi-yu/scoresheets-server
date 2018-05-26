@@ -25,6 +25,13 @@ const Team = new Schema({
 	rank: Number /* Overall sweepstakes rank (calculation triggered by user). */
 })
 
+// Ensure that for a given tournament, there is only one team in each division with a given team number.
+Team.index({ tournament: 1, division: 1, teamNumber: 1 }, { unique: true })
+
+Team.on('index', function(err) {
+	console.log('slkfjsdlk')
+})
+
 /**
  * This code runs after the removal of a Team object.
  * @param  {Team} doc            the removed team

@@ -9,12 +9,13 @@
 }
 
 .padded-button {
-	margin: 25px 0 25px 0 !important;
+	margin-top: 1.5em !important;
+	margin-bottom: 1.5em !important;
 }
 
 .message {
 	position: fixed !important;
-	margin-bottom: 25px !important;
+	margin-bottom: 2em !important;
 	bottom: 0 !important;
 	width: 500px !important;
 	z-index: 100 !important;

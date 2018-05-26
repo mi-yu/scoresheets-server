@@ -67,7 +67,7 @@ class TournamentsModal extends React.Component {
 			.then(res => {
 				if (res.message.success) {
 					setMessage(res.message.success, 'success')
-					updateTournament(currentTournament)
+					updateTournament(res.newTournament)
 				} else setMessage(res.message.error, 'error')
 				this.closeModal()
 			})
