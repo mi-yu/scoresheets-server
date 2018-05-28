@@ -59,7 +59,7 @@ export default class TeamsModal extends React.Component {
 			.then(res => {
 				if (res.message.success) {
 					setMessage(res.message.success, 'success')
-					updateTeam(res.team)
+					updateTeam(res.newTeam)
 				} else setMessage(res.message.error, 'error')
 				this.closeModal()
 			})

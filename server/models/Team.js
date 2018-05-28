@@ -28,8 +28,18 @@ const Team = new Schema({
 // Ensure that for a given tournament, there is only one team in each division with a given team number.
 Team.index({ tournament: 1, division: 1, teamNumber: 1 }, { unique: true })
 
-Team.on('index', function(err) {
-	console.log('slkfjsdlk')
+Team.post('save', team => {
+	ScoresheetEntry.update(
+		{ tournament: team.tournament, division: team.division },
+		{ $push: { scores: { team: team._id } } },
+		{ multi: true },
+		err => {
+			if (err)
+				throw new Error(
+					`Error creating scoresheet entry for team ${team.division}${team.teamNumber}`
+				)
+		}
+	)
 })
 
 /**

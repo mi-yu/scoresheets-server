@@ -34,7 +34,8 @@ export default class TournamentManagementPage extends React.Component {
 			editingTeam: false,
 			currentTeam: {},
 			setMessage: props.setMessage,
-			eventFilter: ''
+			eventsFilter: '',
+			teamsFilter: ''
 		}
 	}
 
@@ -91,7 +92,12 @@ export default class TournamentManagementPage extends React.Component {
 		const teams = this.state.teams
 		const index = teams.map(team => team._id).indexOf(updatedTeam._id)
 		if (index > -1) teams[index] = updatedTeam
-		else teams.push(updatedTeam)
+		else {
+			teams.push(updatedTeam)
+			teams.sort((teamA, teamB) => {
+				return teamA.teamNumber > teamB.teamNumber ? 1 : -1
+			})
+		}
 		this.setState({
 			teams
 		})
@@ -104,10 +110,27 @@ export default class TournamentManagementPage extends React.Component {
 		})
 	}
 
-	handleFilterEvents = (e, { value }) => {
+	handleFilter = (e, { name, value }) => {
 		this.setState({
-			eventFilter: value.toLowerCase()
+			[name]: value.toLowerCase()
 		})
+	}
+
+	matchesTeamsFilter = team => {
+		const teamsFilter = this.state.teamsFilter
+		return (
+			teamsFilter === '' ||
+			team.school.toLowerCase().includes(teamsFilter) ||
+			String(team.teamNumber).includes(teamsFilter)
+		)
+	}
+
+	matchesEventsFilter = event => {
+		const eventsFilter = this.state.eventsFilter
+		return (
+			event.name.toLowerCase().includes(eventsFilter) ||
+			event.category.toLowerCase().includes(eventsFilter)
+		)
 	}
 
 	render() {
@@ -120,7 +143,7 @@ export default class TournamentManagementPage extends React.Component {
 			teamModalOpen,
 			editingTeam,
 			currentTeam,
-			eventFilter
+			eventsFilter
 		} = this.state
 		if (redirectToLogin) return <Redirect to="/users/login" />
 		else if (!tournament) return null
@@ -154,7 +177,19 @@ export default class TournamentManagementPage extends React.Component {
 					</Button>
 				</Button.Group>
 				<Divider />
-				<Header as="h2">Teams</Header>
+				<Grid>
+					<Grid.Column floated="left" width={4}>
+						<Header as="h2">Teams</Header>
+					</Grid.Column>
+					<Grid.Column floated="right" width={4} textAlign="right">
+						<Input
+							name="teamsFilter"
+							placeholder="Filter teams..."
+							icon="search"
+							onChange={this.handleFilter}
+						/>
+					</Grid.Column>
+				</Grid>
 				<TeamsModal
 					currentTeam={currentTeam}
 					tournament={tournament}
@@ -183,14 +218,14 @@ export default class TournamentManagementPage extends React.Component {
 						<Header as="h3">B Teams</Header>
 						<Grid>
 							{teams.map(team => {
-								if (team.division === 'B')
+								if (team.division === 'B' && this.matchesTeamsFilter(team))
 									return <TeamCard key={team._id} team={team} />
 							})}
 						</Grid>
 						<Header as="h3">C Teams</Header>
 						<Grid>
 							{teams.map(team => {
-								if (team.division === 'C')
+								if (team.division === 'C' && this.matchesTeamsFilter(team))
 									return <TeamCard key={team._id} team={team} />
 							})}
 						</Grid>
@@ -203,19 +238,16 @@ export default class TournamentManagementPage extends React.Component {
 					</Grid.Column>
 					<Grid.Column floated="right" width={4} textAlign="right">
 						<Input
-							name="eventFilter"
+							name="eventsFilter"
 							placeholder="Filter events..."
 							icon="search"
-							onChange={this.handleFilterEvents}
+							onChange={this.handleFilter}
 						/>
 					</Grid.Column>
 				</Grid>
 				<Grid>
 					{tournament.events.map(event => {
-						if (
-							event.name.toLowerCase().includes(eventFilter) ||
-							event.category.toLowerCase().includes(eventFilter)
-						)
+						if (this.matchesEventsFilter(event))
 							return <TournamentEventCard key={event._id} {...event} />
 					})}
 				</Grid>

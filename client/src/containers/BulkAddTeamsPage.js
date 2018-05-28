@@ -1,15 +1,7 @@
 import React from 'react'
-import {
-	Grid,
-	Form,
-	Message,
-	Button,
-	Icon,
-	Dropdown,
-	Input,
-	Table,
-	Header
-} from 'semantic-ui-react'
+import { Form, Button, Icon, Table, Header } from 'semantic-ui-react'
+import { Redirect } from 'react-router-dom'
+import Auth from '../modules/Auth'
 
 const divisionOptions = [
 	{
@@ -25,28 +17,90 @@ const divisionOptions = [
 export default class BulkAddTeamsPage extends React.Component {
 	constructor(props) {
 		super(props)
+		let formData = []
+		for (let i = 0; i < 10; i++) {
+			formData.push({
+				teamNumber: undefined,
+				tournament: props.location.state._id,
+				school: '',
+				identifier: '',
+				division: ''
+			})
+		}
 		this.state = {
 			tournament: { ...props.location.state },
-			numRows: 10
+			setMessage: props.setMessage,
+			formData: formData,
+			redirectToManagePage: false
 		}
 	}
 
 	handleAddRows = n => {
-		let numRows = this.state.numRows
-		numRows += n
+		let newRows = []
+		for (let i = 0; i < n; i++) {
+			newRows.push({
+				teamNumber: undefined,
+				tournament: this.state.tournament._id,
+				school: '',
+				identifier: '',
+				division: ''
+			})
+		}
 
 		this.setState({
-			numRows: numRows
+			formData: this.state.formData.concat(newRows)
 		})
 	}
 
-	handleSubmit = () => {
-		const { tournament } = this.state
-		const url = `/tournaments/${tournament._id}/edit/bulkAddTeam`
+	handleChange = (e, { row, name, value }) => {
+		let formData = this.state.formData
+		let changedRow = formData[row]
+		changedRow = {
+			...changedRow,
+			[name]: value
+		}
+		formData[row] = changedRow
+		this.setState({
+			formData: formData
+		})
+	}
+
+	validateRow = row => row.teamNumber != 0 && row.school !== '' && row.division !== ''
+
+	handleSubmit = (event, d) => {
+		const { tournament, setMessage, formData } = this.state
+		const url = `/tournaments/${tournament._id}/edit/bulkAddTeams`
+		const token = Auth.getToken()
+
+		fetch(url, {
+			method: 'POST',
+			headers: new Headers({
+				'Content-Type': 'application/json',
+				Authorization: 'Bearer ' + token
+			}),
+			body: JSON.stringify(formData.filter(row => this.validateRow(row)))
+		})
+			.then(data => {
+				if (data.ok) return data.json()
+				else throw new Error('An unknown error occurred while trying to create teams.')
+			})
+			.then(res => {
+				if (res.message.success) {
+					setMessage(res.message.success, 'success')
+					this.setState({
+						redirectToManagePage: res.redirect
+					})
+				} else setMessage(res.message.error, 'error')
+			})
+			.catch(err => {
+				setMessage(`An unknown error occurred: ${err.toString()}`, 'error')
+			})
 	}
 
 	render() {
-		const { tournament, numRows } = this.state
+		const { tournament, formData, redirectToManagePage } = this.state
+
+		if (redirectToManagePage) return <Redirect to={`/tournaments/${tournament._id}/manage`} />
 
 		return (
 			<div>
@@ -55,29 +109,50 @@ export default class BulkAddTeamsPage extends React.Component {
 					<Table celled>
 						<Table.Header>
 							<Table.Row>
-								<Table.HeaderCell>Team Number</Table.HeaderCell>
-								<Table.HeaderCell>School</Table.HeaderCell>
-								<Table.HeaderCell>Identifier</Table.HeaderCell>
-								<Table.HeaderCell>Division</Table.HeaderCell>
+								<Table.HeaderCell width={2}>Team Number</Table.HeaderCell>
+								<Table.HeaderCell width={8}>School</Table.HeaderCell>
+								<Table.HeaderCell width={3}>Identifier</Table.HeaderCell>
+								<Table.HeaderCell width={3}>Division</Table.HeaderCell>
 							</Table.Row>
-							{[...Array(numRows)].map((r, i) => (
+							{formData.map((r, i) => (
 								<Table.Row key={i}>
 									<Table.Cell>
-										<Form.Input name={`teamNumber${i}`} />
+										<Form.Input
+											name="teamNumber"
+											row={i}
+											fluid
+											value={formData[i].teamNumber}
+											onChange={this.handleChange}
+										/>
 									</Table.Cell>
 									<Table.Cell>
-										<Form.Input name={`school${i}`} />
+										<Form.Input
+											name="school"
+											row={i}
+											fluid
+											value={formData[i].school}
+											onChange={this.handleChange}
+										/>
 									</Table.Cell>
 									<Table.Cell>
-										<Form.Input name={`identifier${i}`} />
+										<Form.Input
+											name="identifier"
+											row={i}
+											fluid
+											value={formData[i].identifier}
+											onChange={this.handleChange}
+										/>
 									</Table.Cell>
 									<Table.Cell>
 										<Form.Dropdown
-											name={`division${i}`}
+											name="division"
+											row={i}
 											placeholder="Choose division"
 											fluid
 											selection
 											options={divisionOptions}
+											value={formData[i].division}
+											onChange={this.handleChange}
 										/>
 									</Table.Cell>
 								</Table.Row>
