@@ -1,12 +1,23 @@
 import React, { Component } from 'react'
-import { Menu, Item } from 'semantic-ui-react'
+import { Menu, Item, Container } from 'semantic-ui-react'
 import { Link, Redirect } from 'react-router-dom'
 import Auth from '../modules/Auth'
 
-export default class Nav extends Component {
-	state = {}
+const activeStyle = {
+	borderBottom: '1px solid black',
+	color: 'black'
+}
 
-	handleClick = e => this.setState({ activeItem: e.target.name })
+export default class Nav extends Component {
+	constructor(props) {
+		super(props)
+		const url = window.location.pathname.split('/')
+		this.state = {
+			activeItem: url[url.length - 1]
+		}
+	}
+
+	handleClick = e => this.setState({ activeItem: e.target.innerHTML.toLowerCase() })
 
 	handleLogout = () => {
 		Auth.removeToken()
@@ -17,60 +28,71 @@ export default class Nav extends Component {
 		const { activeItem } = this.state
 
 		return (
-			<Menu attached="top" inverted={true}>
-				<Item
-					name="Scribe"
-					active={(activeItem === 'Scribe').toString()}
-					onClick={this.handleClick}
+			<Container style={{ paddingTop: '0' }}>
+				<Menu
+					borderless
+					attached="top"
+					style={{
+						borderLeft: 'none',
+						borderRight: 'none',
+						borderTop: 'none'
+					}}
+					color="black"
 				>
-					<Link to="/">Scribe</Link>
-				</Item>
+					<Item
+						name="Scribe"
+						onClick={this.handleClick}
+						style={activeItem === 'scribe' || activeItem === '' ? activeStyle : {}}
+					>
+						<Link to="/">Scribe</Link>
+					</Item>
 
-				{Auth.isAuthenticated() ? (
-					<Menu.Menu position="right">
-						<Item
-							name="Dashboard"
-							active={(activeItem === 'Dashboard').toString()}
-							onClick={this.handleClick}
-						>
-							<Link to="/admin/dashboard">Dashboard</Link>
-						</Item>
-						<Item
-							name="Profile"
-							active={(activeItem === 'Profile').toString()}
-							onClick={this.handleClick}
-						>
-							<Link to="/users/me">Profile</Link>
-						</Item>
-						<Item
-							name="Logout"
-							active={(activeItem === 'Logout').toString()}
-							onClick={this.handleClick}
-						>
-							<Link to="/" onClick={this.handleLogout}>
-								Logout
-							</Link>
-						</Item>
-					</Menu.Menu>
-				) : (
-					<Menu.Menu position="right">
-						<Item
-							name="Login"
-							active={(activeItem === 'Login').toString()}
-							onClick={this.handleClick}
-						>
-							<Link to="/users/login">Login</Link>
-						</Item>
-						<Item
-							name="Register"
-							active={(activeItem === 'Register').toString()}
-							onClick={this.handleClick}
-						>
-							<Link to="/users/register">Register</Link>
-						</Item>
-					</Menu.Menu>
-				)}
-			</Menu>
+					{Auth.isAuthenticated() ? (
+						<Menu.Menu borderless position="right" color="black">
+							<Item
+								name="Dashboard"
+								style={activeItem === 'dashboard' ? activeStyle : {}}
+								onClick={this.handleClick}
+							>
+								<Link to="/admin/dashboard">Dashboard</Link>
+							</Item>
+							<Item
+								name="Profile"
+								style={activeItem === 'profile' ? activeStyle : {}}
+								onClick={this.handleClick}
+							>
+								<Link to="/users/me">Profile</Link>
+							</Item>
+							<Item
+								name="Logout"
+								style={activeItem === 'logout' ? activeStyle : {}}
+								onClick={this.handleClick}
+							>
+								<Link to="/" onClick={this.handleLogout}>
+									Logout
+								</Link>
+							</Item>
+						</Menu.Menu>
+					) : (
+						<Menu.Menu borderless position="right" color="black">
+							<Item
+								name="Login"
+								style={activeItem === 'login' ? activeStyle : {}}
+								onClick={this.handleClick}
+							>
+								<Link to="/users/login">Login</Link>
+							</Item>
+							<Item
+								name="Register"
+								style={activeItem === 'register' ? activeStyle : {}}
+								onClick={this.handleClick}
+							>
+								<Link to="/users/register">Register</Link>
+							</Item>
+						</Menu.Menu>
+					)}
+				</Menu>
+			</Container>
 		)
 	}
 }

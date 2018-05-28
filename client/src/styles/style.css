@@ -2,6 +2,15 @@
 	padding-top: 50px;
 }
 
+.active-link {
+	border-bottom: 1px solid black;
+	color: black;
+}
+
+.menu a {
+	color: #333 !important;
+}
+
 /* temp modals fix */
 .ui.page.modals.transition.visible {
 	padding-top: 10% !important;

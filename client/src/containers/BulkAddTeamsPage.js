@@ -95,6 +95,8 @@ export default class BulkAddTeamsPage extends React.Component {
 			.catch(err => {
 				setMessage(`An unknown error occurred: ${err.toString()}`, 'error')
 			})
+
+		// TODO: better error handling
 	}
 
 	render() {
