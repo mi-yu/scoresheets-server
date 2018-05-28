@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, Label, Button, Grid, Dropdown, Menu } from 'semantic-ui-react'
+import { Card, Label, Button, Grid, Dropdown, Menu, Item } from 'semantic-ui-react'
 
 const EventCard = ({
 	_id,
@@ -53,19 +53,15 @@ const EventCard = ({
 					</Card.Description>
 				</Card.Content>
 				<Card.Content>
-					{division.length === 1 ? (
-						<Button fluid color="blue">
+					{division !== 'BC' ? (
+						<Button fluid basic>
 							Manage Scores
 						</Button>
 					) : (
-						<Menu color="blue" inverted>
-							<Dropdown item fluid text="Choose a division">
-								<Dropdown.Menu>
-									<Dropdown.Item>Manage B Scores</Dropdown.Item>
-									<Dropdown.Item>Manage C Scores</Dropdown.Item>
-								</Dropdown.Menu>
-							</Dropdown>
-						</Menu>
+						<Button.Group fluid basic>
+							<Button color="blue">B Scores</Button>
+							<Button color="blue">C Scores</Button>
+						</Button.Group>
 					)}
 				</Card.Content>
 			</Card>
