@@ -116,50 +116,50 @@ export default class BulkAddTeamsPage extends React.Component {
 								<Table.HeaderCell width={3}>Identifier</Table.HeaderCell>
 								<Table.HeaderCell width={3}>Division</Table.HeaderCell>
 							</Table.Row>
-							{formData.map((r, i) => (
-								<Table.Row key={i}>
-									<Table.Cell>
-										<Form.Input
-											name="teamNumber"
-											row={i}
-											fluid
-											value={formData[i].teamNumber}
-											onChange={this.handleChange}
-										/>
-									</Table.Cell>
-									<Table.Cell>
-										<Form.Input
-											name="school"
-											row={i}
-											fluid
-											value={formData[i].school}
-											onChange={this.handleChange}
-										/>
-									</Table.Cell>
-									<Table.Cell>
-										<Form.Input
-											name="identifier"
-											row={i}
-											fluid
-											value={formData[i].identifier}
-											onChange={this.handleChange}
-										/>
-									</Table.Cell>
-									<Table.Cell>
-										<Form.Dropdown
-											name="division"
-											row={i}
-											placeholder="Choose division"
-											fluid
-											selection
-											options={divisionOptions}
-											value={formData[i].division}
-											onChange={this.handleChange}
-										/>
-									</Table.Cell>
-								</Table.Row>
-							))}
 						</Table.Header>
+						{formData.map((r, i) => (
+							<Table.Row key={i}>
+								<Table.Cell>
+									<Form.Input
+										name="teamNumber"
+										row={i}
+										fluid
+										value={formData[i].teamNumber}
+										onChange={this.handleChange}
+									/>
+								</Table.Cell>
+								<Table.Cell>
+									<Form.Input
+										name="school"
+										row={i}
+										fluid
+										value={formData[i].school}
+										onChange={this.handleChange}
+									/>
+								</Table.Cell>
+								<Table.Cell>
+									<Form.Input
+										name="identifier"
+										row={i}
+										fluid
+										value={formData[i].identifier}
+										onChange={this.handleChange}
+									/>
+								</Table.Cell>
+								<Table.Cell>
+									<Form.Dropdown
+										name="division"
+										row={i}
+										placeholder="Choose division"
+										fluid
+										selection
+										options={divisionOptions}
+										value={formData[i].division}
+										onChange={this.handleChange}
+									/>
+								</Table.Cell>
+							</Table.Row>
+						))}
 					</Table>
 				</Form>
 				<Button
