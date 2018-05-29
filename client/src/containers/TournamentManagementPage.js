@@ -137,6 +137,7 @@ export default class TournamentManagementPage extends React.Component {
 		const {
 			tournament,
 			teams,
+			schools,
 			redirectToLogin,
 			numAwards,
 			teamModalOpen,
@@ -191,6 +192,7 @@ export default class TournamentManagementPage extends React.Component {
 				<TeamsModal
 					currentTeam={currentTeam}
 					tournament={tournament}
+					schools={schools}
 					editingTeam={editingTeam}
 					modalOpen={teamModalOpen}
 					closeModalParent={this.closeModalParent}
@@ -202,7 +204,7 @@ export default class TournamentManagementPage extends React.Component {
 					as={Link}
 					to={{
 						pathname: `/tournaments/${tournament._id}/edit/bulkAddTeams`,
-						state: { ...tournament }
+						state: { tournament: { ...tournament }, schools }
 					}}
 					color="green"
 				>

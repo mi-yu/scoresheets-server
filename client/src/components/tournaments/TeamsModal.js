@@ -35,7 +35,7 @@ export default class TeamsModal extends React.Component {
 	}
 
 	handleSubmitEvent = () => {
-		const { editingTeam, currentTeam, updateTeam, setMessage, tournament } = this.state
+		const { editingTeam, currentTeam, updateTeam, setMessage, tournament, schools } = this.state
 		const tournamentId = tournament._id
 		const teamId = currentTeam._id
 		const teamDiv = currentTeam.division
@@ -77,7 +77,7 @@ export default class TeamsModal extends React.Component {
 	}
 
 	render() {
-		const { modalOpen, currentTeam, clearCurrentTeam } = this.state
+		const { modalOpen, currentTeam, clearCurrentTeam, schools } = this.state
 
 		return (
 			<Modal
@@ -99,11 +99,20 @@ export default class TeamsModal extends React.Component {
 					<Form>
 						<Form.Field required>
 							<label>School</label>
-							<Form.Input
+							<Form.Dropdown
 								required
+								search
+								selection
+								allowAdditions
 								name="school"
 								value={currentTeam.school}
 								onChange={this.handleChange}
+								options={schools.map(school => {
+									return {
+										text: school,
+										value: school
+									}
+								})}
 							/>
 						</Form.Field>
 						<Form.Field>
