@@ -121,7 +121,7 @@ export default class TournamentManagementPage extends React.Component {
 		return (
 			teamsFilter === '' ||
 			team.school.toLowerCase().includes(teamsFilter) ||
-			String(team.teamNumber).includes(teamsFilter)
+			(team.division.toLowerCase() + team.teamNumber).includes(teamsFilter)
 		)
 	}
 
