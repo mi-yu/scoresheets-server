@@ -1,7 +1,7 @@
 import React from 'react'
 import Auth from '../modules/Auth'
 import { Redirect, Link } from 'react-router-dom'
-import { Grid, Header, Divider, Message, Button, Icon, Dropdown, Input } from 'semantic-ui-react'
+import { Grid, Header, Divider, Button, Icon, Dropdown, Input } from 'semantic-ui-react'
 import TournamentEventCard from '../components/tournaments/TournamentEventCard.js'
 import TeamCard from '../components/tournaments/TeamCard.js'
 import TeamsModal from '../components/tournaments/TeamsModal.js'
@@ -137,13 +137,11 @@ export default class TournamentManagementPage extends React.Component {
 		const {
 			tournament,
 			teams,
-			schools,
 			redirectToLogin,
 			numAwards,
 			teamModalOpen,
 			editingTeam,
-			currentTeam,
-			eventsFilter
+			currentTeam
 		} = this.state
 		if (redirectToLogin) return <Redirect to="/users/login" />
 		else if (!tournament) return null
@@ -248,7 +246,13 @@ export default class TournamentManagementPage extends React.Component {
 				<Grid>
 					{tournament.events.map(event => {
 						if (this.matchesEventsFilter(event))
-							return <TournamentEventCard key={event._id} {...event} />
+							return (
+								<TournamentEventCard
+									key={event._id}
+									{...event}
+									tournamentId={tournament._id}
+								/>
+							)
 					})}
 				</Grid>
 			</div>

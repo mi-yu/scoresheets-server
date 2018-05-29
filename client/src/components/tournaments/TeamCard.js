@@ -12,7 +12,7 @@ const TeamCard = ({ team }) => {
 					</Card.Description>
 				</Card.Content>
 				<Card.Content>
-					<div className="ui three buttons">
+					<Button.Group basic>
 						<Button icon>
 							<Icon name="trophy" />
 							Scores
@@ -25,7 +25,7 @@ const TeamCard = ({ team }) => {
 							<Icon name="delete" />
 							Delete
 						</Button>
-					</div>
+					</Button.Group>
 				</Card.Content>
 			</Card>
 		</Grid.Column>

@@ -1,7 +1,8 @@
 import React from 'react'
-import { Card, Label, Button, Grid, Dropdown, Menu, Item } from 'semantic-ui-react'
+import { Card, Label, Button, Grid } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
 
-const EventCard = ({
+const TournamentEventCard = ({
 	_id,
 	name,
 	category,
@@ -9,7 +10,7 @@ const EventCard = ({
 	impound,
 	division,
 	finished,
-	setCurrentEvent
+	tournamentId
 }) => {
 	let color = ''
 	switch (category) {
@@ -54,13 +55,30 @@ const EventCard = ({
 				</Card.Content>
 				<Card.Content>
 					{division !== 'BC' ? (
-						<Button fluid basic>
+						<Button
+							fluid
+							basic
+							as={Link}
+							to={`/scoresheets/${tournamentId}/scores/${division}/${_id}`}
+						>
 							Manage Scores
 						</Button>
 					) : (
 						<Button.Group fluid basic>
-							<Button color="blue">B Scores</Button>
-							<Button color="blue">C Scores</Button>
+							<Button
+								color="blue"
+								as={Link}
+								to={`/scoresheets/${tournamentId}/scores/B/${_id}`}
+							>
+								B Scores
+							</Button>
+							<Button
+								color="blue"
+								as={Link}
+								to={`/scoresheets/${tournamentId}/scores/C/${_id}`}
+							>
+								C Scores
+							</Button>
 						</Button.Group>
 					)}
 				</Card.Content>
@@ -69,4 +87,4 @@ const EventCard = ({
 	)
 }
 
-export default EventCard
+export default TournamentEventCard

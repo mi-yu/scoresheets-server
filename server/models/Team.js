@@ -42,6 +42,24 @@ Team.post('save', team => {
 	)
 })
 
+Team.post('insertMany', docs => {
+	docs.forEach(team => {
+		ScoresheetEntry.update(
+			{ tournament: team.tournament, division: team.division },
+			{ $push: { scores: { team: team._id } } },
+			{ multi: true },
+			err => {
+				if (err)
+					throw new Error(
+						`Error creating scoresheet entry for team ${team.division}${
+							team.teamNumber
+						}`
+					)
+			}
+		)
+	})
+})
+
 /**
  * This code runs after the removal of a Team object.
  * @param  {Team} doc            the removed team
