@@ -2,6 +2,11 @@
 	padding-top: 50px;
 }
 
+.container-wide {
+	width: 80%;
+	margin: 0 auto;
+}
+
 .active-link {
 	border-bottom: 1px solid black;
 	color: black;
@@ -29,4 +34,11 @@
 	width: 500px !important;
 	z-index: 100 !important;
 	text-align: center !important;
+}
+
+.column-header {
+	transform: rotate(-90deg) translateY(45%) translateX(-500%);
+	white-space: nowrap;
+	width: 15px;
+	height: 150px;
 }

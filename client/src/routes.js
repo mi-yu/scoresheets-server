@@ -5,6 +5,7 @@ import DashboardPage from './containers/DashboardPage.js'
 import TournamentManagementPage from './containers/TournamentManagementPage.js'
 import BulkAddTeamsPage from './containers/BulkAddTeamsPage.js'
 import ScoreEntryPage from './containers/ScoreEntryPage.js'
+import ResultsPage from './containers/ResultsPage.js'
 
 const routes = [
 	{
@@ -40,6 +41,11 @@ const routes = [
 	{
 		path: '/tournaments/:id/edit/bulkAddTeams',
 		component: BulkAddTeamsPage
+	},
+
+	{
+		path: '/tournaments/:id/:division/results',
+		component: ResultsPage
 	},
 
 	{

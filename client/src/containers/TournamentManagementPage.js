@@ -154,11 +154,25 @@ export default class TournamentManagementPage extends React.Component {
 					{' '}
 					{tournament.city}, {tournament.state}{' '}
 				</p>
-				<Button primary>
+				<Button
+					primary
+					as={Link}
+					to={{
+						pathname: `/tournaments/${tournament._id}/B/results`,
+						state: { tournament: { ...tournament } }
+					}}
+				>
 					<Icon name="trophy" />
 					B Results
 				</Button>
-				<Button primary>
+				<Button
+					primary
+					as={Link}
+					to={{
+						pathname: `/tournaments/${tournament._id}/C/results`,
+						state: { tournament: { ...tournament } }
+					}}
+				>
 					<Icon name="trophy" />
 					C Results
 				</Button>

@@ -250,9 +250,11 @@ router.get(
 	getTeamsInTournamentByDivision,
 	mw.getScoresheetsInTournament,
 	mw.populateTotalsAndRankTeams,
-	(req, res, next) => {
-		res.locals.division = req.params.division
-		res.render('tournaments/results')
+	(req, res) => {
+		res.json({
+			entries: res.locals.entries,
+			teams: res.locals.teams
+		})
 	}
 )
 
@@ -262,7 +264,7 @@ router.get(
 	mw.getTopTeamsPerEvent,
 	mw.getTopBTeams,
 	mw.getTopCTeams,
-	(req, res, next) => {
+	(req, res) => {
 		res.render('tournaments/slideshow')
 	}
 )

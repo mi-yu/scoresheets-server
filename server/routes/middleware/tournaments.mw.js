@@ -6,7 +6,7 @@ exports.getScoresheetsInTournament = (req, res, next) => {
 		.populate('tournament scores.team')
 		.populate({ path: 'event', select: 'name' })
 		.exec((err, entries) => {
-			if (err) console.log(err)
+			if (err) return next(err)
 
 			// Sort entries by event name
 			entries.sort((a, b) => {
@@ -64,7 +64,7 @@ exports.populateTotalsAndRankTeams = (req, res, next) => {
 			team._id,
 			{ $set: { totalScore: team.totalScore, rank: team.rank } },
 			(err, updated) => {
-				if (err) console.log(err)
+				if (err) return next(err)
 			}
 		)
 	})
