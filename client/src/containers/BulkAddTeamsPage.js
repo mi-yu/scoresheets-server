@@ -1,6 +1,6 @@
 import React from 'react'
 import { Form, Button, Icon, Table, Header } from 'semantic-ui-react'
-import { Redirect } from 'react-router-dom'
+import { Redirect, Link } from 'react-router-dom'
 import Auth from '../modules/Auth'
 
 const divisionOptions = [
@@ -21,7 +21,7 @@ export default class BulkAddTeamsPage extends React.Component {
 		for (let i = 0; i < 10; i++) {
 			formData.push({
 				teamNumber: undefined,
-				tournament: props.location.state._id,
+				tournament: props.location.state.tournament._id,
 				school: '',
 				identifier: '',
 				division: ''
@@ -37,7 +37,8 @@ export default class BulkAddTeamsPage extends React.Component {
 			}),
 			setMessage: props.setMessage,
 			formData: formData,
-			redirectToManagePage: false
+			redirectToManagePage: false,
+			options: divisionOptions
 		}
 	}
 
@@ -68,6 +69,12 @@ export default class BulkAddTeamsPage extends React.Component {
 		formData[row] = changedRow
 		this.setState({
 			formData: formData
+		})
+	}
+
+	handleAddition = (e, { value }) => {
+		this.setState({
+			options: [{ text: value, value }, ...this.state.options]
 		})
 	}
 
@@ -106,13 +113,19 @@ export default class BulkAddTeamsPage extends React.Component {
 	}
 
 	render() {
-		const { tournament, formData, redirectToManagePage, schools } = this.state
+		const { tournament, formData, redirectToManagePage, schools, options } = this.state
 
 		if (redirectToManagePage) return <Redirect to={`/tournaments/${tournament._id}/manage`} />
 
 		return (
 			<div>
-				<Header as="h1">{tournament.name}: Bulk Add Teams</Header>
+				<Header as="h1">Bulk Add Teams</Header>
+				<Header color="blue">
+					<Link to={`/tournaments/${tournament._id}/manage`}>
+						<Icon name="long arrow left" />
+						{tournament.name}
+					</Link>
+				</Header>
 				<Form>
 					<Table celled>
 						<Table.Header>
@@ -145,7 +158,8 @@ export default class BulkAddTeamsPage extends React.Component {
 											name="school"
 											value={formData[i].school}
 											onChange={this.handleChange}
-											options={schools}
+											onAddItem={this.handleAddition}
+											options={options}
 										/>
 									</Table.Cell>
 									<Table.Cell>

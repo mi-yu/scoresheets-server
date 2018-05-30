@@ -158,6 +158,7 @@ router.post('/:id/edit/addTeam', needsGroup('admin'), (req, res) => {
 
 router.post('/:id/edit/bulkAddTeams', needsGroup('admin'), (req, res) => {
 	// console.log('flksjdfl')
+	console.log(req.body)
 	Team.insertMany(req.body, (err, docs) => {
 		if (err) {
 			if (err.code === 11000)
@@ -167,10 +168,10 @@ router.post('/:id/edit/bulkAddTeams', needsGroup('admin'), (req, res) => {
 						err.getOperation().teamNumber
 					} already exists for division ${err.getOperation().division}.`
 				)
-			else req.flash('error', `An unknown error occurred: ${err.errmsg}`)
+			else req.flash('error', `An unknown error occurred: ${err.message}`)
 			return res.json({
 				message: req.flash(),
-				invalidTeam: err.getOperation(),
+				invalidTeam: err.code === 11000 ? err.getOperation() : null,
 				redirect: false
 			})
 		} else req.flash('success', `Successfully created ${docs.length} team(s).`)

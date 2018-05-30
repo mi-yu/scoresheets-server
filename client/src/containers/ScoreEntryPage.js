@@ -1,6 +1,6 @@
 import React from 'react'
 import Auth from '../modules/Auth'
-import { Header, Button, Table, Checkbox, Form } from 'semantic-ui-react'
+import { Header, Button, Table, Checkbox, Form, Icon } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 
 const tierOptions = [...Array(5)].map((n, i) => {
@@ -107,12 +107,12 @@ export default class ScoreEntryPage extends React.Component {
 			return (
 				<div>
 					<Header as="h1">{scoresheetEntry.event.name}</Header>
-					<Link
-						className="sub header"
-						to={`/tournaments/${scoresheetEntry.tournament._id}/manage`}
-					>
-						{scoresheetEntry.tournament.name}
-					</Link>
+					<Header color="blue">
+						<Link to={`/tournaments/${scoresheetEntry.tournament._id}/manage`}>
+							<Icon name="long arrow left" />
+							{scoresheetEntry.tournament.name}
+						</Link>
+					</Header>
 					<Form>
 						<Table celled>
 							<Table.Header>
