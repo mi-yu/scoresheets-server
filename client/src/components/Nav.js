@@ -21,6 +21,7 @@ export default class Nav extends Component {
 
 	handleLogout = () => {
 		Auth.removeToken()
+		this.props.setUser({})
 		return <Redirect to="/" />
 	}
 

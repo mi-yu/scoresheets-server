@@ -6,7 +6,9 @@ const Team = require('../models/Team')
 const ScoresheetEntry = require('../models/ScoresheetEntry')
 const randomWords = require('random-words')
 const helpers = require('./helpers')
-const needsGroup = helpers.needsGroup
+const auth = require('./middleware/auth')
+const ensureAuthenticated = auth.ensureAuthenticated
+const needsGroup = auth.needsGroup
 const getCurrentEventsList = helpers.getCurrentEventsList
 const getSchoolsList = helpers.getSchoolsList
 const getTeamsInTournamentByDivision = helpers.getTeamsInTournamentByDivision
@@ -14,7 +16,7 @@ const getAllTeamsInTournament = helpers.getAllTeamsInTournament
 const mw = require('./middleware/tournaments.mw.js')
 
 /* GET users listing. */
-router.post('/new', needsGroup('admin'), (req, res, next) => {
+router.post('/new', ensureAuthenticated, needsGroup('admin'), (req, res, next) => {
 	let date = new Date(req.body.date)
 	date = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000)
 
@@ -43,7 +45,7 @@ router.post('/new', needsGroup('admin'), (req, res, next) => {
 	})
 })
 
-router.get('/:id/delete', needsGroup('admin'), (req, res, next) => {
+router.get('/:id/delete', ensureAuthenticated, needsGroup('admin'), (req, res, next) => {
 	Tournament.findById(req.params.id, (err, result) => {
 		if (err) req.flash('error', 'The requested tournament could not be found.')
 		res.json({
@@ -53,7 +55,7 @@ router.get('/:id/delete', needsGroup('admin'), (req, res, next) => {
 	})
 })
 
-router.post('/:id/delete', needsGroup('admin'), (req, res, next) => {
+router.post('/:id/delete', ensureAuthenticated, needsGroup('admin'), (req, res, next) => {
 	Tournament.findByIdAndRemove(req.params.id, (err, deleted) => {
 		deleted.remove()
 		if (err) req.flash('error', 'The requested tournament could not be deleted.')
@@ -67,6 +69,7 @@ router.post('/:id/delete', needsGroup('admin'), (req, res, next) => {
 
 router.get(
 	'/:tournamentId/allData',
+	ensureAuthenticated,
 	needsGroup('admin'),
 	getCurrentEventsList,
 	getSchoolsList,
@@ -95,7 +98,7 @@ router.get(
 	}
 )
 
-router.post('/:id/edit', needsGroup('admin'), (req, res, next) => {
+router.post('/:id/edit', ensureAuthenticated, needsGroup('admin'), (req, res, next) => {
 	Tournament.findByIdAndUpdate(
 		req.params.id,
 		{
@@ -119,7 +122,7 @@ router.post('/:id/edit', needsGroup('admin'), (req, res, next) => {
 	)
 })
 
-router.post('/:id/edit/addTeam', needsGroup('admin'), (req, res) => {
+router.post('/:id/edit/addTeam', ensureAuthenticated, needsGroup('admin'), (req, res) => {
 	const team = new Team({
 		tournament: req.params.id,
 		school: req.body.school,
@@ -156,7 +159,7 @@ router.post('/:id/edit/addTeam', needsGroup('admin'), (req, res) => {
 	})
 })
 
-router.post('/:id/edit/bulkAddTeams', needsGroup('admin'), (req, res) => {
+router.post('/:id/edit/bulkAddTeams', ensureAuthenticated, needsGroup('admin'), (req, res) => {
 	// console.log('flksjdfl')
 	console.log(req.body)
 	Team.insertMany(req.body, (err, docs) => {
