@@ -35,24 +35,24 @@ router.get('/:tournamentId/scores/:division/:eventId', needsGroup('admin'), (req
 		})
 })
 
-router.post('/:scoresheetId/updateEvent/:eventName', needsGroup('admin'), (req, res, next) => {
+router.post('/:scoresheetId/update', needsGroup('admin'), (req, res, next) => {
+	console.log(req.body)
 	ScoresheetEntry.findById(req.params.scoresheetId, (err, sse) => {
-		console.log(sse)
 		if (err) req.flash('error', 'An unknown error occurred: ' + err)
-		Object.keys(req.body).forEach(id => {
-			sse.scores.id(id).rawScore = req.body[id].rawScore || 0
-			sse.scores.id(id).tier = req.body[id].tier || 1
-			sse.scores.id(id).noShow = req.body[id].noShow || false
-			sse.scores.id(id).participationOnly = req.body[id].participationOnly || false
-			sse.scores.id(id).dq = req.body[id].dq || false
-			sse.scores.id(id).notes = req.body[id].notes || ''
-			sse.scores.id(id).tiebreaker = req.body[id].tiebreaker || 0
-			sse.scores.id(id).dropped = req.body[id].dropped || false
+		req.body.scores.forEach(score => {
+			sse.scores.id(score._id).rawScore = score.rawScore || 0
+			sse.scores.id(score._id).tier = score.tier || 1
+			sse.scores.id(score._id).noShow = score.noShow || false
+			sse.scores.id(score._id).participationOnly = score.participationOnly || false
+			sse.scores.id(score._id).dq = score.dq || false
+			sse.scores.id(score._id).notes = score.notes || ''
+			sse.scores.id(score._id).tiebreaker = score.tiebreaker || 0
+			sse.scores.id(score._id).dropped = score.dropped || false
 		})
 
 		sse.rank(err => {
 			if (err) req.flash('error', err.message)
-			else req.flash('success', 'Successfully updated scores for ' + req.params.eventName)
+			else req.flash('success', 'Successfully updated scores for ' + req.body.eventName)
 			res.json({
 				message: req.flash()
 			})

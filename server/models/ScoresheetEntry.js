@@ -1,6 +1,6 @@
 const mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
-    Event = require('./Event')
+	Schema = mongoose.Schema,
+	Event = require('./Event')
 
 /**
  * Each ScoresheetEntry has its own array of Scores, which
@@ -9,119 +9,102 @@ const mongoose = require('mongoose'),
  * @type {Schema}
  */
 const Score = new Schema({
-    team: {
-        type: Schema.Types.ObjectId,
-        ref: 'Team',
-        required: true
-    } /* The team that this score is associated with. */,
-    rawScore: { type: Number, required: true, default: 0 },
-    tiebreaker: Number,
-    tier: { type: Number, default: 1, required: true },
-    dq: { type: Boolean, default: false } /* Disqualification flag. */,
-    noShow: { type: Boolean, default: false },
-    participationOnly: { type: Boolean, default: false },
-    dropped: {
-        type: Boolean,
-        default: false
-    } /* If this score was dropped, a rank of 0 will be assigned. */,
-    rank: Number /* Calculation triggered by user. */,
-    notes: String /* Any special notes about the score (how a tiebreaker was won, reason for DQ, etc). */
+	team: {
+		type: Schema.Types.ObjectId,
+		ref: 'Team',
+		required: true
+	} /* The team that this score is associated with. */,
+	rawScore: { type: Number, required: true, default: 0 },
+	tiebreaker: { type: Number, default: 0 },
+	tier: { type: Number, default: 1, required: true },
+	dq: { type: Boolean, default: false } /* Disqualification flag. */,
+	noShow: { type: Boolean, default: false },
+	participationOnly: { type: Boolean, default: false },
+	dropped: {
+		type: Boolean,
+		default: false
+	} /* If this score was dropped, a rank of 0 will be assigned. */,
+	rank: Number /* Calculation triggered by user. */,
+	notes: String /* Any special notes about the score (how a tiebreaker was won, reason for DQ, etc). */
 })
 
 const ScoresheetEntry = new Schema({
-    tournament: {
-        type: Schema.Types.ObjectId,
-        ref: 'Tournament',
-        required: true
-    },
-    event: { type: Schema.Types.ObjectId, ref: 'Event', required: true },
-    division: { type: String, required: true, enum: ['B', 'C'] },
-    scores: [Score],
-    maxScore: Number,
-    locked: { type: Boolean, default: false }
+	tournament: {
+		type: Schema.Types.ObjectId,
+		ref: 'Tournament',
+		required: true
+	},
+	event: { type: Schema.Types.ObjectId, ref: 'Event', required: true },
+	division: { type: String, required: true, enum: ['B', 'C'] },
+	scores: [Score],
+	maxScore: Number,
+	locked: { type: Boolean, default: false }
 })
 
 /**
  * Calculate and assign ranks to each score in the ScoresheetEntry.
  * @param  {Function} callback handler which takes 1 optional error argument
  */
-ScoresheetEntry.methods.rank = function (callback) {
-    let scores = this.scores
+ScoresheetEntry.methods.rank = function(callback) {
+	let scores = this.scores
 
-    Event.findById(this.event).exec((err, event) => {
-        // Save our unbroken ties (if they exist) for error handling.
-        const unbrokenTies = { t1: {}, t2: {} }
+	Event.findById(this.event).exec((err, event) => {
+		// Save our unbroken ties (if they exist) for error handling.
+		const unbrokenTies = { t1: {}, t2: {} }
 
-        try {
-            // Sort the scores.
-            scores.sort((s1, s2) => {
-                if (s1.dropped > s2.dropped || (s1.dropped && s2.dropped))
-                    return 1
-                if (s1.dropped < s2.dropped) return -1
-                if (s1.dq > s2.dq || (s1.dq && s2.dq)) return 1
-                if (s1.dq < s2.dq) return -1
-                if (s1.noShow > s2.noShow || (s1.noShow && s2.noShow)) return 1
-                if (s1.noShow < s2.noShow) return -1
-                if (s1.participationOnly > s2.participationOnly) return 1
-                if (s1.participationOnly < s2.participationOnly) return -1
-                if (s1.tier > s2.tier) return 1
-                if (s1.tier < s2.tier) return -1
-                if (s1.rawScore > s2.rawScore)
-                    return event.highScoreWins ? -1 : 1
-                if (s1.rawScore < s2.rawScore)
-                    return event.highScoreWins ? 1 : -1
-                if (
-                    s1.rawScore === s2.rawScore &&
-                    s1.tiebreaker < s2.tiebreaker
-                )
-                    return 1
-                if (
-                    s1.rawScore === s2.rawScore &&
-                    s1.tiebreaker > s2.tiebreaker
-                )
-                    return -1
+		try {
+			// Sort the scores.
+			scores.sort((s1, s2) => {
+				if (s1.dropped > s2.dropped || (s1.dropped && s2.dropped)) return 1
+				if (s1.dropped < s2.dropped) return -1
+				if (s1.dq > s2.dq || (s1.dq && s2.dq)) return 1
+				if (s1.dq < s2.dq) return -1
+				if (s1.noShow > s2.noShow || (s1.noShow && s2.noShow)) return 1
+				if (s1.noShow < s2.noShow) return -1
+				if (s1.participationOnly > s2.participationOnly) return 1
+				if (s1.participationOnly < s2.participationOnly) return -1
+				if (s1.tier > s2.tier) return 1
+				if (s1.tier < s2.tier) return -1
+				if (s1.rawScore > s2.rawScore) return event.highScoreWins ? -1 : 1
+				if (s1.rawScore < s2.rawScore) return event.highScoreWins ? 1 : -1
+				if (s1.rawScore === s2.rawScore && s1.tiebreaker < s2.tiebreaker) return 1
+				if (s1.rawScore === s2.rawScore && s1.tiebreaker > s2.tiebreaker) return -1
 
-                // If we reach here, we have an unbroken tie.
-                unbrokenTies.t1 = s1.team
-                unbrokenTies.t2 = s2.team
-                throw new Error(
-                    `Tie must be broken between ${s1.team.school} (${s1.team
-                        .division + s1.team.teamNumber}) and ${
-                    s2.team.school
-                    } (${s2.team.division + s2.team.teamNumber})`
-                )
-            })
-        } catch (err) {
-            // When encountering unbroken ties, immediately return to callback.
-            err.unbrokenTies = unbrokenTies
-            return callback(err)
-        }
+				// If we reach here, we have an unbroken tie.
+				unbrokenTies.t1 = s1.team
+				unbrokenTies.t2 = s2.team
+				throw new Error(
+					`Tie must be broken between ${s1.team.school} (${s1.team.division +
+						s1.team.teamNumber}) and ${s2.team.school} (${s2.team.division +
+						s2.team.teamNumber})`
+				)
+			})
+		} catch (err) {
+			// When encountering unbroken ties, immediately return to callback.
+			err.unbrokenTies = unbrokenTies
+			return callback(err)
+		}
 
-        // Assign ranks to scores.
-        scores.forEach((score, i) => {
-            // If there is nothing special about the score, just give regular rank.
-            if (
-                !score.dq &&
-                !score.noShow &&
-                !score.participationOnly &&
-                !score.dropped
-            )
-                score.rank = i + 1
-            else {
-                // Otherwise, we need to handle special cases accordingly.
-                if (score.participationOnly) score.rank = scores.length
-                if (score.dq) score.rank = scores.length + 2
-                if (score.noShow) score.rank = scores.length + 1
-                if (score.dropped) score.rank = 0
-            }
-        })
+		// Assign ranks to scores.
+		scores.forEach((score, i) => {
+			// If there is nothing special about the score, just give regular rank.
+			if (!score.dq && !score.noShow && !score.participationOnly && !score.dropped)
+				score.rank = i + 1
+			else {
+				// Otherwise, we need to handle special cases accordingly.
+				if (score.participationOnly) score.rank = scores.length
+				if (score.dq) score.rank = scores.length + 2
+				if (score.noShow) score.rank = scores.length + 1
+				if (score.dropped) score.rank = 0
+			}
+		})
 
-        // Save and return to callback.
-        this.save(err => {
-            if (err) callback(err)
-            else callback()
-        })
-    })
+		// Save and return to callback.
+		this.save(err => {
+			if (err) callback(err)
+			else callback()
+		})
+	})
 }
 
 /**
@@ -131,84 +114,80 @@ ScoresheetEntry.methods.rank = function (callback) {
  * @param  {String}   d        division
  * @param  {Function} callback handler which takes 1 optional error argument
  */
-ScoresheetEntry.statics.getTopTeamsPerEvent = function (n, id, d, callback) {
-    if (!d) d = /(B|C)/
+ScoresheetEntry.statics.getTopTeamsPerEvent = function(n, id, d, callback) {
+	if (!d) d = /(B|C)/
 
-    // Default number of awards
-    if (!n) n = 4
+	// Default number of awards
+	if (!n) n = 4
 
-    // Get all ScoresheetEntries for given tournament and arrange the data.
-    // The .lean() gives us raw JS arrays to work with instead of Mongoose's
-    // default wrapped objects.
-    return this.find({ tournament: id, division: d })
-        .select('event scores division')
-        .populate('event scores.team scores')
-        .lean()
-        .exec((err, entries) => {
-            if (err) callback(err)
+	// Get all ScoresheetEntries for given tournament and arrange the data.
+	// The .lean() gives us raw JS arrays to work with instead of Mongoose's
+	// default wrapped objects.
+	return this.find({ tournament: id, division: d })
+		.select('event scores division')
+		.populate('event scores.team scores')
+		.lean()
+		.exec((err, entries) => {
+			if (err) callback(err)
 
-            // We need to count the drops so we can exclude them from the
-            // awards presentation.
-            let drops = 0
-            entries.forEach(entry => {
-                entry.scores.forEach(score => {
-                    if (
-                        !score.rank ||
-                        score.dq ||
-                        score.participationOnly ||
-                        score.noShow ||
-                        score.dropped
-                    )
-                        drops++
-                })
+			// We need to count the drops so we can exclude them from the
+			// awards presentation.
+			let drops = 0
+			entries.forEach(entry => {
+				entry.scores.forEach(score => {
+					if (
+						!score.rank ||
+						score.dq ||
+						score.participationOnly ||
+						score.noShow ||
+						score.dropped
+					)
+						drops++
+				})
 
-                // Sort the scores, moving the dropped events (zeroes) to end of array.
-                entry.scores.sort((a, b) => {
-                    if (a.rank === 0) return 1
-                    if (b.rank === 0) return -1
-                    if (a.rank > b.rank) return 1
-                    if (a.rank < b.rank) return -1
-                    return 0
-                })
+				// Sort the scores, moving the dropped events (zeroes) to end of array.
+				entry.scores.sort((a, b) => {
+					if (a.rank === 0) return 1
+					if (b.rank === 0) return -1
+					if (a.rank > b.rank) return 1
+					if (a.rank < b.rank) return -1
+					return 0
+				})
 
-                // Take at most the top n scores, throwing out drops.
-                entry.scores = entry.scores.slice(
-                    0,
-                    Math.min(
-                        n,
-                        entry.scores.length - drops,
-                        entry.scores.length
-                    )
-                )
+				// Take at most the top n scores, throwing out drops.
+				entry.scores = entry.scores.slice(
+					0,
+					Math.min(n, entry.scores.length - drops, entry.scores.length)
+				)
 
-                // Reset drops counter.
-                drops = 0
-            })
+				// Reset drops counter.
+				drops = 0
+			})
 
-            // Sort entries by event name alphabetically.
-            entries.sort((a, b) => a.event.name.localeCompare(b.event.name))
+			// Sort entries by event name alphabetically.
+			entries.sort((a, b) => a.event.name.localeCompare(b.event.name))
 
-            // Order B events before C events
-            const sortedEntries = []
+			// Order B events before C events
+			const sortedEntries = []
 
-            let b = 0
-            let c = 0
-            while (sortedEntries.length < entries.length) {
-                while (entries[b] && entries[b].division !== 'B') b++
-                if (b < entries.length) {
-                    sortedEntries.push(entries[b])
-                    b++
-                }
+			let b = 0
+			let c = 0
+			while (sortedEntries.length < entries.length) {
+				while (entries[b] && entries[b].division !== 'B') b++
+				if (b < entries.length) {
+					sortedEntries.push(entries[b])
+					b++
+				}
 
-                while (entries[c] && entries[c].division !== 'C') c++
-                if (c < entries.length) {
-                    sortedEntries.push(entries[c])
-                    c++
-                }
-            }
+				while (entries[c] && entries[c].division !== 'C') c++
+				if (c < entries.length) {
+					sortedEntries.push(entries[c])
+					c++
+				}
+			}
 
-            callback(null, sortedEntries)
-        })
+			callback(null, sortedEntries)
+		})
 }
 
 module.exports = mongoose.model('ScoresheetEntry', ScoresheetEntry)

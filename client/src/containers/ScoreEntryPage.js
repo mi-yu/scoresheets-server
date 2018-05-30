@@ -3,12 +3,75 @@ import Auth from '../modules/Auth'
 import { Header, Button, Table, Checkbox, Form } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 
+const tierOptions = [...Array(5)].map((n, i) => {
+	return {
+		value: i + 1,
+		text: String(i + 1)
+	}
+})
+
 export default class ScoreEntryPage extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
 			setMessage: props.setMessage
 		}
+	}
+
+	handleChange = (e, { scoreindex, name, value }) => {
+		const { scoresheetEntry } = this.state
+		const scores = scoresheetEntry.scores
+		scores[scoreindex] = {
+			...scores[scoreindex],
+			[name]: value
+		}
+		this.setState({
+			scoresheetEntry: {
+				...scoresheetEntry,
+				scores
+			}
+		})
+	}
+
+	handleCheck = (e, { scoreindex, name, checked }) => {
+		const { scoresheetEntry } = this.state
+		const scores = scoresheetEntry.scores
+		scores[scoreindex] = { ...scores[scoreindex], [name]: checked }
+		this.setState({ scoresheetEntry: { ...scoresheetEntry, scores } })
+	}
+
+	submitScores = () => {
+		const { scoresheetEntry, setMessage } = this.state
+		const url = `/scoresheets/${scoresheetEntry._id}/update`
+		const eventName = scoresheetEntry.event.name
+		const token = Auth.getToken()
+		const data = JSON.stringify({
+			scores: scoresheetEntry.scores,
+			eventName: eventName
+		})
+
+		fetch(url, {
+			method: 'POST',
+			headers: new Headers({
+				'Content-Type': 'application/json',
+				Authorization: 'Bearer ' + token
+			}),
+			body: data
+		})
+			.then(data => {
+				if (data.ok) return data.json()
+				else throw new Error()
+			})
+			.then(res => {
+				if (res.message.error) setMessage(res.message.error, 'error')
+				else {
+					setMessage(res.message.success, 'success')
+					this.setState(this.state)
+				}
+			})
+			.catch(err => {
+				setMessage(err, 'error')
+			})
 	}
 
 	componentDidMount() {
@@ -54,6 +117,7 @@ export default class ScoreEntryPage extends React.Component {
 						<Table celled>
 							<Table.Header>
 								<Table.Row>
+									{/* TODO: make sortable */}
 									<Table.HeaderCell width={3}>Team (School)</Table.HeaderCell>
 									<Table.HeaderCell width={2}>Raw Score</Table.HeaderCell>
 									<Table.HeaderCell width={2}>Tiebreaker</Table.HeaderCell>
@@ -76,28 +140,32 @@ export default class ScoreEntryPage extends React.Component {
 										<Table.Cell>
 											<Form.Input
 												name="rawScore"
-												scoreIndex={i}
+												scoreindex={i}
 												fluid
-												value={scoresheetEntry.scores[i].rawScore}
+												type="number"
+												value={score.rawScore}
 												onChange={this.handleChange}
 											/>
 										</Table.Cell>
 										<Table.Cell>
 											<Form.Input
 												name="tiebreaker"
-												scoreIndex={i}
+												scoreindex={i}
 												fluid
-												value={scoresheetEntry.scores[i].tiebreaker}
+												type="number"
+												value={score.tiebreaker}
 												onChange={this.handleChange}
 											/>
 										</Table.Cell>
 										<Table.Cell>
-											<Form.Input
+											<Form.Dropdown
 												name="tier"
-												scoreIndex={i}
+												scoreindex={i}
 												fluid
-												value={scoresheetEntry.scores[i].tier}
+												selection
+												value={score.tier}
 												onChange={this.handleChange}
+												options={tierOptions}
 											/>
 										</Table.Cell>
 										<Table.Cell>
@@ -106,15 +174,17 @@ export default class ScoreEntryPage extends React.Component {
 													name="dropped"
 													label="Dropped"
 													width={8}
-													checked={scoresheetEntry.scores[i].dropped}
+													checked={score.dropped}
+													scoreindex={i}
+													onChange={this.handleCheck}
 												/>
 												<Form.Checkbox
 													name="participationOnly"
 													label="PP"
 													width={8}
-													checked={
-														scoresheetEntry.scores[i].participationOnly
-													}
+													checked={score.participationOnly}
+													scoreindex={i}
+													onChange={this.handleCheck}
 												/>
 											</Form.Group>
 											<Form.Group>
@@ -122,31 +192,35 @@ export default class ScoreEntryPage extends React.Component {
 													width={8}
 													name="noShow"
 													label="NS"
-													checked={scoresheetEntry.scores[i].noShow}
+													checked={score.noShow}
+													scoreindex={i}
+													onChange={this.handleCheck}
 												/>
 												<Form.Checkbox
 													width={8}
 													name="dq"
 													label="DQ"
-													checked={scoresheetEntry.scores[i].dq}
+													checked={score.dq}
+													scoreindex={i}
+													onChange={this.handleCheck}
 												/>
 											</Form.Group>
 										</Table.Cell>
 										<Table.Cell>
 											<Form.TextArea
 												name="notes"
-												scoreIndex={i}
+												scoreindex={i}
 												fluid
-												value={scoresheetEntry.scores[i].notes}
+												value={score.notes}
 												onChange={this.handleChange}
 											/>
 										</Table.Cell>
-										<Table.Cell>{scoresheetEntry.scores[i].rank}</Table.Cell>
+										<Table.Cell textAlign="center">{score.rank}</Table.Cell>
 									</Table.Row>
 								))}
 							</Table.Body>
 						</Table>
-						<Button type="submit" color="green">
+						<Button type="submit" color="green" onClick={this.submitScores}>
 							Save Scores
 						</Button>
 					</Form>
