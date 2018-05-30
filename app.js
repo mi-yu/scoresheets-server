@@ -7,18 +7,18 @@ const flash = require('express-flash')
 const session = require('express-session')
 
 // Routes
-const basic = require('./routes/basic')
-const users = require('./routes/users')
-const admin = require('./routes/admin')
-const tournaments = require('./routes/tournaments')
-const scoresheets = require('./routes/scoresheets')
-const events = require('./routes/events')
+const basic = require('./server/routes/basic')
+const users = require('./server/routes/users')
+const admin = require('./server/routes/admin')
+const tournaments = require('./server/routes/tournaments')
+const scoresheets = require('./server/routes/scoresheets')
+const events = require('./server/routes/events')
 
 // DB and authentication
 const mongoose = require('mongoose')
 const passport = require('passport')
-const RegisterStrategy = require('./passport/register')
-const LoginStrategy = require('./passport/login')
+const RegisterStrategy = require('./server/passport/register')
+const LoginStrategy = require('./server/passport/login')
 
 // Create Express app
 const app = express()
@@ -38,18 +38,12 @@ if ('development' == env) {
 	mongoose.connection.openUri(process.env.DB_URL)
 }
 
-// view engine setup
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'pug');
-
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 app.use(session({ secret: 'koala', resave: false, saveUninitialized: true }))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser())
-app.use(express.static(path.join(__dirname, 'dist')))
-app.use(express.static(path.join(__dirname, 'client/build')))
 app.use(passport.initialize())
 app.use(flash())
 
@@ -60,6 +54,7 @@ passport.use('local-login', LoginStrategy)
 mongoose.Promise = global.Promise
 
 // Use routes
+app.use(express.static(path.join(__dirname, 'client/build')))
 app.use('/', basic)
 app.use('/users', users)
 app.use('/admin', admin)
@@ -87,4 +82,8 @@ app.use((err, req, res, next) => {
 	res.json(err)
 })
 
-module.exports = app
+app.set('port', process.env.PORT || 5000)
+
+app.listen(app.get('port'), () => {
+	console.log('App running at localhost:%d in %s mode', app.get('port'), app.get('env'))
+})

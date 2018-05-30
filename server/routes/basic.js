@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
 
-router.get('/', function(req, res, next) {
-	res.render('index', { title: 'Scribe', lightNav: true })
+router.get('/', (req, res) => {
+	res.sendFile('../../client/build/index.html')
 })
 
 module.exports = router
