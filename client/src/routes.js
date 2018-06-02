@@ -6,6 +6,7 @@ import TournamentManagementPage from './containers/TournamentManagementPage.js'
 import BulkAddTeamsPage from './containers/BulkAddTeamsPage.js'
 import ScoreEntryPage from './containers/ScoreEntryPage.js'
 import ResultsPage from './containers/ResultsPage.js'
+import Slideshow from './containers/Slideshow.js'
 
 const routes = [
 	{
@@ -46,6 +47,11 @@ const routes = [
 	{
 		path: '/tournaments/:id/:division/results',
 		component: ResultsPage
+	},
+
+	{
+		path: '/tournaments/:id/slideshow',
+		component: Slideshow
 	},
 
 	{

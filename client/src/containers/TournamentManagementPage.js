@@ -185,7 +185,16 @@ export default class TournamentManagementPage extends React.Component {
 						onChange={this.handleChange}
 						value={numAwards}
 					/>
-					<Button icon primary labelPosition="right">
+					<Button
+						icon
+						primary
+						labelPosition="right"
+						as={Link}
+						to={{
+							pathname: `/tournaments/${tournament._id}/slideshow`,
+							state: { numAwards, tournament }
+						}}
+					>
 						Start Awards Presentation <Icon name="right arrow" />
 					</Button>
 				</Button.Group>

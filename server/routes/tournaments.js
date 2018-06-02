@@ -268,7 +268,16 @@ router.get(
 	mw.getTopBTeams,
 	mw.getTopCTeams,
 	(req, res) => {
-		res.render('tournaments/slideshow')
+		Tournament.findById(req.params.tournamentId, (err, tournament) => {
+			if (err) req.flash('error', err.message)
+			res.json({
+				message: req.flash(),
+				tournament,
+				topTeamsPerEvent: res.locals.topTeamsPerEvent,
+				topBTeams: res.locals.topBTeams,
+				topCTeams: res.locals.topCTeams
+			})
+		})
 	}
 )
 

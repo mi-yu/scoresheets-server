@@ -1,9 +1,8 @@
-
 const app = require('../app')
 const mongoose = require('mongoose')
-const Tournament = require('../models/Tournament')
-const Event = require('../models/Event')
-const User = require('../models/User')
+const Tournament = require('../server/models/Tournament')
+const Event = require('../server/models/Event')
+const User = require('../server/models/User')
 
 const chai = require('chai')
 const chaiHttp = require('chai-http')
@@ -26,22 +25,26 @@ const admin = {
 	name: 'admin'
 }
 
-let tournament;
-let locals;
+let tournament
+let locals
 
 describe('Test tournament routes', () => {
-	before((done) => {
+	before(done => {
 		mongoose.connection.openUri(process.env.DB_TEST_URL)
-		User.register(new User({ email: admin.email, name: admin.name }), admin.password, (err, user) => {
-	        // user.email.should.equal('admin@scribe.com')
-	        // user.name.should.equal('admin')
-	        done()
-	    });
+		User.register(
+			new User({ email: admin.email, name: admin.name }),
+			admin.password,
+			(err, user) => {
+				// user.email.should.equal('admin@scribe.com')
+				// user.name.should.equal('admin')
+				done()
+			}
+		)
 	})
 
-	beforeEach((done) => {
+	beforeEach(done => {
 		tournament = new Tournament(baseTournament)
-		Event.find({inRotation: true}, (err, events) => {
+		Event.find({ inRotation: true }, (err, events) => {
 			tournament.events = events.map(event => event._id)
 			tournament.save((err, doc) => {
 				console.log('finishing beforeEach')
@@ -58,16 +61,17 @@ describe('Test tournament routes', () => {
 		return
 	})
 
-	after((done) => {
-		Tournament.remove({}, (err) => {
-			User.remove({}, (err) => {
+	after(done => {
+		Tournament.remove({}, err => {
+			User.remove({}, err => {
 				mongoose.disconnect(done)
 			})
 		})
 	})
 
 	it('GET /', () => {
-		chai.request(app)
+		chai
+			.request(app)
 			.get('/admin/dashboard')
 			.end((err, res) => {
 				console.log(res.locals)
