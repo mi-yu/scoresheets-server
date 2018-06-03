@@ -110,7 +110,7 @@ Team.statics.getTopTeams = function(n, id, d, cb) {
 	const regex = d ? d : /(B|C)/
 
 	// Default number of awards is 4.
-	n = n ? n : 4
+	n = n || 4
 
 	return this.find({
 		tournament: id,

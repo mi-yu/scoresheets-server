@@ -11,10 +11,25 @@ const theme = createTheme(
 		quarternary: '#CECECE'
 	},
 	{
-		primary: 'Montserrat',
-		secondary: 'Helvetica'
+		primary: 'Roboto'
 	}
 )
+
+const getRankSuffix = n => {
+	switch (n) {
+		case 1:
+			return '1st'
+			break
+		case 2:
+			return '2nd'
+			break
+		case 3:
+			return '3rd'
+			break
+		default:
+			return n + 'th'
+	}
+}
 
 export default class Slideshow extends React.Component {
 	constructor(props) {
@@ -40,8 +55,16 @@ export default class Slideshow extends React.Component {
 				else throw new Error()
 			})
 			.then(res => {
+				let sweepstakes = res.topCTeams
+				let n = 1
+				for (let i = 0; i < res.topBTeams.length; i++) {
+					sweepstakes.splice(n, 0, res.topBTeams[i])
+					n += 2
+				}
 				this.setState({
-					...res
+					topTeamsPerEvent: res.topTeamsPerEvent,
+					tournament: res.tournament,
+					sweepstakes: sweepstakes.reverse()
 				})
 			})
 			.catch(err => {
@@ -53,7 +76,7 @@ export default class Slideshow extends React.Component {
 	}
 
 	render() {
-		const { topTeamsPerEvent, topBTeams, topCTeams, tournament } = this.state
+		const { topTeamsPerEvent, sweepstakes, tournament } = this.state
 		if (!topTeamsPerEvent) return null
 		return (
 			<Deck theme={theme} progress="none" controls={false}>
@@ -83,6 +106,30 @@ export default class Slideshow extends React.Component {
 						</Slide>
 					)
 				})}
+				{sweepstakes.map((team, i) => {
+					return (
+						<Slide key={team._id}>
+							<Heading size={4} padding="50px">
+								Sweepstakes {team.division} - {getRankSuffix(team.rank)} Place
+							</Heading>
+							<Appear>
+								<Text textAlign="center" textSize="64px">
+									{team.division}
+									{team.teamNumber} ({team.school}
+									{team.identifier ? ' ' + team.identifier : ''})
+								</Text>
+							</Appear>
+						</Slide>
+					)
+				})}
+				<Slide>
+					<Heading size={3} padding="50px">
+						Thanks for coming!
+					</Heading>
+					<Text textAlign="center">
+						Visit scribbl.io/tournamentName/results for full results.
+					</Text>
+				</Slide>
 			</Deck>
 		)
 	}
