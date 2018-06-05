@@ -42,6 +42,7 @@ export default class Slideshow extends React.Component {
 
 	componentDidMount() {
 		const { id } = this.props.match.params
+		const { setMessage } = this.props
 		const token = Auth.getToken()
 
 		fetch(`/tournaments/${id}/slideshow`, {
@@ -68,10 +69,7 @@ export default class Slideshow extends React.Component {
 				})
 			})
 			.catch(err => {
-				console.log(err)
-				this.setState({
-					redirectToLogin: true
-				})
+				setMessage(err, 'error')
 			})
 	}
 
@@ -82,7 +80,7 @@ export default class Slideshow extends React.Component {
 			<Deck theme={theme} progress="none" controls={false}>
 				<Slide transition={['fade']}>
 					<Heading size={1}>{tournament.name} Awards</Heading>
-					<Heading size={4}>{tournament.date}</Heading>
+					<Heading size={4}>{new Date(tournament.date).toLocaleDateString()}</Heading>
 				</Slide>
 				{topTeamsPerEvent.map((entry, i) => {
 					return (

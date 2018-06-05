@@ -7,6 +7,7 @@ import BulkAddTeamsPage from './containers/BulkAddTeamsPage.js'
 import ScoreEntryPage from './containers/ScoreEntryPage.js'
 import ResultsPage from './containers/ResultsPage.js'
 import Slideshow from './containers/Slideshow.js'
+import RegisterPage from './containers/RegisterPage.js'
 
 const routes = [
 	{
@@ -21,7 +22,7 @@ const routes = [
 
 	{
 		path: '/users/register',
-		component: HomePage
+		component: RegisterPage
 	},
 
 	{

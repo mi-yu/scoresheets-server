@@ -1,14 +1,15 @@
 const mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
-    passportLocalMongoose = require('passport-local-mongoose'),
-    bcrypt = require('bcrypt');
+	Schema = mongoose.Schema,
+	passportLocalMongoose = require('passport-local-mongoose'),
+	bcrypt = require('bcrypt')
 
 const User = new Schema({
-    name: { type: String, default: null },
-    email: { type: String, default: null, unique: true },
-    group: { type: String, default: 'user', lowercase: true, trim: true },
-    password: String
-});
+	firstName: String,
+	lastName: String,
+	email: { type: String, unique: true },
+	group: { type: String, required: true, lowercase: true, trim: true },
+	password: String
+})
 
 User.methods.comparePassword = function(password, cb) {
 	bcrypt.compare(password, this.password, cb)
@@ -16,7 +17,7 @@ User.methods.comparePassword = function(password, cb) {
 
 User.pre('save', function(next) {
 	const user = this
-	if (!user.isModified('password')) next();
+	if (!user.isModified('password')) next()
 
 	bcrypt.genSalt((saltError, salt) => {
 		if (saltError) {
@@ -31,4 +32,4 @@ User.pre('save', function(next) {
 	})
 })
 
-module.exports = mongoose.model('User', User);
+module.exports = mongoose.model('User', User)

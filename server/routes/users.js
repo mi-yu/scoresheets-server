@@ -2,6 +2,7 @@ const router = require('express').Router()
 const User = require('../models/User')
 const passport = require('passport')
 const auth = require('./middleware/auth')
+const register = require('../passport/register')
 
 /* GET users listing. */
 router.get('/', (req, res, next) => {
@@ -42,27 +43,6 @@ router.post('/login', (req, res, next) => {
 	})(req, res, next)
 })
 
-router.get('/register', (req, res, next) => {
-	res.render('user/register')
-})
-
-router.post('/register', (req, res, next) => {
-	const newUser = new User({
-		email: req.body.email.trim(),
-		password: req.body.password.trim(),
-		name: req.body.name.trim()
-	})
-
-	newUser.save(err => {
-		if (err) {
-			console.log(err)
-			return next(err)
-		}
-		res.json({
-			success: true,
-			message: 'Registration successful.'
-		})
-	})
-})
+router.post('/register', register)
 
 module.exports = router

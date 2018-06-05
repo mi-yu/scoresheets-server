@@ -1,26 +1,23 @@
 const User = require('../models/User')
-const PassportLocalStrategy = require('passport-local').Strategy
 
-module.exports = new PassportLocalStrategy(
-	{
-		usernameField: 'email',
-		passwordField: 'password',
-		session: false,
-		passReqToCallback: true
-	},
-	(req, email, password, done) => {
-		const newUser = new User({
-			email: email.trim(),
-			password: password.trim(),
-			name: req.body.name.trim()
-		})
-
-		newUser.save(err => {
-			if (err) {
-				console.log(err)
-				return done(err)
+module.exports = (req, res, next) => {
+	if (req.body.group === 'admin')
+		return res.json({
+			message: {
+				error: 'Cannot register as admin.'
 			}
-			return done(null)
 		})
-	}
-)
+	const newUser = new User({
+		...req.body
+	})
+
+	newUser.save(err => {
+		if (err) return next(err)
+
+		return res.json({
+			message: {
+				success: 'Registration successful.'
+			}
+		})
+	})
+}

@@ -1,12 +1,12 @@
 import React from 'react'
 import LoginForm from '../components/users/LoginForm'
+import { Header } from 'semantic-ui-react'
 
-const LoginPage = props => {
-	console.log(props)
+const LoginPage = ({ setUser }) => {
 	return (
 		<div>
-			<h1> Login </h1>
-			<LoginForm setUser={props.setUser} />
+			<Header as="h1"> Login </Header>
+			<LoginForm setUser={setUser} />
 		</div>
 	)
 }
