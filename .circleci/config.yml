@@ -27,6 +27,9 @@ jobs:
           - v1-dependencies-
 
       - run: yarn install
+      
+      # Rebuild bcrypt
+      - run: yarn install bcrypt
 
       - save_cache:
           paths:
