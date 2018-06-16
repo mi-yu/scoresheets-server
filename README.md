@@ -1,6 +1,8 @@
 # ✒️ Scribe
 A scorekeeping and judging system for Science Olympiad tournaments.
 
+[![CircleCI](https://circleci.com/gh/mi-yu/scribe.svg?style=svg&circle-token=bd8b567fefd15274b718dd1210c78328e9ae1309)](https://circleci.com/gh/mi-yu/scribe)
+
 ### Features:
 - [x] Allows event supervisors to submit scores
 - [x] Automatic generation of scoresheets and awards presentation
