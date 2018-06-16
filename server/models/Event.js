@@ -14,7 +14,6 @@ const Event = new Schema({
 		enum: ['B', 'C', 'BC']
 	} /* An event can, based on the season, be in any combination of divison B/C. */,
 	inRotation: { type: Boolean, default: false },
-	building: { type: Boolean, default: false },
 	impound: { type: Boolean, default: false },
 	stateEvent: {
 		type: Boolean,

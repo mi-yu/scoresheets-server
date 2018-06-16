@@ -88,6 +88,4 @@ app.use((err, req, res, next) => {
 
 app.set('port', process.env.PORT || 5000)
 
-app.listen(app.get('port'), () => {
-	console.log('App running at localhost:%d in %s mode', app.get('port'), app.get('env'))
-})
+module.exports = app

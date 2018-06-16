@@ -4,14 +4,13 @@
 	"version": "0.0.0",
 	"private": true,
 	"scripts": {
-		"start": "node app.js",
+		"start": "node server.js",
 		"start-dev": "set NODE_ENV=development&&run-p start-server watch",
-		"start-dev-server": "set NODE_ENV=development&&npm run start-server",
-		"start-server": "nodemon app.js",
-		"prettier-watch":
-			"onchange '**/*.js' -- prettier --write --single-quote --tab-width 4 --use-tabs --no-semi --print-width 80 '{!(dist)/**/, models/**/, routes/**/}*.js'",
+		"start-dev-server": "set NODE_ENV=development&&yarn run start-server",
+		"start-server": "nodemon server.js",
+		"prettier-watch": "onchange '**/*.js' -- prettier --write --single-quote --tab-width 4 --use-tabs --no-semi --print-width 80 '{!(dist)/**/, models/**/, routes/**/}*.js'",
 		"watch": "gulp watch",
-		"test": "set NODE_ENV=test&&mocha --exit",
+		"test": "set NODE_ENV=test && set DB_TEST_URL=mongodb://localhost/scribe-dev-test && jest",
 		"heroku-postbuild": "cd client && yarn --production=false && yarn run build"
 	},
 	"jest": {
@@ -27,7 +26,6 @@
 		"express-session": "^1.15.6",
 		"jsonwebtoken": "^8.2.1",
 		"mongoose": "^4.13.12",
-		"mongoose-double": "0.0.1",
 		"morgan": "^1.9.0",
 		"passport": "^0.4.0",
 		"passport-local": "^1.0.0",
@@ -37,30 +35,15 @@
 		"serve-favicon": "^2.5.0"
 	},
 	"devDependencies": {
-		"chai": "^4.1.2",
-		"chai-http": "^3.0.0",
 		"dotenv": "^4.0.0",
-		"gulp": "^3.9.1",
-		"gulp-autoprefixer": "^4.1.0",
-		"gulp-cache": "^1.0.2",
-		"gulp-clean": "^0.3.2",
-		"gulp-clean-css": "^3.9.4",
-		"gulp-concat": "^2.6.1",
-		"gulp-imagemin": "^4.1.0",
-		"gulp-jshint": "^2.1.0",
-		"gulp-livereload": "^3.8.1",
-		"gulp-prettier": "^1.1.0",
-		"gulp-pug-beautify": "0.0.1",
-		"gulp-rename": "^1.2.2",
-		"gulp-sass": "^3.2.1",
-		"gulp-uglify": "^3.0.0",
-		"jshint": "^2.9.5",
-		"mocha": "^4.1.0",
+		"mockingoose": "^2.10.1",
 		"nodemon": "^1.17.4",
-		"tiny-lr": "^1.1.1"
+		"supertest": "^3.1.0"
 	},
 	"nodemonConfig": {
-		"ignore": ["client/**/*"],
+		"ignore": [
+			"client/**/*"
+		],
 		"delay": 10
 	}
 }
