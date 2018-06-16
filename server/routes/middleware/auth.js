@@ -13,7 +13,7 @@ exports.ensureAuthenticated = (req, res, next) => {
 	jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
 		if (err) {
 			console.log(err)
-			return res.status(401).json({
+			return res.status(400).json({
 				message: {
 					error: 'Incorrect credentials, please try again.'
 				}
@@ -23,7 +23,7 @@ exports.ensureAuthenticated = (req, res, next) => {
 		const userId = decoded.sub
 
 		User.findById(userId, '-password', (userErr, user) => {
-			if (userErr || !user) res.status(401).end()
+			if (userErr || !user) res.status(400).end()
 			req.user = user
 			res.locals.user = user
 			next()
@@ -34,7 +34,7 @@ exports.ensureAuthenticated = (req, res, next) => {
 exports.needsGroup = group => (req, res, next) => {
 	if (req.user && req.user.group === group) next()
 	else
-		return res.status(401).json({
+		return res.status(403).json({
 			message: {
 				error: 'Unauthorized access.'
 			}
