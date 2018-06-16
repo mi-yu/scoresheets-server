@@ -2670,10 +2670,6 @@ mkdirp@^0.5.0, mkdirp@^0.5.1:
   dependencies:
     minimist "0.0.8"
 
-mockingoose@^2.10.1:
-  version "2.10.1"
-  resolved "https://registry.yarnpkg.com/mockingoose/-/mockingoose-2.10.1.tgz#d0348c0b52dfee6171f7ef36a6773accc6da8683"
-
 mongodb-core@2.1.18:
   version "2.1.18"
   resolved "https://registry.yarnpkg.com/mongodb-core/-/mongodb-core-2.1.18.tgz#4c46139bdf3a1f032ded91db49f38eec01659050"
