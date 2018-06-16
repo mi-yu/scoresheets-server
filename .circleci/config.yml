@@ -27,15 +27,15 @@ jobs:
           - v1-dependencies-
 
       - run: 
-        - name: Install dependencies
-        - command: |
+        name: Install dependencies
+        command: |
             yarn install
             npm rebuild bcrypt --update-binary
 
       # Install Mongo CLI
       - run:
-        - name: Install Mongo CLI tools
-        - command: |
+        name: Install Mongo CLI tools
+        command: |
             sudo apt-get install apt-transport-https
             sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
             echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.6 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list
