@@ -1,0 +1,632 @@
+swagger: '2.0'
+info:
+  description: This is a simple API
+  version: 1.0.0
+  title: Simple Inventory API
+  # put the contact info for your development or API team
+  contact:
+    email: you@your-company.com
+
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+paths:
+  /users:
+    get:
+      tags:
+        - Users
+      summary: Get a list of users
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/User"
+        401:
+          description: Unauthorized
+          schema:
+            $ref: "#/responses/ErrorResponse"
+        403:
+          description: Forbidden
+          schema:
+            $ref: "#/responses/ErrorResponse"
+  /users/login:
+    post:
+      tags:
+        - Users
+      summary: Log in a user
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                format: $email
+                description: user's email
+                example: bevo@utexas.edu
+              password:
+                type: string
+                format: $password
+                description: user's password
+                example: theeyesoftexas123
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              user:
+                $ref: "#/definitions/User"
+              token:
+                type: string
+                description: JSONWebToken that can be used to authenticate requests on behalf of logged in user
+        400:
+          description: Bad credentials
+          schema:
+            $ref: "#/responses/ErrorResponse"
+  /users/register:
+    post:
+      tags:
+        - Users
+      summary: Register (create) a user
+      consumes:
+      - application/json
+      produces:
+      - application/json
+        parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            required:
+              - email
+              - password
+              - firstName
+              - lastName
+            properties:
+              email:
+                type: string
+                format: $email
+                description: user's email
+                example: bevo@utexas.edu
+              password:
+                type: string
+                format: $password
+                description: user's password
+                example: theeyesoftexas123
+              firstName:
+                type: string
+              lastName:
+                type: string
+      responses:
+        201:
+          description: Created
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: Missing or invalid fields
+          schema: 
+            $ref: "#/responses/ErrorResponse"
+  /users/{user_id}:
+    get:
+      tags:
+        - Users
+      summary: Get data for specific user
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: user_id
+        required: true
+        description: oid of user
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/User"
+        401:
+          description: Unauthorized
+          schema:
+            $ref: "#/responses/ErrorResponse"
+        403:
+          description: Forbidden
+          schema:
+            $ref: "#/responses/ErrorResponse"
+        404:
+          description: Not found
+          schema:
+            $ref: "#/responses/ErrorResponse"
+    patch:
+      tags:
+        - Users
+      summary: Update data for specific user
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: user_id
+        required: true
+        description: oid of user
+      - in: body
+        name: body
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+              description: First and last name of user
+              example: Bevo Longhorn
+            group:
+              type: string
+              description: Determines access level of user
+              example: coach
+            email:
+              type: string
+              format: email
+              description: User email
+              example: longhorn@utexas.edu
+      responses:
+        200:
+          description: Successfully updated user
+          schema:
+            $ref: "#/definitions/User"
+        401:
+          description: Unauthorized
+          schema:
+            $ref: "#/responses/ErrorResponse"
+        403:
+          description: Forbidden
+          schema:
+            $ref: "#/responses/ErrorResponse"
+        404:
+          description: Not found
+          schema:
+            $ref: "#/responses/ErrorResponse"
+    delete:
+      tags:
+        - Users
+      summary: Deletes a user
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: user_id
+        required: true
+        description: oid of user
+      responses:
+        204:
+          description: Successfully deleted
+        401:
+          description: Unauthorized
+          schema:
+            $ref: "#/responses/ErrorResponse"
+        403:
+          description: Forbidden
+          schema:
+            $ref: "#/responses/ErrorResponse"
+        404:
+          description: Event not found
+          schema:
+            $ref: "#/responses/ErrorResponse"
+  /events:
+    get:
+      tags:
+        - Events
+      summary: Get a list of events
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: inRotation
+        description: Optionally only return events that are in rotation
+        example: true
+        required: false
+        type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Event'
+        400:
+          description: Bad input
+          schema:
+            $ref: "#/responses/ErrorResponse"
+        401:
+          description: Unauthorized
+          schema:
+            $ref: "#/responses/ErrorResponse"
+        403:
+          description: Forbidden
+          schema:
+            $ref: "#/responses/ErrorResponse"
+        404:
+          description: Not found
+          schema:
+            $ref: "#/responses/ErrorResponse"
+    post:
+      tags:
+        - Events
+      summary: Creates an event
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          type: object
+          required:
+            - name
+            - category
+            - division
+          properties:
+            name:
+              type: string
+              example: Dynamic Planet
+            category:
+              type: string
+              enum: ["bio", "earth", "inquiry", "phys/chem", "building"]
+            division:
+              type: string
+              enum: ["B", "C", "BC"]
+            inRotation:
+              type: boolean
+            impound:
+              type: boolean
+            trialEvent:
+              type: boolean
+            topics:
+              type: array
+              items:
+                type: string
+            currentTopic:
+              type: string
+            notes:
+              type: string
+            highScoreWins:
+              type: boolean
+            
+      responses:
+        201:
+          description: Event successfully created
+          schema: 
+            $ref: "#/definitions/Event"
+        400:
+          description: Input event is invalid
+          schema:
+            $ref: "#/responses/ErrorResponse"
+        401:
+          description: Unauthorized
+          schema:
+            $ref: "#/responses/ErrorResponse"
+        403:
+          description: Forbidden
+          schema:
+            $ref: "#/responses/ErrorResponse"
+        409:
+          description: There is already an event with the same name
+          schema:
+            $ref: "#/responses/ErrorResponse"
+  /events/{event_id}:
+    get:
+      tags:
+        - Events
+      summary: Get data for single event
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: event_id
+        required: true
+        schema:
+          type: string
+        description: The event oid
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: "#/definitions/Event"
+        401:
+          description: Unauthorized
+          schema: 
+            $ref: "#/responses/ErrorResponse"
+        403:
+          description: Forbidden
+          schema:
+            $ref: "#/responses/ErrorResponse"
+        404:
+          description: Event not found
+          schema:
+            $ref: "#/responses/ErrorResponse"
+    patch: 
+      tags:
+        - Events
+      summary: Updates an event
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: event_id
+        required: true
+        schema:
+          type: string
+        description: The event oid
+      - in: body
+        name: body
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+              description: Name of event
+              example: Dynamic Planet
+            category:
+              type: string
+              example: bio
+              enum: ["bio", "earth", "inquiry", "phys/chem", "building"]
+            division:
+              type: string
+              example: B
+              enum: ["B", "C", "BC"]
+            inRotation:
+              type: boolean
+              description: Whether or not event is currently in rotation
+              example: false
+            impound:
+              type: boolean
+              description: Whether or not event needs to be impounded
+              example: false
+            trialEvent:
+              type: boolean
+              description: Whether or not event is a trial/state event
+              example: false
+            topics:
+              type: array
+              description: List of current and past topics
+              items:
+                type: string
+            currentTopic:
+              type: string
+              description: Current topic of event
+              example: Glaciers
+            notesAllowed:
+              type: string
+              description: Description of kinds of notes allowed in event, if any
+              example: Four pages front and back letter size paper
+            highScoreWins:
+              type: boolean
+              description: Whether or not event winners should have highest or lowest score
+              example: true
+      responses:
+        200:
+          description: Event successfully updated
+          schema:
+            $ref: "#/definitions/Event"
+        400:
+          description: Input event is invalid
+          schema:
+            $ref: "#/responses/ErrorResponse"
+        401:
+          description: Unauthorized
+          schema:
+            $ref: "#/responses/ErrorResponse"
+        403:
+          description: Forbidden
+          schema:
+            $ref: "#/responses/ErrorResponse"
+        404:
+          description: Could not find event to update
+          schema:
+            $ref: "#/responses/ErrorResponse"
+    delete:
+      tags:
+        - Events
+      summary: Deletes an event
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: event_id
+        required: true
+        schema:
+          type: string
+        description: The event oid
+      responses:
+        204:
+          description: Successfully deleted
+        401:
+          description: Unauthorized
+          schema:
+            $ref: "#/responses/ErrorResponse"
+        403:
+          description: Forbidden
+          schema:
+            $ref: "#/responses/ErrorResponse"
+        404:
+          description: Event not found
+          schema:
+            $ref: "#/responses/ErrorResponse"
+        
+
+responses:       
+  ErrorResponse:
+    type: object
+    properties:
+      code:
+        type: string
+        description: Error code
+        example: "event_already_exists"
+      message:
+        type: string
+        description: Some helpful error message
+        example: "The event you are trying to create already exists"
+    required:
+      - code
+      - message
+
+definitions:
+  Event:
+    type: object
+    required:
+    - id
+    - name
+    - category
+    - division
+    properties:
+      id:
+        type: ObjectId
+        format: oid
+        example: 5862f91727b955df5fc861f9
+      name:
+        type: string
+        description: Name of event
+        example: Dynamic Planet
+      category:
+        type: string
+        example: bio
+        enum: ["bio", "earth", "inquiry", "phys/chem", "building"]
+      division:
+        type: string
+        example: B
+        enum: ["B", "C", "BC"]
+      inRotation:
+        type: boolean
+        description: Whether or not event is currently in rotation
+        example: false
+      impound:
+        type: boolean
+        description: Whether or not event needs to be impounded
+        example: false
+      trialEvent:
+        type: boolean
+        description: Whether or not event is a trial/state event
+        example: false
+      topics:
+        type: array
+        description: List of current and past topics
+        items:
+          type: string
+      currentTopic:
+        type: string
+        description: Current topic of event
+        example: Glaciers
+      notesAllowed:
+        type: string
+        description: Description of kinds of notes allowed in event, if any
+        example: Four pages front and back letter size paper
+      highScoreWins:
+        type: boolean
+        description: Whether or not event winners should have highest or lowest score
+        example: true
+
+  User:
+    type: object
+    required:
+    - id
+    - name
+    - group
+    - email
+    properties:
+      id:
+        type: ObjectId
+        format: oid
+        example: 5862f91727b955df5fc861f9
+      name:
+        type: string
+        description: First and last name of user
+        example: Bevo Longhorn
+      group:
+        type: string
+        description: Determines access level of user
+        example: coach
+      email:
+        type: string
+        format: email
+        description: User email
+        example: longhorn@utexas.edu
+      token:
+        type: string
+        description: JSONWebToken that can be used to authenticate requests from client
+  
+  Tournament:
+    type: object
+    required:
+    - id
+    - name
+    - date
+    - state
+    - city
+    - joinCode
+    properties:
+      id:
+        type: ObjectId
+        format: oid
+        example: 5862f91727b955df5fc861f9
+      name:
+        type: string
+        description: Name of tournament
+        example: UT Austin Invitational 2018
+      date:
+        type: string
+        description: Date of tournament
+        format: date
+        example: 2018-10-21
+      state:
+        type: string
+        description: State in which tournament will be held, abbreviated
+        example: TX
+      city:
+        type: string
+        description: City in which tournament will be held
+        example: Austin
+      joinCode:
+        type: string
+        description: Randomly generated or custom string that can be given to event supervisors to give access to tournament
+        example: slow-marbled-green-cloud-marsh
+      events:
+        type: array
+        items:
+          $ref: "#/definitions/Event"
+  
+  ScoresheetEntry:
+    type: object
+    required:
+      - id
+      - tournament
+      - event
+      - division
+    properties:
+
+
+      
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /scribe/scribe/1.0.0
+schemes:
+ - https
