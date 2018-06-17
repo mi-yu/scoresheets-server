@@ -65,8 +65,6 @@ Team.post('insertMany', docs => {
  * @param  {Team} doc            the removed team
  */
 Team.post('remove', doc => {
-	console.log('Removing all scoresheet entries with team id ' + doc._id + '.')
-
 	// Remove the deleted team from all ScoresheetEntries that include this team.
 	ScoresheetEntry.update(
 		{
@@ -85,10 +83,8 @@ Team.post('remove', doc => {
 					division: doc.division
 				},
 				(err, entries) => {
-					console.log('found entries ' + entries.length)
 					entries.forEach(entry =>
 						entry.rank(err => {
-							console.log('reranking entry ' + entry._id)
 							if (err) console.log(err)
 						})
 					)

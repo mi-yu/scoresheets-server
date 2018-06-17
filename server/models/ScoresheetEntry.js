@@ -47,7 +47,7 @@ const ScoresheetEntry = new Schema({
  */
 ScoresheetEntry.methods.rank = function(callback) {
 	let scores = this.scores
-
+	if (!scores.length) return callback()
 	Event.findById(this.event).exec((err, event) => {
 		// Save our unbroken ties (if they exist) for error handling.
 		const unbrokenTies = { t1: {}, t2: {} }

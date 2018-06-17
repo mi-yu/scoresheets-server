@@ -5,12 +5,7 @@ const dbURL = require('../config.json').testURL
 describe('test User model', () => {
 	beforeAll(() => {
 		mongoose.Promise = global.Promise
-		return mongoose.connect(
-			dbURL,
-			{
-				useMongoClient: true
-			}
-		)
+		return mongoose.connect(dbURL)
 	})
 
 	afterAll(done => {
