@@ -26,6 +26,10 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
+      - run:
+          name: Lint
+          command: yarn lint
+
       - run: 
           name: Install dependencies
           command: |
