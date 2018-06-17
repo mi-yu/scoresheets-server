@@ -1,6 +1,6 @@
-const mongoose = require('mongoose'),
-	Schema = mongoose.Schema,
-	Event = require('./Event')
+const mongoose = require('mongoose')
+const { Schema } = mongoose
+const Event = require('./Event')
 
 /**
  * Each ScoresheetEntry has its own array of Scores, which
@@ -25,7 +25,7 @@ const Score = new Schema({
 		default: false,
 	} /* If this score was dropped, a rank of 0 will be assigned. */,
 	rank: Number /* Calculation triggered by user. */,
-	notes: String, /* Any special notes about the score (how a tiebreaker was won, reason for DQ, etc). */
+	notes: String /* Any special notes about the score (how a tiebreaker was won, reason for DQ, etc). */,
 })
 
 const ScoresheetEntry = new Schema({
@@ -45,8 +45,8 @@ const ScoresheetEntry = new Schema({
  * Calculate and assign ranks to each score in the ScoresheetEntry.
  * @param  {Function} callback handler which takes 1 optional error argument
  */
-ScoresheetEntry.methods.rank = function (callback) {
-	const scores = this.scores
+ScoresheetEntry.methods.rank = function(callback) {
+	const { scores } = this
 	if (!scores.length) return callback()
 	Event.findById(this.event).exec((err, event) => {
 		// Save our unbroken ties (if they exist) for error handling.
@@ -73,20 +73,24 @@ ScoresheetEntry.methods.rank = function (callback) {
 				// If we reach here, we have an unbroken tie.
 				unbrokenTies.t1 = s1.team
 				unbrokenTies.t2 = s2.team
-				throw new Error(`Tie must be broken between ${s1.team.school} (${s1.team.division +
+				throw new Error(
+					`Tie must be broken between ${s1.team.school} (${s1.team.division +
 						s1.team.teamNumber}) and ${s2.team.school} (${s2.team.division +
-						s2.team.teamNumber})`)
+						s2.team.teamNumber})`,
+				)
 			})
-		} catch (err) {
+		} catch (e) {
 			// When encountering unbroken ties, immediately return to callback.
-			err.unbrokenTies = unbrokenTies
-			return callback(err)
+			e.unbrokenTies = unbrokenTies
+			return callback(e)
 		}
 
 		// Assign ranks to scores.
 		scores.forEach((score, i) => {
 			// If there is nothing special about the score, just give regular rank.
-			if (!score.dq && !score.noShow && !score.participationOnly && !score.dropped) { score.rank = i + 1 } else {
+			if (!score.dq && !score.noShow && !score.participationOnly && !score.dropped) {
+				score.rank = i + 1
+			} else {
 				// Otherwise, we need to handle special cases accordingly.
 				if (score.participationOnly) score.rank = scores.length
 				if (score.dq) score.rank = scores.length + 2
@@ -96,8 +100,8 @@ ScoresheetEntry.methods.rank = function (callback) {
 		})
 
 		// Save and return to callback.
-		this.save(err => {
-			if (err) callback(err)
+		return this.save(e => {
+			if (e) callback(e)
 			else callback()
 		})
 	})
@@ -110,7 +114,7 @@ ScoresheetEntry.methods.rank = function (callback) {
  * @param  {String}   d        division
  * @param  {Function} callback handler which takes 1 optional error argument
  */
-ScoresheetEntry.statics.getTopTeamsPerEvent = function (n, id, d, callback) {
+ScoresheetEntry.statics.getTopTeamsPerEvent = function(n, id, d, callback) {
 	if (!d) d = /(B|C)/
 
 	// Default number of awards
@@ -137,7 +141,9 @@ ScoresheetEntry.statics.getTopTeamsPerEvent = function (n, id, d, callback) {
 						score.participationOnly ||
 						score.noShow ||
 						score.dropped
-					) { drops++ }
+					) {
+						drops += 1
+					}
 				})
 
 				// Sort the scores, moving the dropped events (zeroes) to end of array.
@@ -168,16 +174,16 @@ ScoresheetEntry.statics.getTopTeamsPerEvent = function (n, id, d, callback) {
 			let b = 0
 			let c = 0
 			while (sortedEntries.length < entries.length) {
-				while (entries[b] && entries[b].division !== 'B') b++
+				while (entries[b] && entries[b].division !== 'B') b += 1
 				if (b < entries.length) {
 					sortedEntries.push(entries[b])
-					b++
+					b += 1
 				}
 
-				while (entries[c] && entries[c].division !== 'C') c++
+				while (entries[c] && entries[c].division !== 'C') c += 1
 				if (c < entries.length) {
 					sortedEntries.push(entries[c])
-					c++
+					c += 1
 				}
 			}
 

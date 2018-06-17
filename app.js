@@ -1,6 +1,6 @@
 const express = require('express')
 const path = require('path')
-const favicon = require('serve-favicon')
+// const favicon = require('serve-favicon')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const flash = require('express-flash')
@@ -17,7 +17,6 @@ const events = require('./server/routes/events')
 // DB and authentication
 const mongoose = require('mongoose')
 const passport = require('passport')
-const RegisterStrategy = require('./server/passport/register')
 const LoginStrategy = require('./server/passport/login')
 
 // Create Express app
@@ -26,7 +25,7 @@ const app = express()
 // Set environment
 const env = process.env.NODE_ENV || 'development'
 
-if (env == 'development') {
+if (env === 'development') {
 	const logger = require('morgan')
 	require('dotenv').config({
 		path: './.env',
@@ -70,7 +69,7 @@ app.use((req, res, next) => {
 })
 
 // error handler
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
 	// set locals, only providing error in development
 	// res.locals.message = err.message
 	// res.locals.error = req.app.get('env') === 'development' ? err : {}

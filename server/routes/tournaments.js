@@ -1,23 +1,21 @@
 const router = require('express').Router()
-const User = require('../models/User')
 const Tournament = require('../models/Tournament')
-const Event = require('../models/Event')
 const Team = require('../models/Team')
-const ScoresheetEntry = require('../models/ScoresheetEntry')
 const randomWords = require('random-words')
-const helpers = require('./helpers')
-const auth = require('./middleware/auth')
-const ensureAuthenticated = auth.ensureAuthenticated
-const needsGroup = auth.needsGroup
-const getCurrentEventsList = helpers.getCurrentEventsList
-const getSchoolsList = helpers.getSchoolsList
-const getTeamsInTournamentByDivision = helpers.getTeamsInTournamentByDivision
-const getAllTeamsInTournament = helpers.getAllTeamsInTournament
+const { ensureAuthenticated, needsGroup } = require('./middleware/auth')
+const {
+	getCurrentEventsList,
+	getSchoolsList,
+	getAllTeamsInTournament,
+	getTeamsInTournamentByDivision,
+} = require('./helpers')
 const mw = require('./middleware/tournaments.mw.js')
 
 /* GET users listing. */
-router.post('/new', ensureAuthenticated, needsGroup('admin'), (req, res, next) => {
+router.post('/new', ensureAuthenticated, needsGroup('admin'), (req, res) => {
 	let date = new Date(req.body.date)
+	// TODO: fix dates
+	// eslint-disable-next-line
 	date = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000)
 
 	const tournament = new Tournament({
@@ -45,7 +43,7 @@ router.post('/new', ensureAuthenticated, needsGroup('admin'), (req, res, next) =
 	})
 })
 
-router.get('/:id/delete', ensureAuthenticated, needsGroup('admin'), (req, res, next) => {
+router.get('/:id/delete', ensureAuthenticated, needsGroup('admin'), (req, res) => {
 	Tournament.findById(req.params.id, (err, result) => {
 		if (err) req.flash('error', 'The requested tournament could not be found.')
 		res.json({
@@ -55,7 +53,7 @@ router.get('/:id/delete', ensureAuthenticated, needsGroup('admin'), (req, res, n
 	})
 })
 
-router.post('/:id/delete', ensureAuthenticated, needsGroup('admin'), (req, res, next) => {
+router.post('/:id/delete', ensureAuthenticated, needsGroup('admin'), (req, res) => {
 	Tournament.findByIdAndRemove(req.params.id, (err, deleted) => {
 		deleted.remove()
 		if (err) req.flash('error', 'The requested tournament could not be deleted.')
@@ -98,7 +96,7 @@ router.get(
 	},
 )
 
-router.post('/:id/edit', ensureAuthenticated, needsGroup('admin'), (req, res, next) => {
+router.post('/:id/edit', ensureAuthenticated, needsGroup('admin'), (req, res) => {
 	Tournament.findByIdAndUpdate(
 		req.params.id,
 		{
@@ -111,7 +109,9 @@ router.post('/:id/edit', ensureAuthenticated, needsGroup('admin'), (req, res, ne
 			},
 		},
 		(err, updated) => {
-			if (err) { req.flash('error', `There was an error updating the tournament details: ${err}`) } else req.flash('success', `Successfully updated tournament ${updated.name}`)
+			if (err) {
+				req.flash('error', `There was an error updating the tournament details: ${err}`)
+			} else req.flash('success', `Successfully updated tournament ${updated.name}`)
 			res.json({
 				message: req.flash(),
 				updatedTournament: updated,
@@ -175,7 +175,8 @@ router.post('/:id/edit/bulkAddTeams', ensureAuthenticated, needsGroup('admin'), 
 				invalidTeam: err.code === 11000 ? err.getOperation() : null,
 				redirect: false,
 			})
-		} req.flash('success', `Successfully created ${docs.length} team(s).`)
+		}
+		req.flash('success', `Successfully created ${docs.length} team(s).`)
 
 		res.json({
 			message: req.flash(),
@@ -234,11 +235,11 @@ router.post('/:tournamentId/edit/:division/editTeam/:teamNumber', (req, res, nex
 			}
 			result.teamNumber = req.body.teamNumber
 			result.school = req.body.school
-			result.save(err => {
-				if (err) {
+			result.save(error => {
+				if (error) {
 					req.flash(
 						'error',
-						`There was an error saving team ${result.teamNumber}: ${err}`,
+						`There was an error saving team ${result.teamNumber}: ${error}`,
 					)
 				} else req.flash('success', `Successfully updated team ${result.teamNumber}`)
 				res.redirect(`/tournaments/${req.params.tournamentId}/manage`)

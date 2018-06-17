@@ -1,7 +1,6 @@
-const mongoose = require('mongoose'),
-	Schema = mongoose.Schema,
-	ScoresheetEntry = require('./ScoresheetEntry'),
-	ObjectId = mongoose.Types.ObjectId
+const mongoose = require('mongoose')
+const { Schema } = mongoose
+const ScoresheetEntry = require('./ScoresheetEntry')
 
 const Team = new Schema({
 	tournament: {
@@ -22,7 +21,7 @@ const Team = new Schema({
 		min: 1,
 	} /* Must be unique within a tournament. */,
 	totalScore: Number /* Overall team score (currently only supports lowest overall score wins). */,
-	rank: Number, /* Overall sweepstakes rank (calculation triggered by user). */
+	rank: Number /* Overall sweepstakes rank (calculation triggered by user). */,
 })
 
 // Ensure that for a given tournament, there is only one team in each division with a given team number.
@@ -35,7 +34,9 @@ Team.post('save', team => {
 		{ multi: true },
 		err => {
 			if (err) {
-				throw new Error(`Error creating scoresheet entry for team ${team.division}${team.teamNumber}`)
+				throw new Error(
+					`Error creating scoresheet entry for team ${team.division}${team.teamNumber}`,
+				)
 			}
 		},
 	)
@@ -49,9 +50,11 @@ Team.post('insertMany', docs => {
 			{ multi: true },
 			err => {
 				if (err) {
-					throw new Error(`Error creating scoresheet entry for team ${team.division}${
-						team.teamNumber
-					}`)
+					throw new Error(
+						`Error creating scoresheet entry for team ${team.division}${
+							team.teamNumber
+						}`,
+					)
 				}
 			},
 		)
@@ -80,11 +83,12 @@ Team.post('remove', doc => {
 					tournament: doc.tournament,
 					division: doc.division,
 				},
-				(err, entries) => {
+				(error, entries) => {
 					entries.forEach(entry =>
-						entry.rank(err => {
-							if (err) console.log(err)
-						}))
+						entry.rank(e => {
+							if (e) console.log(e)
+						}),
+					)
 				},
 			)
 		},
@@ -98,7 +102,7 @@ Team.post('remove', doc => {
  * @param  {String}   d  division
  * @param  {Function} cb handler that returns the top n teams per division and an optional error
  */
-Team.statics.getTopTeams = function (n, id, d, cb) {
+Team.statics.getTopTeams = function(n, id, d, cb) {
 	// TODO: throw error if bad regex.
 	const regex = d || /(B|C)/
 

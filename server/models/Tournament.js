@@ -1,8 +1,8 @@
-const mongoose = require('mongoose'),
-	Schema = mongoose.Schema,
-	Team = require('./Team'),
-	ScoresheetEntry = require('./ScoresheetEntry'),
-	Event = require('./Event')
+const mongoose = require('mongoose')
+const { Schema } = mongoose
+const Team = require('./Team')
+const ScoresheetEntry = require('./ScoresheetEntry')
+const Event = require('./Event')
 
 const Tournament = new Schema({
 	name: {
@@ -24,7 +24,7 @@ const Tournament = new Schema({
 			type: Schema.Types.ObjectId,
 			ref: 'Event',
 		},
-	], /* The events to be held at this tournament. */
+	] /* The events to be held at this tournament. */,
 })
 
 // Create ScoresheetEntries after successfully creating tournament.
@@ -49,8 +49,8 @@ Tournament.post('save', doc => {
 			})
 
 			// Save ScoresheetEntries.
-			ScoresheetEntry.collection.insert(entries, (err, docs) => {
-				if (err) throw new Error(err)
+			ScoresheetEntry.collection.insert(entries, (error, docs) => {
+				if (error) throw new Error(error)
 			})
 		})
 })

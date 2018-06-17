@@ -7,7 +7,7 @@ module.exports = {
 		Tournament.find((err, results) => {
 			if (err) req.flash('error', `Could not load tournaments: ${err}`)
 			res.locals.tournaments = results
-			next()
+			return next()
 		})
 	},
 	getCurrentEventsList: (req, res, next) => {

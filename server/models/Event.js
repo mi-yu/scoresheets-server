@@ -1,5 +1,5 @@
-const mongoose = require('mongoose'),
-	Schema = mongoose.Schema
+const mongoose = require('mongoose')
+const { Schema } = mongoose
 
 const Event = new Schema({
 	name: { type: String, unique: true, required: true },
@@ -25,7 +25,7 @@ const Event = new Schema({
 	highScoreWins: {
 		type: Boolean,
 		default: true,
-	}, /* In some events, the lowest score wins (Electric Vehicle, Scrambler, etc). */
+	} /* In some events, the lowest score wins (Electric Vehicle, Scrambler, etc). */,
 })
 
 module.exports = mongoose.model('Event', Event)

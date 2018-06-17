@@ -1,8 +1,0 @@
-extends layouts/basic
-
-block content
-    #content: .ui.container
-        h1= message
-        if (error)
-            h2= error.status
-            pre #{error.stack}

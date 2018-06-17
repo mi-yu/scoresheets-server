@@ -1,23 +1,25 @@
-const mongoose = require('mongoose'),
-	Schema = mongoose.Schema,
-	passportLocalMongoose = require('passport-local-mongoose'),
-	bcrypt = require('bcrypt')
+const mongoose = require('mongoose')
+const { Schema } = mongoose
+const bcrypt = require('bcrypt')
 
 const User = new Schema({
 	firstName: String,
 	lastName: String,
 	email: { type: String, unique: true },
 	group: {
-		type: String, required: true, lowercase: true, trim: true,
+		type: String,
+		required: true,
+		lowercase: true,
+		trim: true,
 	},
 	password: String,
 })
 
-User.methods.comparePassword = function (password, cb) {
+User.methods.comparePassword = function(password, cb) {
 	bcrypt.compare(password, this.password, cb)
 }
 
-User.pre('save', function (next) {
+User.pre('save', function(next) {
 	const user = this
 	if (!user.isModified('password')) next()
 

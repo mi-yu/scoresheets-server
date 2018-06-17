@@ -1,12 +1,8 @@
 const router = require('express').Router()
-const User = require('../models/User')
-const Tournament = require('../models/Tournament')
 const Event = require('../models/Event')
-const auth = require('./middleware/auth')
-const ensureAuthenticated = auth.ensureAuthenticated
-const needsGroup = auth.needsGroup
+const { ensureAuthenticated, needsGroup } = require('./middleware/auth')
 
-router.post('/new', ensureAuthenticated, needsGroup('admin'), (req, res, next) => {
+router.post('/new', ensureAuthenticated, needsGroup('admin'), (req, res) => {
 	const event = new Event({
 		name: req.body.name,
 		division: req.body.division,
@@ -29,7 +25,7 @@ router.post('/new', ensureAuthenticated, needsGroup('admin'), (req, res, next) =
 	})
 })
 
-router.post('/:eventId/edit', ensureAuthenticated, needsGroup('admin'), (req, res, next) => {
+router.post('/:eventId/edit', ensureAuthenticated, needsGroup('admin'), (req, res) => {
 	console.log(req.body.category)
 	Event.findByIdAndUpdate(
 		req.params.eventId,

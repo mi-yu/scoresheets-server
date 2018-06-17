@@ -35,8 +35,7 @@ function countOccurrences(arr, n) {
 
 exports.populateTotalsAndRankTeams = (req, res, next) => {
 	// Append score data to each team
-	const teams = res.locals.teams
-	const entries = res.locals.entries
+	const { teams, entries } = res.locals
 
 	teams.forEach((team, i) => {
 		team.scores = []

@@ -1,19 +1,12 @@
 const router = require('express').Router()
-const User = require('../models/User')
-const Tournament = require('../models/Tournament')
-const Event = require('../models/Event')
-const Team = require('../models/Team')
 const ScoresheetEntry = require('../models/ScoresheetEntry')
-const auth = require('./middleware/auth')
-const ensureAuthenticated = auth.ensureAuthenticated
-const needsGroup = auth.needsGroup
-const getTeamsInTournamentByDivision = require('./helpers').getTeamsInTournamentByDivision
+const { ensureAuthenticated, needsGroup } = require('./middleware/auth')
 
 router.get(
 	'/:tournamentId/scores/:division/:eventId',
 	ensureAuthenticated,
 	needsGroup('admin'),
-	(req, res, next) => {
+	(req, res) => {
 		ScoresheetEntry.findOne({
 			tournament: req.params.tournamentId,
 			event: req.params.eventId,
@@ -29,8 +22,8 @@ router.get(
 						const t1 = s1.team.teamNumber
 						const t2 = s2.team.teamNumber
 						if (t1 > t2) return 1
-						if (t1 === t2) return 0
 						if (t1 < t2) return -1
+						return 0
 					})
 				}
 				res.json({
@@ -41,7 +34,7 @@ router.get(
 	},
 )
 
-router.post('/:scoresheetId/update', ensureAuthenticated, needsGroup('admin'), (req, res, next) => {
+router.post('/:scoresheetId/update', ensureAuthenticated, needsGroup('admin'), (req, res) => {
 	console.log(req.body)
 	ScoresheetEntry.findById(req.params.scoresheetId, (err, sse) => {
 		if (err) req.flash('error', `An unknown error occurred: ${err}`)
@@ -56,8 +49,8 @@ router.post('/:scoresheetId/update', ensureAuthenticated, needsGroup('admin'), (
 			sse.scores.id(score._id).dropped = score.dropped || false
 		})
 
-		sse.rank(err => {
-			if (err) req.flash('error', err.message)
+		sse.rank(error => {
+			if (error) req.flash('error', error.message)
 			else req.flash('success', `Successfully updated scores for ${req.body.eventName}`)
 			res.json({
 				message: req.flash(),
@@ -66,17 +59,17 @@ router.post('/:scoresheetId/update', ensureAuthenticated, needsGroup('admin'), (
 	})
 })
 
-router.get('/:scoresheetId/rank', ensureAuthenticated, needsGroup('admin'), (req, res, next) => {
+router.get('/:scoresheetId/rank', ensureAuthenticated, needsGroup('admin'), (req, res) => {
 	ScoresheetEntry.findById(req.params.scoresheetId).exec((err, sse) => {
 		if (err) {
 			req.flash('error', err)
 			res.redirect(`/scoresheets/${sse.tournament}/scores/${sse.event.name}`)
 		} else {
-			sse.rank(err => {
-				if (err) {
+			sse.rank(error => {
+				if (error) {
 					req.flash(
 						'error',
-						`There was an error ranking teams for ${sse.event.name}: ${err}`,
+						`There was an error ranking teams for ${sse.event.name}: ${error}`,
 					)
 				} else req.flash('success', 'Generated ranks.')
 				res.redirect(`/scoresheets/${sse.tournament}/scores/${sse.event}`)
