@@ -7,22 +7,22 @@ const Team = new Schema({
 	tournament: {
 		type: Schema.Types.ObjectId,
 		ref: 'Tournament',
-		required: true
+		required: true,
 	} /* Tournament that this team belongs to. */,
 	school: String,
-	identifier: String /* Distinguishes between two teams from same school (team A, team B, etc)*/,
+	identifier: String /* Distinguishes between two teams from same school (team A, team B, etc) */,
 	division: {
 		type: String,
 		required: true,
-		enum: ['B', 'C']
+		enum: ['B', 'C'],
 	} /* A team can either be in division B or C. */,
 	teamNumber: {
 		type: Number,
 		required: true,
-		min: 1
+		min: 1,
 	} /* Must be unique within a tournament. */,
 	totalScore: Number /* Overall team score (currently only supports lowest overall score wins). */,
-	rank: Number /* Overall sweepstakes rank (calculation triggered by user). */
+	rank: Number, /* Overall sweepstakes rank (calculation triggered by user). */
 })
 
 // Ensure that for a given tournament, there is only one team in each division with a given team number.
@@ -34,11 +34,10 @@ Team.post('save', team => {
 		{ $push: { scores: { team: team._id } } },
 		{ multi: true },
 		err => {
-			if (err)
-				throw new Error(
-					`Error creating scoresheet entry for team ${team.division}${team.teamNumber}`
-				)
-		}
+			if (err) {
+				throw new Error(`Error creating scoresheet entry for team ${team.division}${team.teamNumber}`)
+			}
+		},
 	)
 })
 
@@ -49,13 +48,12 @@ Team.post('insertMany', docs => {
 			{ $push: { scores: { team: team._id } } },
 			{ multi: true },
 			err => {
-				if (err)
-					throw new Error(
-						`Error creating scoresheet entry for team ${team.division}${
-							team.teamNumber
-						}`
-					)
-			}
+				if (err) {
+					throw new Error(`Error creating scoresheet entry for team ${team.division}${
+						team.teamNumber
+					}`)
+				}
+			},
 		)
 	})
 })
@@ -80,17 +78,16 @@ Team.post('remove', doc => {
 			ScoresheetEntry.find(
 				{
 					tournament: doc.tournament,
-					division: doc.division
+					division: doc.division,
 				},
 				(err, entries) => {
 					entries.forEach(entry =>
 						entry.rank(err => {
 							if (err) console.log(err)
-						})
-					)
-				}
+						}))
+				},
 			)
-		}
+		},
 	)
 })
 
@@ -101,13 +98,13 @@ Team.post('remove', doc => {
  * @param  {String}   d  division
  * @param  {Function} cb handler that returns the top n teams per division and an optional error
  */
-Team.statics.getTopTeams = function(n, id, d, cb) {
+Team.statics.getTopTeams = function (n, id, d, cb) {
 	// TODO: throw error if bad regex.
 	const regex = d || /(B|C)/
 
 	return this.find({
 		tournament: id,
-		division: regex
+		division: regex,
 	})
 		.sort('rank')
 		.lean()

@@ -1,23 +1,24 @@
 const User = require('../models/User')
 
 module.exports = (req, res, next) => {
-	if (req.body.group === 'admin')
+	if (req.body.group === 'admin') {
 		return res.json({
 			message: {
-				error: 'Cannot register as admin.'
-			}
+				error: 'Cannot register as admin.',
+			},
 		})
+	}
 	const newUser = new User({
-		...req.body
+		...req.body,
 	})
 
-	newUser.save(err => {
+	return newUser.save(err => {
 		if (err) return next(err)
 
 		return res.json({
 			message: {
-				success: 'Registration successful.'
-			}
+				success: 'Registration successful.',
+			},
 		})
 	})
 }

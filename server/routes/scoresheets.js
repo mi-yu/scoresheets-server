@@ -17,17 +17,17 @@ router.get(
 		ScoresheetEntry.findOne({
 			tournament: req.params.tournamentId,
 			event: req.params.eventId,
-			division: req.params.division
+			division: req.params.division,
 		})
 			.populate('tournament event scores.team')
 			.exec((err, result) => {
-				if (err) req.flash('error', 'An unknown error occurred: ' + err.message)
+				if (err) req.flash('error', `An unknown error occurred: ${err.message}`)
 				else if (!result) req.flash('error', 'Could not get scoresheet entry')
 				else {
 					// Sort scores by team number
 					result.scores.sort((s1, s2) => {
-						let t1 = s1.team.teamNumber
-						let t2 = s2.team.teamNumber
+						const t1 = s1.team.teamNumber
+						const t2 = s2.team.teamNumber
 						if (t1 > t2) return 1
 						if (t1 === t2) return 0
 						if (t1 < t2) return -1
@@ -35,16 +35,16 @@ router.get(
 				}
 				res.json({
 					scoresheetEntry: result,
-					message: req.flash()
+					message: req.flash(),
 				})
 			})
-	}
+	},
 )
 
 router.post('/:scoresheetId/update', ensureAuthenticated, needsGroup('admin'), (req, res, next) => {
 	console.log(req.body)
 	ScoresheetEntry.findById(req.params.scoresheetId, (err, sse) => {
-		if (err) req.flash('error', 'An unknown error occurred: ' + err)
+		if (err) req.flash('error', `An unknown error occurred: ${err}`)
 		req.body.scores.forEach(score => {
 			sse.scores.id(score._id).rawScore = score.rawScore || 0
 			sse.scores.id(score._id).tier = score.tier || 1
@@ -58,9 +58,9 @@ router.post('/:scoresheetId/update', ensureAuthenticated, needsGroup('admin'), (
 
 		sse.rank(err => {
 			if (err) req.flash('error', err.message)
-			else req.flash('success', 'Successfully updated scores for ' + req.body.eventName)
+			else req.flash('success', `Successfully updated scores for ${req.body.eventName}`)
 			res.json({
-				message: req.flash()
+				message: req.flash(),
 			})
 		})
 	})
@@ -70,16 +70,16 @@ router.get('/:scoresheetId/rank', ensureAuthenticated, needsGroup('admin'), (req
 	ScoresheetEntry.findById(req.params.scoresheetId).exec((err, sse) => {
 		if (err) {
 			req.flash('error', err)
-			res.redirect('/scoresheets/' + sse.tournament + '/scores/' + sse.event.name)
+			res.redirect(`/scoresheets/${sse.tournament}/scores/${sse.event.name}`)
 		} else {
 			sse.rank(err => {
-				if (err)
+				if (err) {
 					req.flash(
 						'error',
-						'There was an error ranking teams for ' + sse.event.name + ': ' + err
+						`There was an error ranking teams for ${sse.event.name}: ${err}`,
 					)
-				else req.flash('success', 'Generated ranks.')
-				res.redirect('/scoresheets/' + sse.tournament + '/scores/' + sse.event)
+				} else req.flash('success', 'Generated ranks.')
+				res.redirect(`/scoresheets/${sse.tournament}/scores/${sse.event}`)
 			})
 		}
 	})

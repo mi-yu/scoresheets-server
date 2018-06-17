@@ -7,7 +7,7 @@ class ProfilePage extends React.Component {
 		super(props)
 		this.setUser = props.setUser.bind(this)
 		this.state = {
-			redirectToLogin: false
+			redirectToLogin: false,
 		}
 	}
 
@@ -18,20 +18,18 @@ class ProfilePage extends React.Component {
 			fetch('/users/me', {
 				method: 'GET',
 				headers: new Headers({
-					Authorization: 'Bearer ' + token
-				})
+					Authorization: `Bearer ${token}`,
+				}),
 			})
 				.then(data => {
 					if (data.ok) return data.json()
-					else throw new Error()
+					throw new Error()
 				})
-				.then(res => {
-					return this.setUser(res.user)
-				})
+				.then(res => this.setUser(res.user))
 				.catch(err => {
 					console.log(err)
 					this.setState({
-						redirectToLogin: true
+						redirectToLogin: true,
 					})
 				})
 		}
@@ -48,7 +46,7 @@ class ProfilePage extends React.Component {
 				<h1>id: {user._id}</h1>
 				<h1>Name: {user.name}</h1>
 				<h1>Email: {user.email}</h1>
-			</div>
+  </div>
 		)
 	}
 }

@@ -9,7 +9,7 @@ export default class ResultsPage extends React.Component {
 		this.state = {
 			...props,
 			division: props.match.params.division,
-			tournament: { ...props.location.state.tournament }
+			tournament: { ...props.location.state.tournament },
 		}
 	}
 
@@ -20,75 +20,73 @@ export default class ResultsPage extends React.Component {
 		fetch(`/tournaments/${tournament._id}/${division}/results`, {
 			method: 'GET',
 			headers: new Headers({
-				Authorization: 'Bearer ' + token
-			})
+				Authorization: `Bearer ${token}`,
+			}),
 		})
 			.then(data => {
 				if (data.ok) return data.json()
-				else throw new Error()
+				throw new Error()
 			})
 			.then(res => {
 				this.setState({
 					entries: res.entries,
-					teams: res.teams
+					teams: res.teams,
 				})
 			})
 			.catch(err => {
 				console.log(err)
 				this.setState({
-					redirectToLogin: true
+					redirectToLogin: true,
 				})
 			})
 	}
 
 	render() {
-		const { entries, tournament, division, teams } = this.state
+		const {
+			entries, tournament, division, teams,
+		} = this.state
 		if (!entries) return null
 		return (
 			<div>
 				<Header as="h1">Division {division} Results</Header>
-				<Header color="blue">
+    <Header color="blue">
 					<Link to={`/tournaments/${tournament._id}/manage`}>
-						<Icon name="long arrow left" />
-						{tournament.name}
+        <Icon name="long arrow left" />
+        {tournament.name}
 					</Link>
-				</Header>
+  </Header>
 				<Table celled collapsing size="small" compact>
-					<Table.Header>
-						<Table.Row>
-							<Table.HeaderCell verticalAlign="bottom">
+    <Table.Header>
+        <Table.Row>
+  <Table.HeaderCell verticalAlign="bottom">
 								Team (School)
-							</Table.HeaderCell>
+       </Table.HeaderCell>
 							{entries.map(entry => (
-								<Table.HeaderCell key={entry._id}>
-									<div className="column-header">{entry.event.name}</div>
-								</Table.HeaderCell>
+            <Table.HeaderCell key={entry._id}>
+  <div className="column-header">{entry.event.name}</div>
+</Table.HeaderCell>
 							))}
-							<Table.HeaderCell verticalAlign="bottom">Total</Table.HeaderCell>
+  <Table.HeaderCell verticalAlign="bottom">Total</Table.HeaderCell>
 							<Table.HeaderCell verticalAlign="bottom">Rank</Table.HeaderCell>
 						</Table.Row>
-					</Table.Header>
-					<Table.Body>
-						{teams.map(team => {
-							return (
-								<Table.Row key={team._id}>
-									<Table.Cell>
-										{team.division}
-										{team.teamNumber}{' '}
-										{team.school +
-											(team.identifier ? ' ' + team.identifier : '')}
-									</Table.Cell>
-									{team.scores.map((score, i) => {
-										return <Table.Cell key={i}>{score}</Table.Cell>
-									})}
-									<Table.Cell>{team.totalScore}</Table.Cell>
-									<Table.Cell>{team.rank}</Table.Cell>
-								</Table.Row>
-							)
-						})}
-					</Table.Body>
+      </Table.Header>
+    <Table.Body>
+        {teams.map(team => (
+							<Table.Row key={team._id}>
+            <Table.Cell>
+        {team.division}
+        {team.teamNumber}{' '}
+        {team.school +
+											(team.identifier ? ` ${team.identifier}` : '')}
+      </Table.Cell>
+								{team.scores.map((score, i) => <Table.Cell key={i}>{score}</Table.Cell>)}
+								<Table.Cell>{team.totalScore}</Table.Cell>
+								<Table.Cell>{team.rank}</Table.Cell>
+							</Table.Row>
+						))}
+      </Table.Body>
 				</Table>
-			</div>
+  </div>
 		)
 	}
 }

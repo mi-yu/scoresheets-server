@@ -1,208 +1,208 @@
 const states = [
 	{
 		text: 'Alabama',
-		value: 'AL'
+		value: 'AL',
 	},
 	{
 		text: 'Alaska',
-		value: 'AK'
+		value: 'AK',
 	},
 	{
 		text: 'Arizona',
-		value: 'AZ'
+		value: 'AZ',
 	},
 	{
 		text: 'Arkansas',
-		value: 'AR'
+		value: 'AR',
 	},
 	{
 		text: 'California',
-		value: 'CA'
+		value: 'CA',
 	},
 	{
 		text: 'Colorado',
-		value: 'CO'
+		value: 'CO',
 	},
 	{
 		text: 'Connecticut',
-		value: 'CT'
+		value: 'CT',
 	},
 	{
 		text: 'Delaware',
-		value: 'DE'
+		value: 'DE',
 	},
 	{
 		text: 'District Of Columbia',
-		value: 'DC'
+		value: 'DC',
 	},
 	{
 		text: 'Florida',
-		value: 'FL'
+		value: 'FL',
 	},
 	{
 		text: 'Georgia',
-		value: 'GA'
+		value: 'GA',
 	},
 	{
 		text: 'Hawaii',
-		value: 'HI'
+		value: 'HI',
 	},
 	{
 		text: 'Idaho',
-		value: 'ID'
+		value: 'ID',
 	},
 	{
 		text: 'Illinois',
-		value: 'IL'
+		value: 'IL',
 	},
 	{
 		text: 'Indiana',
-		value: 'IN'
+		value: 'IN',
 	},
 	{
 		text: 'Iowa',
-		value: 'IA'
+		value: 'IA',
 	},
 	{
 		text: 'Kansas',
-		value: 'KS'
+		value: 'KS',
 	},
 	{
 		text: 'Kentucky',
-		value: 'KY'
+		value: 'KY',
 	},
 	{
 		text: 'Louisiana',
-		value: 'LA'
+		value: 'LA',
 	},
 	{
 		text: 'Maine',
-		value: 'ME'
+		value: 'ME',
 	},
 	{
 		text: 'Maryland',
-		value: 'MD'
+		value: 'MD',
 	},
 	{
 		text: 'Massachusetts',
-		value: 'MA'
+		value: 'MA',
 	},
 	{
 		text: 'Michigan',
-		value: 'MI'
+		value: 'MI',
 	},
 	{
 		text: 'Minnesota',
-		value: 'MN'
+		value: 'MN',
 	},
 	{
 		text: 'Mississippi',
-		value: 'MS'
+		value: 'MS',
 	},
 	{
 		text: 'Missouri',
-		value: 'MO'
+		value: 'MO',
 	},
 	{
 		text: 'Montana',
-		value: 'MT'
+		value: 'MT',
 	},
 	{
 		text: 'Nebraska',
-		value: 'NE'
+		value: 'NE',
 	},
 	{
 		text: 'Nevada',
-		value: 'NV'
+		value: 'NV',
 	},
 	{
 		text: 'New Hampshire',
-		value: 'NH'
+		value: 'NH',
 	},
 	{
 		text: 'New Jersey',
-		value: 'NJ'
+		value: 'NJ',
 	},
 	{
 		text: 'New Mexico',
-		value: 'NM'
+		value: 'NM',
 	},
 	{
 		text: 'New York',
-		value: 'NY'
+		value: 'NY',
 	},
 	{
 		text: 'North Carolina',
-		value: 'NC'
+		value: 'NC',
 	},
 	{
 		text: 'North Dakota',
-		value: 'ND'
+		value: 'ND',
 	},
 	{
 		text: 'Ohio',
-		value: 'OH'
+		value: 'OH',
 	},
 	{
 		text: 'Oklahoma',
-		value: 'OK'
+		value: 'OK',
 	},
 	{
 		text: 'Oregon',
-		value: 'OR'
+		value: 'OR',
 	},
 	{
 		text: 'Pennsylvania',
-		value: 'PA'
+		value: 'PA',
 	},
 	{
 		text: 'Rhode Island',
-		value: 'RI'
+		value: 'RI',
 	},
 	{
 		text: 'South Carolina',
-		value: 'SC'
+		value: 'SC',
 	},
 	{
 		text: 'South Dakota',
-		value: 'SD'
+		value: 'SD',
 	},
 	{
 		text: 'Tennessee',
-		value: 'TN'
+		value: 'TN',
 	},
 	{
 		text: 'Texas',
-		value: 'TX'
+		value: 'TX',
 	},
 	{
 		text: 'Utah',
-		value: 'UT'
+		value: 'UT',
 	},
 	{
 		text: 'Vermont',
-		value: 'VT'
+		value: 'VT',
 	},
 	{
 		text: 'Virginia',
-		value: 'VA'
+		value: 'VA',
 	},
 	{
 		text: 'Washington',
-		value: 'WA'
+		value: 'WA',
 	},
 	{
 		text: 'West Virginia',
-		value: 'WV'
+		value: 'WV',
 	},
 	{
 		text: 'Wisconsin',
-		value: 'WI'
+		value: 'WI',
 	},
 	{
 		text: 'Wyoming',
-		value: 'WY'
-	}
+		value: 'WY',
+	},
 ]
 
 export default states

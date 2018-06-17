@@ -12,7 +12,7 @@ router.get(
 	helpers.getCurrentEventsList,
 	(req, res, next) => {
 		res.json(res.locals)
-	}
+	},
 )
 
 module.exports = router

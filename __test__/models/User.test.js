@@ -9,9 +9,7 @@ describe('test User model', () => {
 	})
 
 	afterAll(done => {
-		mongoose.connection.db.dropDatabase().then(() => {
-			return mongoose.disconnect(done)
-		})
+		mongoose.connection.db.dropDatabase().then(() => mongoose.disconnect(done))
 	})
 
 	test('Should register user when given valid params', async () => {
@@ -20,7 +18,7 @@ describe('test User model', () => {
 			lastName: 'last',
 			email: 'email@test.com',
 			password: 'test123',
-			group: 'user'
+			group: 'user',
 		})
 
 		await newUser.save()
@@ -39,7 +37,7 @@ describe('test User model', () => {
 			lastName: 'user',
 			email: 'email@test.com',
 			password: 'test123',
-			group: 'user'
+			group: 'user',
 		})
 
 		try {

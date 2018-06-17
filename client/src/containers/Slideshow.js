@@ -8,26 +8,26 @@ const theme = createTheme(
 		primary: 'white',
 		secondary: '#1F2022',
 		tertiary: 'black',
-		quarternary: '#CECECE'
+		quarternary: '#CECECE',
 	},
 	{
-		primary: 'Roboto'
-	}
+		primary: 'Roboto',
+	},
 )
 
 const getRankSuffix = n => {
 	switch (n) {
-		case 1:
-			return '1st'
-			break
-		case 2:
-			return '2nd'
-			break
-		case 3:
-			return '3rd'
-			break
-		default:
-			return n + 'th'
+	case 1:
+		return '1st'
+		break
+	case 2:
+		return '2nd'
+		break
+	case 3:
+		return '3rd'
+		break
+	default:
+		return `${n}th`
 	}
 }
 
@@ -36,7 +36,7 @@ export default class Slideshow extends React.Component {
 		super(props)
 		this.state = {
 			...props,
-			numAwards: props.location.state && (props.location.state.numAwards || 4)
+			numAwards: props.location.state && (props.location.state.numAwards || 4),
 		}
 	}
 
@@ -48,15 +48,15 @@ export default class Slideshow extends React.Component {
 		fetch(`/tournaments/${id}/slideshow`, {
 			method: 'GET',
 			headers: new Headers({
-				Authorization: 'Bearer ' + token
-			})
+				Authorization: `Bearer ${token}`,
+			}),
 		})
 			.then(data => {
 				if (data.ok) return data.json()
-				else throw new Error()
+				throw new Error()
 			})
 			.then(res => {
-				let sweepstakes = res.topCTeams
+				const sweepstakes = res.topCTeams
 				let n = 1
 				for (let i = 0; i < res.topBTeams.length; i++) {
 					sweepstakes.splice(n, 0, res.topBTeams[i])
@@ -65,7 +65,7 @@ export default class Slideshow extends React.Component {
 				this.setState({
 					topTeamsPerEvent: res.topTeamsPerEvent,
 					tournament: res.tournament,
-					sweepstakes: sweepstakes.reverse()
+					sweepstakes: sweepstakes.reverse(),
 				})
 			})
 			.catch(err => {
@@ -78,57 +78,51 @@ export default class Slideshow extends React.Component {
 		if (!topTeamsPerEvent) return null
 		return (
 			<Deck theme={theme} progress="none" controls={false}>
-				<Slide transition={['fade']}>
-					<Heading size={1}>{tournament.name} Awards</Heading>
+    <Slide transition={['fade']}>
+  <Heading size={1}>{tournament.name} Awards</Heading>
 					<Heading size={4}>{new Date(tournament.date).toLocaleDateString()}</Heading>
-				</Slide>
-				{topTeamsPerEvent.map((entry, i) => {
-					return (
-						<Slide key={i} transition={['fade']}>
-							<Heading size={3} padding="50px">
-								{entry.event.name} {entry.division}
-							</Heading>
-							{entry.scores.map((score, n) => {
-								return (
-									<Appear order={entry.scores.length - n - 1} key={n}>
-										<Text textAlign="center" textFont="Roboto">
-											{n + 1}. {score.team.division}
-											{score.team.teamNumber} ({score.team.school}
-											{score.team.identifier
-												? ' ' + score.team.identifier
-												: ''})
-										</Text>
-									</Appear>
-								)
-							})}
-						</Slide>
-					)
-				})}
-				{sweepstakes.map((team, i) => {
-					return (
-						<Slide key={team._id}>
-							<Heading size={4} padding="50px">
+</Slide>
+				{topTeamsPerEvent.map((entry, i) => (
+					<Slide key={i} transition={['fade']}>
+						<Heading size={3} padding="50px">
+    {entry.event.name} {entry.division}
+  </Heading>
+    {entry.scores.map((score, n) => (
+    <Appear order={entry.scores.length - n - 1} key={n}>
+        <Text textAlign="center" textFont="Roboto">
+        {n + 1}. {score.team.division}
+									{score.team.teamNumber} ({score.team.school}
+        {score.team.identifier
+										? ` ${score.team.identifier}`
+										: ''})
+      </Text>
+      </Appear>
+						))}
+  </Slide>
+				))}
+				{sweepstakes.map((team, i) => (
+					<Slide key={team._id}>
+    <Heading size={4} padding="50px">
 								Sweepstakes {team.division} - {getRankSuffix(team.rank)} Place
-							</Heading>
-							<Appear>
-								<Text textAlign="center" textSize="64px">
-									{team.division}
-									{team.teamNumber} ({team.school}
-									{team.identifier ? ' ' + team.identifier : ''})
-								</Text>
-							</Appear>
-						</Slide>
-					)
-				})}
+  </Heading>
+						<Appear>
+							<Text textAlign="center" textSize="64px">
+								{team.division}
+								{team.teamNumber} ({team.school}
+								{team.identifier ? ` ${team.identifier}` : ''})
+  </Text>
+  </Appear>
+  </Slide>
+				))}
 				<Slide>
 					<Heading size={3} padding="50px">
 						Thanks for coming!
-					</Heading>
+  </Heading>
 					<Text textAlign="center">
 						Visit scribbl.io/tournamentName/results for full results.
-					</Text>
-				</Slide>
-			</Deck>
+  </Text>
+  </Slide>
+  </Deck>
 		)
 	}
 }

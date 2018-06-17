@@ -2,39 +2,39 @@ const options = {
 	categories: [
 		{
 			text: 'Life, Personal & Social',
-			value: 'bio'
+			value: 'bio',
 		},
 		{
 			text: 'Earth and Space',
-			value: 'earth'
+			value: 'earth',
 		},
 		{
 			text: 'Physical Science and Chemistry',
-			value: 'phys/chem'
+			value: 'phys/chem',
 		},
 		{
 			text: 'Technology & Engineering',
-			value: 'building'
+			value: 'building',
 		},
 		{
 			text: 'Inquiry & Nature of Science',
-			value: 'inquiry'
-		}
+			value: 'inquiry',
+		},
 	],
 	divisions: [
 		{
 			text: 'B only',
-			value: 'B'
+			value: 'B',
 		},
 		{
 			text: 'C only',
-			value: 'C'
+			value: 'C',
 		},
 		{
 			text: 'B and C',
-			value: 'BC'
-		}
-	]
+			value: 'BC',
+		},
+	],
 }
 
 export default options

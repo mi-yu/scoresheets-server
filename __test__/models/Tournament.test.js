@@ -12,9 +12,7 @@ describe('test Tournament model', () => {
 	})
 
 	afterAll(done => {
-		mongoose.connection.db.dropDatabase().then(() => {
-			return mongoose.disconnect(done)
-		})
+		mongoose.connection.db.dropDatabase().then(() => mongoose.disconnect(done))
 	})
 
 	test('Should successfully create tournament', async () => {
@@ -27,7 +25,7 @@ describe('test Tournament model', () => {
 			state: 'TX',
 			city: 'Austin',
 			joinCode: 'random-string',
-			events: events
+			events,
 		}
 
 		const tournament = new Tournament(tournamentData)
@@ -40,9 +38,7 @@ describe('test Tournament model', () => {
 		const tournament = await Tournament.findOne({ name: 'test tournament' })
 			.populate('events')
 			.exec()
-		const expectedNumEntries = tournament.events.reduce((accumulator, event) => {
-			return accumulator + event.division.length
-		}, 0)
+		const expectedNumEntries = tournament.events.reduce((accumulator, event) => accumulator + event.division.length, 0)
 
 		const entries = await ScoresheetEntry.find({ tournament: tournament._id }).exec()
 		expect(entries.length).toEqual(expectedNumEntries)
@@ -55,23 +51,21 @@ describe('test Tournament model', () => {
 			school: 'b school',
 			identifier: 'A',
 			division: 'B',
-			teamNumber: 1
+			teamNumber: 1,
 		})
 		const divCTeam = new Team({
 			tournament: tournament._id,
 			school: 'c school',
 			identifier: 'A',
 			division: 'C',
-			teamNumber: 1
+			teamNumber: 1,
 		})
 
 		return Team.insertMany([divBTeam, divCTeam]).then(async () => {
 			const entries = await ScoresheetEntry.find({ tournament: tournament._id }).exec()
 			entries.forEach(entry => {
 				expect(entry.scores.length).toEqual(1)
-				if (entry.division === 'B')
-					expect(entry.scores[0]).toHaveProperty('team', divBTeam._id)
-				else expect(entry.scores[0]).toHaveProperty('team', divCTeam._id)
+				if (entry.division === 'B') { expect(entry.scores[0]).toHaveProperty('team', divBTeam._id) } else expect(entry.scores[0]).toHaveProperty('team', divCTeam._id)
 			})
 		})
 	})
@@ -84,7 +78,7 @@ describe('test Tournament model', () => {
 			school: 'another school',
 			identifier: 'B',
 			division: 'B',
-			teamNumber: 1
+			teamNumber: 1,
 		})
 
 		try {

@@ -5,7 +5,7 @@ const Team = require('../models/Team')
 module.exports = {
 	getTournamentList: (req, res, next) => {
 		Tournament.find((err, results) => {
-			if (err) req.flash('error', 'Could not load tournaments: ' + err)
+			if (err) req.flash('error', `Could not load tournaments: ${err}`)
 			res.locals.tournaments = results
 			next()
 		})
@@ -14,15 +14,15 @@ module.exports = {
 		Event.find({ inRotation: true })
 			.sort('name')
 			.exec((err, results) => {
-				if (err) req.flash('error', 'Could not load events: ' + err)
+				if (err) req.flash('error', `Could not load events: ${err}`)
 				res.locals.events = results
 				next()
 			})
 	},
 	getSchoolsList: (req, res, next) => {
 		Team.find({}, '-_id school', (err, results) => {
-			if (err) req.flash('error', 'Could not load schools: ' + err)
-			let schools = []
+			if (err) req.flash('error', `Could not load schools: ${err}`)
+			const schools = []
 			results.forEach(el => {
 				schools.push(el.school)
 			})
@@ -35,7 +35,7 @@ module.exports = {
 			.lean()
 			.sort('teamNumber')
 			.exec((err, results) => {
-				if (err) req.flash('error', 'Could not load teams: ' + err)
+				if (err) req.flash('error', `Could not load teams: ${err}`)
 				res.locals.teams = results
 				next()
 			})
@@ -49,5 +49,5 @@ module.exports = {
 				res.locals.teams = results
 				next()
 			})
-	}
+	},
 }

@@ -16,15 +16,15 @@ router.post('/new', ensureAuthenticated, needsGroup('admin'), (req, res, next) =
 		impound: req.body.impound,
 		stateEvent: req.body.stateEvent,
 		highScoreWins: req.body.highScoreWins,
-		topic: req.body.currentTopic
+		topic: req.body.currentTopic,
 	})
 
 	event.save((err, doc) => {
 		if (err) req.flash('error', err.message)
-		else req.flash('success', 'Successfully created new event: ' + event.name)
+		else req.flash('success', `Successfully created new event: ${event.name}`)
 		res.json({
 			message: req.flash(),
-			newEvent: event
+			newEvent: event,
 		})
 	})
 })
@@ -43,20 +43,20 @@ router.post('/:eventId/edit', ensureAuthenticated, needsGroup('admin'), (req, re
 				impound: req.body.impound,
 				stateEvent: req.body.stateEvent,
 				highScoreWins: req.body.highScoreWins,
-				currentTopic: req.body.currentTopic
-			}
+				currentTopic: req.body.currentTopic,
+			},
 		},
 		{
-			new: true
+			new: true,
 		},
 		(err, updated) => {
 			if (err) req.flash('error', err.message)
-			else req.flash('success', 'Successfully updated ' + updated.name)
+			else req.flash('success', `Successfully updated ${updated.name}`)
 			res.json({
 				message: req.flash(),
-				updatedEvent: updated
+				updatedEvent: updated,
 			})
-		}
+		},
 	)
 })
 

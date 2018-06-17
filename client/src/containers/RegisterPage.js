@@ -4,7 +4,7 @@ import { Header } from 'semantic-ui-react'
 
 const centered = {
 	width: '50%',
-	margin: '0 auto'
+	margin: '0 auto',
 }
 
 export default class RegisterPage extends React.Component {
@@ -17,7 +17,7 @@ export default class RegisterPage extends React.Component {
 			<div style={centered}>
 				<Header as="h1">Register</Header>
 				<RegisterForm />
-			</div>
+  </div>
 		)
 	}
 }

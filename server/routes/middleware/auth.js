@@ -15,8 +15,8 @@ exports.ensureAuthenticated = (req, res, next) => {
 			console.log(err)
 			return res.status(400).json({
 				message: {
-					error: 'Incorrect credentials, please try again.'
-				}
+					error: 'Incorrect credentials, please try again.',
+				},
 			})
 		}
 
@@ -33,10 +33,11 @@ exports.ensureAuthenticated = (req, res, next) => {
 
 exports.needsGroup = group => (req, res, next) => {
 	if (req.user && req.user.group === group) next()
-	else
+	else {
 		return res.status(403).json({
 			message: {
-				error: 'Unauthorized access.'
-			}
+				error: 'Unauthorized access.',
+			},
 		})
+	}
 }

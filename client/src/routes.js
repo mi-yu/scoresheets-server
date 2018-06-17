@@ -12,53 +12,53 @@ import RegisterPage from './containers/RegisterPage.js'
 const routes = [
 	{
 		path: '/',
-		component: HomePage
+		component: HomePage,
 	},
 
 	{
 		path: '/users/login',
-		component: LoginPage
+		component: LoginPage,
 	},
 
 	{
 		path: '/users/register',
-		component: RegisterPage
+		component: RegisterPage,
 	},
 
 	{
 		path: '/users/me',
-		component: ProfilePage
+		component: ProfilePage,
 	},
 
 	{
 		path: '/admin/dashboard',
-		component: DashboardPage
+		component: DashboardPage,
 	},
 
 	{
 		path: '/tournaments/:id/manage',
-		component: TournamentManagementPage
+		component: TournamentManagementPage,
 	},
 
 	{
 		path: '/tournaments/:id/edit/bulkAddTeams',
-		component: BulkAddTeamsPage
+		component: BulkAddTeamsPage,
 	},
 
 	{
 		path: '/tournaments/:id/:division/results',
-		component: ResultsPage
+		component: ResultsPage,
 	},
 
 	{
 		path: '/tournaments/:id/slideshow',
-		component: Slideshow
+		component: Slideshow,
 	},
 
 	{
 		path: '/scoresheets/:tournamentId/scores/:division/:eventId',
-		component: ScoreEntryPage
-	}
+		component: ScoreEntryPage,
+	},
 ]
 
 export default routes

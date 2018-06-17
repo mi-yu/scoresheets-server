@@ -10,80 +10,80 @@ const TournamentEventCard = ({
 	impound,
 	division,
 	finished,
-	tournamentId
+	tournamentId,
 }) => {
 	let color = ''
 	switch (category) {
-		case 'bio':
-			color = 'green'
-			break
-		case 'earth':
-			color = 'brown'
-			break
-		case 'inquiry':
-			color = 'pink'
-			break
-		case 'phys/chem':
-			color = 'violet'
-			break
-		case 'building':
-			color = 'orange'
-			break
-		default:
-			color = 'grey'
-			break
+	case 'bio':
+		color = 'green'
+		break
+	case 'earth':
+		color = 'brown'
+		break
+	case 'inquiry':
+		color = 'pink'
+		break
+	case 'phys/chem':
+		color = 'violet'
+		break
+	case 'building':
+		color = 'orange'
+		break
+	default:
+		color = 'grey'
+		break
 	}
 
 	return (
 		<Grid.Column width={4}>
 			<Card>
-				<Card.Content>
+    <Card.Content>
 					<Card.Header>{name}</Card.Header>
-					<Card.Description>
-						<Label size="tiny" color={color}>
-							{category}
+    <Card.Description>
+  <Label size="tiny" color={color}>
+  {category}
 						</Label>
-						{division.split('').map((div, i) => (
-							<Label size="tiny" key={i}>
+  {division.split('').map((div, i) => (
+        <Label size="tiny" key={i}>
 								{div}
 							</Label>
 						))}
-						<Label size="tiny" color={finished ? 'green' : 'grey'}>
+  <Label size="tiny" color={finished ? 'green' : 'grey'}>
 							{finished ? 'finished' : 'in progress'}
-						</Label>
+      </Label>
 					</Card.Description>
-				</Card.Content>
-				<Card.Content>
-					{division !== 'BC' ? (
-						<Button
+  </Card.Content>
+    <Card.Content>
+  {division !== 'BC' ? (
+  <Button
 							fluid
-							basic
+  basic
 							as={Link}
-							to={`/scoresheets/${tournamentId}/scores/${division}/${_id}`}
+  to={`/scoresheets/${tournamentId}/scores/${division}/${_id}`}
 						>
 							Manage Scores
-						</Button>
+</Button>
 					) : (
 						<Button.Group fluid basic>
 							<Button
-								color="blue"
-								as={Link}
+    color="blue"
+    as={Link}
 								to={`/scoresheets/${tournamentId}/scores/B/${_id}`}
-							>
+  >
 								B Scores
-							</Button>
+  </Button>
 							<Button
 								color="blue"
 								as={Link}
 								to={`/scoresheets/${tournamentId}/scores/C/${_id}`}
-							>
+  >
 								C Scores
-							</Button>
-						</Button.Group>
+  </Button>
+  </Button.Group>
 					)}
 				</Card.Content>
-			</Card>
-		</Grid.Column>
+  </Card>
+  </Grid.Column>
 	)
 }
 

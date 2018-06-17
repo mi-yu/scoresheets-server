@@ -12,7 +12,7 @@ const Score = new Schema({
 	team: {
 		type: Schema.Types.ObjectId,
 		ref: 'Team',
-		required: true
+		required: true,
 	} /* The team that this score is associated with. */,
 	rawScore: { type: Number, required: true, default: 0 },
 	tiebreaker: { type: Number, default: 0 },
@@ -22,31 +22,31 @@ const Score = new Schema({
 	participationOnly: { type: Boolean, default: false },
 	dropped: {
 		type: Boolean,
-		default: false
+		default: false,
 	} /* If this score was dropped, a rank of 0 will be assigned. */,
 	rank: Number /* Calculation triggered by user. */,
-	notes: String /* Any special notes about the score (how a tiebreaker was won, reason for DQ, etc). */
+	notes: String, /* Any special notes about the score (how a tiebreaker was won, reason for DQ, etc). */
 })
 
 const ScoresheetEntry = new Schema({
 	tournament: {
 		type: Schema.Types.ObjectId,
 		ref: 'Tournament',
-		required: true
+		required: true,
 	},
 	event: { type: Schema.Types.ObjectId, ref: 'Event', required: true },
 	division: { type: String, required: true, enum: ['B', 'C'] },
 	scores: [Score],
 	maxScore: Number,
-	locked: { type: Boolean, default: false }
+	locked: { type: Boolean, default: false },
 })
 
 /**
  * Calculate and assign ranks to each score in the ScoresheetEntry.
  * @param  {Function} callback handler which takes 1 optional error argument
  */
-ScoresheetEntry.methods.rank = function(callback) {
-	let scores = this.scores
+ScoresheetEntry.methods.rank = function (callback) {
+	const scores = this.scores
 	if (!scores.length) return callback()
 	Event.findById(this.event).exec((err, event) => {
 		// Save our unbroken ties (if they exist) for error handling.
@@ -73,11 +73,9 @@ ScoresheetEntry.methods.rank = function(callback) {
 				// If we reach here, we have an unbroken tie.
 				unbrokenTies.t1 = s1.team
 				unbrokenTies.t2 = s2.team
-				throw new Error(
-					`Tie must be broken between ${s1.team.school} (${s1.team.division +
+				throw new Error(`Tie must be broken between ${s1.team.school} (${s1.team.division +
 						s1.team.teamNumber}) and ${s2.team.school} (${s2.team.division +
-						s2.team.teamNumber})`
-				)
+						s2.team.teamNumber})`)
 			})
 		} catch (err) {
 			// When encountering unbroken ties, immediately return to callback.
@@ -88,9 +86,7 @@ ScoresheetEntry.methods.rank = function(callback) {
 		// Assign ranks to scores.
 		scores.forEach((score, i) => {
 			// If there is nothing special about the score, just give regular rank.
-			if (!score.dq && !score.noShow && !score.participationOnly && !score.dropped)
-				score.rank = i + 1
-			else {
+			if (!score.dq && !score.noShow && !score.participationOnly && !score.dropped) { score.rank = i + 1 } else {
 				// Otherwise, we need to handle special cases accordingly.
 				if (score.participationOnly) score.rank = scores.length
 				if (score.dq) score.rank = scores.length + 2
@@ -114,7 +110,7 @@ ScoresheetEntry.methods.rank = function(callback) {
  * @param  {String}   d        division
  * @param  {Function} callback handler which takes 1 optional error argument
  */
-ScoresheetEntry.statics.getTopTeamsPerEvent = function(n, id, d, callback) {
+ScoresheetEntry.statics.getTopTeamsPerEvent = function (n, id, d, callback) {
 	if (!d) d = /(B|C)/
 
 	// Default number of awards
@@ -141,8 +137,7 @@ ScoresheetEntry.statics.getTopTeamsPerEvent = function(n, id, d, callback) {
 						score.participationOnly ||
 						score.noShow ||
 						score.dropped
-					)
-						drops++
+					) { drops++ }
 				})
 
 				// Sort the scores, moving the dropped events (zeroes) to end of array.
@@ -157,7 +152,7 @@ ScoresheetEntry.statics.getTopTeamsPerEvent = function(n, id, d, callback) {
 				// Take at most the top n scores, throwing out drops.
 				entry.scores = entry.scores.slice(
 					0,
-					Math.min(n, entry.scores.length - drops, entry.scores.length)
+					Math.min(n, entry.scores.length - drops, entry.scores.length),
 				)
 
 				// Reset drops counter.

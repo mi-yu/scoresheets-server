@@ -26,10 +26,10 @@ const app = express()
 // Set environment
 const env = process.env.NODE_ENV || 'development'
 
-if ('development' == env) {
+if (env == 'development') {
 	const logger = require('morgan')
 	require('dotenv').config({
-		path: './.env'
+		path: './.env',
 	})
 	app.use(logger('dev'))
 	mongoose.connection.openUri(process.env.DB_REACT_LOCAL_URL)
@@ -39,7 +39,7 @@ if ('development' == env) {
 }
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
+// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 app.use(session({ secret: 'koala', resave: false, saveUninitialized: true }))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -81,8 +81,8 @@ app.use((err, req, res, next) => {
 	// res.render('error');
 	res.json({
 		message: {
-			error: err.message
-		}
+			error: err.message,
+		},
 	})
 })
 

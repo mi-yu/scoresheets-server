@@ -7,12 +7,12 @@ module.exports = new PassportLocalStrategy(
 		usernameField: 'email',
 		passwordField: 'password',
 		session: false,
-		passReqToCallback: true
+		passReqToCallback: true,
 	},
 	(req, email, password, done) => {
 		const userData = {
 			email: req.body.email.trim(),
-			password: req.body.password.trim()
+			password: req.body.password.trim(),
 		}
 		return User.findOne({ email: userData.email }, (err, user) => {
 			if (err) return done(err)
@@ -33,7 +33,7 @@ module.exports = new PassportLocalStrategy(
 				}
 
 				const payload = {
-					sub: user._id
+					sub: user._id,
 				}
 
 				const token = jwt.sign(payload, process.env.JWT_SECRET)
@@ -43,5 +43,5 @@ module.exports = new PassportLocalStrategy(
 				return done(null, token, userObj)
 			})
 		})
-	}
+	},
 )
