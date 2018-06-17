@@ -1,27 +1,36 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Button, Modal, Form, Dropdown, Icon } from 'semantic-ui-react'
 import OpenModalButton from '../modals/OpenModalButton'
 import Auth from '../../modules/Auth'
-import states from './StatesList.js'
+import states from './StatesList'
 
 class TournamentsModal extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			...props
+			...props,
 		}
 	}
 
+	componentWillReceiveProps(nextProps) {
+		if (this.state.modalOpen !== nextProps.modalOpen) {
+			this.setState({
+				...nextProps,
+				currentTournament: nextProps.currentTournament || {},
+			})
+		}
+	}
 	openModal = () => {
 		this.setState({
-			modalOpen: true
+			modalOpen: true,
 		})
 	}
 
 	closeModal = () => {
 		this.state.closeModalParent()
 		this.setState({
-			modalOpen: false
+			modalOpen: false,
 		})
 	}
 
@@ -30,8 +39,8 @@ class TournamentsModal extends React.Component {
 			...this.state,
 			currentTournament: {
 				...this.state.currentTournament,
-				[name]: value
-			}
+				[name]: value,
+			},
 		})
 	}
 
@@ -40,8 +49,8 @@ class TournamentsModal extends React.Component {
 			...this.state,
 			currentTournament: {
 				...this.state.currentTournament,
-				[name]: checked
-			}
+				[name]: checked,
+			},
 		})
 	}
 
@@ -56,13 +65,13 @@ class TournamentsModal extends React.Component {
 			method: 'POST',
 			headers: new Headers({
 				'Content-Type': 'application/json',
-				Authorization: 'Bearer ' + token
+				Authorization: `Bearer ${token}`,
 			}),
-			body: JSON.stringify(currentTournament)
+			body: JSON.stringify(currentTournament),
 		})
 			.then(data => {
 				if (data.ok) return data.json()
-				else this.closeModal()
+				this.closeModal()
 			})
 			.then(res => {
 				if (res.message.success) {
@@ -73,7 +82,7 @@ class TournamentsModal extends React.Component {
 			})
 			.catch(err => {
 				this.setState({
-					redirectToLogin: true
+					redirectToLogin: true,
 				})
 			})
 	}
@@ -84,12 +93,12 @@ class TournamentsModal extends React.Component {
 		switch (key) {
 			case 0: // only B events
 				newEvents = events.filter(
-					event => event.division.includes('B') && !event.stateEvent
+					event => event.division.includes('B') && !event.stateEvent,
 				)
 				break
 			case 1: // only C events
 				newEvents = events.filter(
-					event => event.division.includes('C') && !event.stateEvent
+					event => event.division.includes('C') && !event.stateEvent,
 				)
 				break
 			case 2: // B events + trials
@@ -111,17 +120,9 @@ class TournamentsModal extends React.Component {
 		this.setState({
 			currentTournament: {
 				...this.state.currentTournament,
-				events: newEvents
-			}
+				events: newEvents,
+			},
 		})
-	}
-
-	componentWillReceiveProps(nextProps) {
-		if (this.state.modalOpen !== nextProps.modalOpen)
-			this.setState({
-				...nextProps,
-				currentTournament: nextProps.currentTournament || {}
-			})
 	}
 
 	render() {
@@ -129,12 +130,7 @@ class TournamentsModal extends React.Component {
 		let eventsOptions = []
 
 		if (this.state.events) {
-			eventsOptions = this.state.events.map(event => {
-				return {
-					text: event.name,
-					value: event._id
-				}
-			})
+			eventsOptions = this.state.events.map(event => ({ text: event.name, value: event._id }))
 		}
 
 		return (
@@ -158,7 +154,7 @@ class TournamentsModal extends React.Component {
 				<Modal.Content>
 					<Form>
 						<Form.Field required>
-							<label>Tournament Name</label>
+							<label htmlFor="name">Tournament Name</label>
 							<Form.Input
 								required
 								name="name"
@@ -167,7 +163,7 @@ class TournamentsModal extends React.Component {
 							/>
 						</Form.Field>
 						<Form.Field required>
-							<label>City</label>
+							<label htmlFor="city">City</label>
 							<Form.Input
 								required
 								name="city"
@@ -176,7 +172,7 @@ class TournamentsModal extends React.Component {
 							/>
 						</Form.Field>
 						<Form.Field required>
-							<label>State</label>
+							<label htmlFor="state">State</label>
 							<Dropdown
 								placeholder="Select state"
 								selection
@@ -188,11 +184,11 @@ class TournamentsModal extends React.Component {
 							/>
 						</Form.Field>
 						<Form.Field required>
-							<label>Date</label>
+							<label htmlFor="date">Date</label>
 							<Form.Input type="date" name="date" onChange={this.handleChange} />
 						</Form.Field>
 						<Form.Field required>
-							<label>Events</label>
+							<label htmlFor="events">Events</label>
 							<Dropdown
 								placeholder="Choose events"
 								selection
@@ -271,6 +267,18 @@ class TournamentsModal extends React.Component {
 			</Modal>
 		)
 	}
+}
+
+TournamentsModal.propTypes = {
+	modalOpen: PropTypes.bool.isRequired,
+	currentTournament: PropTypes.shape({
+		_id: PropTypes.string.isRequired,
+		name: PropTypes.string.isRequired,
+		city: PropTypes.string.isRequired,
+		state: PropTypes.string.isRequired,
+		date: PropTypes.string.isRequired,
+		events: PropTypes.arrayOf(PropTypes.string).isRequired,
+	}).isRequired,
 }
 
 export default TournamentsModal

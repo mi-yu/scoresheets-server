@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Form, Button, Icon, Table, Header } from 'semantic-ui-react'
 import { Redirect, Link } from 'react-router-dom'
 import Auth from '../modules/Auth'
@@ -6,81 +7,76 @@ import Auth from '../modules/Auth'
 const divisionOptions = [
 	{
 		text: 'B',
-		value: 'B'
+		value: 'B',
 	},
 	{
 		text: 'C',
-		value: 'C'
-	}
+		value: 'C',
+	},
 ]
 
 export default class BulkAddTeamsPage extends React.Component {
 	constructor(props) {
 		super(props)
-		let formData = []
-		for (let i = 0; i < 10; i++) {
+		const formData = []
+		for (let i = 0; i < 10; i += 1) {
 			formData.push({
 				teamNumber: undefined,
 				tournament: props.location.state.tournament._id,
 				school: '',
 				identifier: '',
-				division: ''
+				division: '',
 			})
 		}
 		this.state = {
 			tournament: { ...props.location.state.tournament },
-			schools: props.location.state.schools.map(school => {
-				return {
-					text: school,
-					value: school
-				}
-			}),
+			schools: props.location.state.schools.map(school => ({ text: school, value: school })),
 			setMessage: props.setMessage,
-			formData: formData,
 			redirectToManagePage: false,
-			options: divisionOptions
+			options: divisionOptions,
+			formData,
 		}
 	}
 
 	handleAddRows = n => {
-		let newRows = []
-		for (let i = 0; i < n; i++) {
+		const newRows = []
+		for (let i = 0; i < n; i += 1) {
 			newRows.push({
 				teamNumber: undefined,
 				tournament: this.state.tournament._id,
 				school: '',
 				identifier: '',
-				division: ''
+				division: '',
 			})
 		}
 
 		this.setState({
-			formData: this.state.formData.concat(newRows)
+			formData: this.state.formData.concat(newRows),
 		})
 	}
 
 	handleChange = (e, { row, name, value }) => {
-		let formData = this.state.formData
+		const { formData } = this.state
 		let changedRow = formData[row]
 		changedRow = {
 			...changedRow,
-			[name]: value
+			[name]: value,
 		}
 		formData[row] = changedRow
 		this.setState({
-			formData: formData
+			formData,
 		})
 	}
 
 	handleAddition = (e, { value }) => {
 		this.setState({
-			options: [{ text: value, value }, ...this.state.options]
+			options: [{ text: value, value }, ...this.state.options],
 		})
 	}
 
-	validateRow = row => row.teamNumber != 0 && row.school !== '' && row.division !== ''
+	validateRow = row => row.teamNumber !== 0 && row.school !== '' && row.division !== ''
 
-	handleSubmit = (event, d) => {
+	handleSubmit = () => {
 		const { tournament, setMessage, formData } = this.state
 		const url = `/tournaments/${tournament._id}/edit/bulkAddTeams`
 		const token = Auth.getToken()
@@ -89,19 +85,19 @@ export default class BulkAddTeamsPage extends React.Component {
 			method: 'POST',
 			headers: new Headers({
 				'Content-Type': 'application/json',
-				Authorization: 'Bearer ' + token
+				Authorization: `Bearer ${token}`,
 			}),
-			body: JSON.stringify(formData.filter(row => this.validateRow(row)))
+			body: JSON.stringify(formData.filter(row => this.validateRow(row))),
 		})
 			.then(data => {
 				if (data.ok) return data.json()
-				else throw new Error('An unknown error occurred while trying to create teams.')
+				throw new Error('An unknown error occurred while trying to create teams.')
 			})
 			.then(res => {
 				if (res.message.success) {
 					setMessage(res.message.success, 'success')
 					this.setState({
-						redirectToManagePage: res.redirect
+						redirectToManagePage: res.redirect,
 					})
 				} else setMessage(res.message.error, 'error')
 			})
@@ -212,4 +208,15 @@ export default class BulkAddTeamsPage extends React.Component {
 			</div>
 		)
 	}
+}
+
+BulkAddTeamsPage.propTypes = {
+	setMessage: PropTypes.func.isRequired,
+	location: PropTypes.shape({
+		state: PropTypes.object.isRequired,
+	}),
+}
+
+BulkAddTeamsPage.defaultProps = {
+	location: undefined,
 }

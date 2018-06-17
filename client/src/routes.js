@@ -1,13 +1,13 @@
-import HomePage from './containers/HomePage.js'
-import LoginPage from './containers/LoginPage.js'
-import ProfilePage from './containers/ProfilePage.js'
-import DashboardPage from './containers/DashboardPage.js'
-import TournamentManagementPage from './containers/TournamentManagementPage.js'
-import BulkAddTeamsPage from './containers/BulkAddTeamsPage.js'
-import ScoreEntryPage from './containers/ScoreEntryPage.js'
-import ResultsPage from './containers/ResultsPage.js'
-import Slideshow from './containers/Slideshow.js'
-import RegisterPage from './containers/RegisterPage.js'
+import HomePage from './containers/HomePage'
+import LoginPage from './containers/LoginPage'
+import ProfilePage from './containers/ProfilePage'
+import DashboardPage from './containers/DashboardPage'
+import TournamentManagementPage from './containers/TournamentManagementPage'
+import BulkAddTeamsPage from './containers/BulkAddTeamsPage'
+import ScoreEntryPage from './containers/ScoreEntryPage'
+import ResultsPage from './containers/ResultsPage'
+import Slideshow from './containers/Slideshow'
+import RegisterPage from './containers/RegisterPage'
 
 const routes = [
 	{

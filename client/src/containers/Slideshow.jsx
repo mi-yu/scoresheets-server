@@ -1,7 +1,8 @@
 import React from 'react'
-import { Deck, Heading, List, ListItem, Slide, Text, Appear } from 'spectacle'
-import Auth from '../modules/Auth'
+import PropTypes from 'prop-types'
 import createTheme from 'spectacle/lib/themes/default'
+import { Deck, Heading, Slide, Text, Appear } from 'spectacle'
+import Auth from '../modules/Auth'
 
 const theme = createTheme(
 	{
@@ -17,17 +18,14 @@ const theme = createTheme(
 
 const getRankSuffix = n => {
 	switch (n) {
-	case 1:
-		return '1st'
-		break
-	case 2:
-		return '2nd'
-		break
-	case 3:
-		return '3rd'
-		break
-	default:
-		return `${n}th`
+		case 1:
+			return '1st'
+		case 2:
+			return '2nd'
+		case 3:
+			return '3rd'
+		default:
+			return `${n}th`
 	}
 }
 
@@ -58,7 +56,7 @@ export default class Slideshow extends React.Component {
 			.then(res => {
 				const sweepstakes = res.topCTeams
 				let n = 1
-				for (let i = 0; i < res.topBTeams.length; i++) {
+				for (let i = 0; i < res.topBTeams.length; i += 1) {
 					sweepstakes.splice(n, 0, res.topBTeams[i])
 					n += 2
 				}
@@ -78,51 +76,64 @@ export default class Slideshow extends React.Component {
 		if (!topTeamsPerEvent) return null
 		return (
 			<Deck theme={theme} progress="none" controls={false}>
-    <Slide transition={['fade']}>
-  <Heading size={1}>{tournament.name} Awards</Heading>
+				<Slide transition={['fade']}>
+					<Heading size={1}>{tournament.name} Awards</Heading>
 					<Heading size={4}>{new Date(tournament.date).toLocaleDateString()}</Heading>
-</Slide>
-				{topTeamsPerEvent.map((entry, i) => (
-					<Slide key={i} transition={['fade']}>
+				</Slide>
+				{topTeamsPerEvent.map(entry => (
+					<Slide transition={['fade']}>
 						<Heading size={3} padding="50px">
-    {entry.event.name} {entry.division}
-  </Heading>
-    {entry.scores.map((score, n) => (
-    <Appear order={entry.scores.length - n - 1} key={n}>
-        <Text textAlign="center" textFont="Roboto">
-        {n + 1}. {score.team.division}
+							{entry.event.name} {entry.division}
+						</Heading>
+						{entry.scores.map((score, n) => (
+							<Appear order={entry.scores.length - n - 1}>
+								<Text textAlign="center" textFont="Roboto">
+									{n + 1}. {score.team.division}
 									{score.team.teamNumber} ({score.team.school}
-        {score.team.identifier
-										? ` ${score.team.identifier}`
-										: ''})
-      </Text>
-      </Appear>
+									{score.team.identifier ? ` ${score.team.identifier}` : ''})
+								</Text>
+							</Appear>
 						))}
-  </Slide>
+					</Slide>
 				))}
-				{sweepstakes.map((team, i) => (
+				{sweepstakes.map(team => (
 					<Slide key={team._id}>
-    <Heading size={4} padding="50px">
-								Sweepstakes {team.division} - {getRankSuffix(team.rank)} Place
-  </Heading>
+						<Heading size={4} padding="50px">
+							Sweepstakes {team.division} - {getRankSuffix(team.rank)} Place
+						</Heading>
 						<Appear>
 							<Text textAlign="center" textSize="64px">
 								{team.division}
 								{team.teamNumber} ({team.school}
 								{team.identifier ? ` ${team.identifier}` : ''})
-  </Text>
-  </Appear>
-  </Slide>
+							</Text>
+						</Appear>
+					</Slide>
 				))}
 				<Slide>
 					<Heading size={3} padding="50px">
 						Thanks for coming!
-  </Heading>
+					</Heading>
 					<Text textAlign="center">
 						Visit scribbl.io/tournamentName/results for full results.
-  </Text>
-  </Slide>
-  </Deck>
+					</Text>
+				</Slide>
+			</Deck>
 		)
 	}
+}
+
+Slideshow.propTypes = {
+	location: PropTypes.shape({
+		state: PropTypes.object.isRequired,
+	}),
+	match: PropTypes.shape({
+		params: PropTypes.object.isRequired,
+	}),
+	setMessage: PropTypes.func.isRequired,
+}
+
+Slideshow.defaultProps = {
+	location: undefined,
+	match: undefined,
 }

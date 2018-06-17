@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Button, Modal, Form, Dropdown } from 'semantic-ui-react'
 import OpenModalButton from '../modals/OpenModalButton'
 import options from './EventsOptions'
@@ -8,20 +9,29 @@ class EventsModal extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			...props
+			...props,
+		}
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (this.state.modalOpen !== nextProps.modalOpen) {
+			this.setState({
+				...nextProps,
+				currentEvent: nextProps.currentEvent || {},
+			})
 		}
 	}
 
 	openModal = () => {
 		this.setState({
-			modalOpen: true
+			modalOpen: true,
 		})
 	}
 
 	closeModal = () => {
 		this.state.closeModalParent()
 		this.setState({
-			modalOpen: false
+			modalOpen: false,
 		})
 	}
 
@@ -30,8 +40,8 @@ class EventsModal extends React.Component {
 			...this.state,
 			currentEvent: {
 				...this.state.currentEvent,
-				[name]: value
-			}
+				[name]: value,
+			},
 		})
 	}
 
@@ -40,8 +50,8 @@ class EventsModal extends React.Component {
 			...this.state,
 			currentEvent: {
 				...this.state.currentEvent,
-				[name]: checked
-			}
+				[name]: checked,
+			},
 		})
 	}
 
@@ -54,16 +64,13 @@ class EventsModal extends React.Component {
 			method: 'POST',
 			headers: new Headers({
 				'Content-Type': 'application/json',
-				Authorization: 'Bearer ' + token
+				Authorization: `Bearer ${token}`,
 			}),
-			body: JSON.stringify(currentEvent)
+			body: JSON.stringify(currentEvent),
 		})
 			.then(data => {
 				if (data.ok) return data.json()
-				else {
-					console.log(data)
-					throw new Error()
-				}
+				throw new Error()
 			})
 			.then(res => {
 				if (res.message.success) {
@@ -73,21 +80,11 @@ class EventsModal extends React.Component {
 				this.closeModal()
 			})
 			.catch(err => {
-				console.log(err)
 				this.setState({
-					redirectToLogin: true
+					redirectToLogin: true,
 				})
 			})
 	}
-
-	componentWillReceiveProps(nextProps) {
-		if (this.state.modalOpen !== nextProps.modalOpen)
-			this.setState({
-				...nextProps,
-				currentEvent: nextProps.currentEvent || {}
-			})
-	}
-
 	render() {
 		const { modalOpen, currentEvent, clearCurrentEvent } = this.state
 		return (
@@ -109,7 +106,7 @@ class EventsModal extends React.Component {
 				<Modal.Content>
 					<Form>
 						<Form.Field required>
-							<label>Name</label>
+							<label htmlFor="name">Name</label>
 							<Form.Input
 								required
 								name="name"
@@ -118,7 +115,7 @@ class EventsModal extends React.Component {
 							/>
 						</Form.Field>
 						<Form.Field required>
-							<label>Division</label>
+							<label htmlFor="division">Division</label>
 							<Dropdown
 								placeholder="Select division"
 								selection
@@ -130,7 +127,7 @@ class EventsModal extends React.Component {
 							/>
 						</Form.Field>
 						<Form.Field required>
-							<label>Category</label>
+							<label htmlFor="category">Category</label>
 							<Dropdown
 								placeholder="Select category"
 								selection
@@ -142,7 +139,9 @@ class EventsModal extends React.Component {
 							/>
 						</Form.Field>
 						<Form.Field>
-							<label>Resources Allowed (1 binder, 4 sheets of paper, etc)</label>
+							<label htmlFor="resources">
+								Resources Allowed (1 binder, 4 sheets of paper, etc)
+							</label>
 							<Form.Input
 								type="text"
 								name="resources"
@@ -187,6 +186,19 @@ class EventsModal extends React.Component {
 			</Modal>
 		)
 	}
+}
+
+EventsModal.propTypes = {
+	modalOpen: PropTypes.bool.isRequired,
+	currentEvent: PropTypes.shape({
+		_id: PropTypes.string.isRequired,
+		name: PropTypes.string.isRequired,
+		category: PropTypes.oneOf(['bio', 'earth', 'inquiry', 'phys/chem', 'building']).isRequired,
+		stateEvent: PropTypes.bool.isRequired,
+		impound: PropTypes.bool.isRequired,
+		division: PropTypes.oneOf(['B', 'C', 'BC']).isRequired,
+		setCurrentEvent: PropTypes.func.isRequired,
+	}).isRequired,
 }
 
 export default EventsModal

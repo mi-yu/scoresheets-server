@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Form, Message } from 'semantic-ui-react'
 import { Redirect } from 'react-router-dom'
 import Auth from '../../modules/Auth'
@@ -10,10 +11,8 @@ class LoginForm extends React.Component {
 			email: '',
 			password: '',
 			message: '',
-			user: props.user,
-			token: props.token,
 			loginSucess: false,
-			redirect: false
+			redirect: false,
 		}
 
 		this.setUser = props.setUser.bind(this)
@@ -28,15 +27,15 @@ class LoginForm extends React.Component {
 
 		const payload = {
 			email,
-			password
+			password,
 		}
 
 		fetch('/users/login', {
 			method: 'POST',
 			headers: new Headers({
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
 			}),
-			body: JSON.stringify(payload)
+			body: JSON.stringify(payload),
 		})
 			.then(data => data.json())
 			.catch(err => console.log(err))
@@ -45,11 +44,11 @@ class LoginForm extends React.Component {
 					Auth.storeToken(res.token)
 					this.setUser(res.user)
 					this.setState({
-						redirect: true
+						redirect: true,
 					})
 				} else {
 					this.setState({
-						message: res.message
+						message: res.message,
 					})
 				}
 			})
@@ -62,7 +61,7 @@ class LoginForm extends React.Component {
 			<div>
 				<Form onSubmit={this.handleSubmit}>
 					<Form.Field required>
-						<label>Email</label>
+						<label htmlFor="email">Email</label>
 						<Form.Input
 							placeholder="Email"
 							name="email"
@@ -71,7 +70,7 @@ class LoginForm extends React.Component {
 						/>
 					</Form.Field>
 					<Form.Field required>
-						<label>Password</label>
+						<label htmlFor="password">Password</label>
 						<Form.Input
 							type="password"
 							name="password"
@@ -86,6 +85,10 @@ class LoginForm extends React.Component {
 			</div>
 		)
 	}
+}
+
+LoginForm.propTypes = {
+	setUser: PropTypes.func.isRequired,
 }
 
 export default LoginForm

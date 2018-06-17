@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Menu, Item, Container } from 'semantic-ui-react'
 import { Link, Redirect } from 'react-router-dom'
 import Auth from '../modules/Auth'
 
 const activeStyle = {
 	borderBottom: '1px solid black',
-	color: 'black'
+	color: 'black',
 }
 
 export default class Nav extends Component {
@@ -13,7 +14,7 @@ export default class Nav extends Component {
 		super(props)
 		const url = window.location.pathname.split('/')
 		this.state = {
-			activeItem: url[url.length - 1]
+			activeItem: url[url.length - 1],
 		}
 	}
 
@@ -36,7 +37,7 @@ export default class Nav extends Component {
 					style={{
 						borderLeft: 'none',
 						borderRight: 'none',
-						borderTop: 'none'
+						borderTop: 'none',
 					}}
 					color="black"
 				>
@@ -96,4 +97,8 @@ export default class Nav extends Component {
 			</Container>
 		)
 	}
+}
+
+Nav.propTypes = {
+	setUser: PropTypes.func.isRequired,
 }

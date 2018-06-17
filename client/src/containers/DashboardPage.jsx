@@ -1,9 +1,10 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+import { Grid, Header, Divider } from 'semantic-ui-react'
+import { Redirect } from 'react-router-dom'
 import Auth from '../modules/Auth'
 import EventCard from '../components/dashboard/EventCard'
 import TournamentCard from '../components/dashboard/TournamentCard'
-import { Grid, Header, Divider } from 'semantic-ui-react'
-import { Redirect } from 'react-router-dom'
 import EventsModal from '../components/events/EventsModal'
 import TournamentsModal from '../components/tournaments/TournamentsModal'
 
@@ -14,7 +15,6 @@ export default class DashboardPage extends React.Component {
 		this.state = {
 			tournaments: [],
 			events: [],
-			user: props.user,
 			redirectToLogin: false,
 			eventsModalOpen: false,
 			tournamentsModalOpen: false,
@@ -22,7 +22,7 @@ export default class DashboardPage extends React.Component {
 			editingTournament: false,
 			currentEvent: {},
 			currentTournament: {},
-			setMessage: props.setMessage
+			setMessage: props.setMessage,
 		}
 	}
 
@@ -34,34 +34,43 @@ export default class DashboardPage extends React.Component {
 			fetch('/admin/dashboard', {
 				method: 'GET',
 				headers: new Headers({
-					Authorization: 'Bearer ' + token
-				})
+					Authorization: `Bearer ${token}`,
+				}),
 			})
 				.then(data => {
 					if (data.ok) return data.json()
-					else throw new Error()
+					throw new Error()
 				})
 				.then(res => {
 					this.setState({
 						tournaments: res.tournaments,
-						events: res.events
+						events: res.events,
 					})
 				})
 				.catch(err => {
 					console.log(err)
 					this.setState({
-						redirectToLogin: true
+						redirectToLogin: true,
 					})
 				})
 		}
 	}
 
 	setCurrentEvent = (e, id) => {
-		const event = this.state.events.find(event => event._id === id)
+		const nextCurrentEvent = this.state.events.find(event => event._id === id)
 		this.setState({
-			currentEvent: event,
+			currentEvent: nextCurrentEvent,
 			eventsModalOpen: true,
-			editingEvent: true
+			editingEvent: true,
+		})
+	}
+
+	setCurrentTournament = (e, id) => {
+		const tournament = this.state.tournaments.find(t => t._id === id)
+		this.setState({
+			currentTournament: tournament,
+			tournamentsModalOpen: true,
+			editingTournament: true,
 		})
 	}
 
@@ -69,26 +78,7 @@ export default class DashboardPage extends React.Component {
 		this.setState({
 			currentEvent: {},
 			eventsModalOpen: true,
-			editingEvent: false
-		})
-	}
-
-	updateEvent = updatedEvent => {
-		const events = this.state.events
-		const index = events.map(event => event._id).indexOf(updatedEvent._id)
-		if (index > -1) events[index] = updatedEvent
-		else events.push(updatedEvent)
-		this.setState({
-			events
-		})
-	}
-
-	setCurrentTournament = (e, id) => {
-		const t = this.state.tournaments.find(t => t._id === id)
-		this.setState({
-			currentTournament: t,
-			tournamentsModalOpen: true,
-			editingTournament: true
+			editingEvent: false,
 		})
 	}
 
@@ -96,17 +86,27 @@ export default class DashboardPage extends React.Component {
 		this.setState({
 			currentTournament: {},
 			editingTournament: false,
-			tournamentsModalOpen: true
+			tournamentsModalOpen: true,
+		})
+	}
+
+	updateEvent = updatedEvent => {
+		const { events } = this.state
+		const index = events.map(event => event._id).indexOf(updatedEvent._id)
+		if (index > -1) events[index] = updatedEvent
+		else events.push(updatedEvent)
+		this.setState({
+			events,
 		})
 	}
 
 	updateTournament = updated => {
-		const tournaments = this.state.tournaments
+		const { tournaments } = this.state
 		const index = tournaments.map(t => t._id).indexOf(updated._id)
 		if (index > -1) tournaments[index] = updated
 		else tournaments.push(updated)
 		this.setState({
-			tournaments
+			tournaments,
 		})
 	}
 
@@ -115,7 +115,7 @@ export default class DashboardPage extends React.Component {
 			eventsModalOpen: false,
 			tournamentsModalOpen: false,
 			editingEvent: false,
-			editingTournament: false
+			editingTournament: false,
 		})
 	}
 
@@ -130,7 +130,7 @@ export default class DashboardPage extends React.Component {
 			editingEvent,
 			editingTournament,
 			currentTournament,
-			setMessage
+			setMessage,
 		} = this.state
 
 		if (redirectToLogin) return <Redirect to="/users/login" />
@@ -182,4 +182,8 @@ export default class DashboardPage extends React.Component {
 			</div>
 		)
 	}
+}
+
+DashboardPage.propTypes = {
+	setMessage: PropTypes.func.isRequired,
 }

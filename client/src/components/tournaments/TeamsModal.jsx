@@ -1,5 +1,6 @@
 import React from 'react'
-import { Button, Modal, Form, Dropdown } from 'semantic-ui-react'
+import PropTypes from 'prop-types'
+import { Button, Modal, Form } from 'semantic-ui-react'
 import OpenModalButton from '../modals/OpenModalButton'
 import Auth from '../../modules/Auth'
 
@@ -7,20 +8,29 @@ export default class TeamsModal extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			...props
+			...props,
+		}
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (this.state.modalOpen !== nextProps.modalOpen) {
+			this.setState({
+				...nextProps,
+				currentTeam: nextProps.currentTeam || {},
+			})
 		}
 	}
 
 	openModal = () => {
 		this.setState({
-			modalOpen: true
+			modalOpen: true,
 		})
 	}
 
 	closeModal = () => {
 		this.state.closeModalParent()
 		this.setState({
-			modalOpen: false
+			modalOpen: false,
 		})
 	}
 
@@ -29,8 +39,8 @@ export default class TeamsModal extends React.Component {
 			...this.state,
 			currentTeam: {
 				...this.state.currentTeam,
-				[name]: value
-			}
+				[name]: value,
+			},
 		})
 	}
 
@@ -48,13 +58,13 @@ export default class TeamsModal extends React.Component {
 			method: 'POST',
 			headers: new Headers({
 				'Content-Type': 'application/json',
-				Authorization: 'Bearer ' + token
+				Authorization: `Bearer ${token}`,
 			}),
-			body: JSON.stringify(currentTeam)
+			body: JSON.stringify(currentTeam),
 		})
 			.then(data => {
 				if (data.ok) return data.json()
-				else this.closeModal()
+				this.closeModal()
 			})
 			.then(res => {
 				if (res.message.success) {
@@ -65,14 +75,6 @@ export default class TeamsModal extends React.Component {
 			})
 			.catch(err => {
 				setMessage(err, 'error')
-			})
-	}
-
-	componentWillReceiveProps(nextProps) {
-		if (this.state.modalOpen !== nextProps.modalOpen)
-			this.setState({
-				...nextProps,
-				currentTeam: nextProps.currentTeam || {}
 			})
 	}
 
@@ -93,12 +95,12 @@ export default class TeamsModal extends React.Component {
 				onClose={this.closeModal}
 			>
 				<Modal.Header>
-					{currentTeam.name ? `Edit Team: ${currentTeam.name}` : 'New Team'}
+					{currentTeam.school ? `Edit Team: ${currentTeam.school}` : 'New Team'}
 				</Modal.Header>
 				<Modal.Content>
 					<Form>
 						<Form.Field required>
-							<label>School</label>
+							<label htmlFor="school">School</label>
 							<Form.Dropdown
 								required
 								search
@@ -107,16 +109,11 @@ export default class TeamsModal extends React.Component {
 								name="school"
 								value={currentTeam.school}
 								onChange={this.handleChange}
-								options={schools.map(school => {
-									return {
-										text: school,
-										value: school
-									}
-								})}
+								options={schools.map(school => ({ text: school, value: school }))}
 							/>
 						</Form.Field>
 						<Form.Field>
-							<label>Identifier (optional)</label>
+							<label htmlFor="identifier">Identifier (optional)</label>
 							<small>
 								Use this to distinguish between two teams from the same school (team
 								A/B/C, team Red/Green, etc)
@@ -129,7 +126,7 @@ export default class TeamsModal extends React.Component {
 							/>
 						</Form.Field>
 						<Form.Field required>
-							<label>Division</label>
+							<label htmlFor="division">Division</label>
 							<Form.Select
 								fluid
 								name="division"
@@ -139,7 +136,7 @@ export default class TeamsModal extends React.Component {
 							/>
 						</Form.Field>
 						<Form.Field required>
-							<label>Team Number</label>
+							<label htmlFor="team number">Team Number</label>
 							<Form.Input
 								name="teamNumber"
 								type="number"
@@ -158,4 +155,14 @@ export default class TeamsModal extends React.Component {
 			</Modal>
 		)
 	}
+}
+
+TeamsModal.propTypes = {
+	modalOpen: PropTypes.bool.isRequired,
+	currentTeam: PropTypes.shape({
+		_id: PropTypes.string.isRequired,
+		division: PropTypes.string.isRequired,
+		identifier: PropTypes.string.isRequired,
+		teamNumber: PropTypes.number.isRequired,
+	}).isRequired,
 }

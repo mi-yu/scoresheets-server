@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { Route, BrowserRouter as Router } from 'react-router-dom'
 import { Container, Message } from 'semantic-ui-react'
 
-import routes from '../routes.js'
+import routes from '../routes'
 
 class Base extends React.Component {
 	state = {

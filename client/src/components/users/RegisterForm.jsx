@@ -1,20 +1,19 @@
 import React from 'react'
 import { Form } from 'semantic-ui-react'
-import Auth from '../../modules/Auth'
 
 const roleOptions = [
 	{
 		text: 'Tournament Director',
-		value: 'director'
+		value: 'director',
 	},
 	{
 		text: 'Event Supervisor',
-		value: 'supervisor'
+		value: 'supervisor',
 	},
 	{
 		text: 'Competitor',
-		value: 'competitor'
-	}
+		value: 'competitor',
+	},
 ]
 
 export default class RegisterForm extends React.Component {
@@ -24,14 +23,22 @@ export default class RegisterForm extends React.Component {
 			group: '',
 			firstName: '',
 			lastName: '',
-			password: ''
+			password: '',
 		}
 	}
 
 	handleChange = (e, { name, value }) => {
 		this.setState({
-			[name]: value
+			[name]: value,
 		})
+	}
+
+	renderDirectorFields = () => {
+		return (
+			<Form.Field>
+				<label htmlFor="director specific fields">Director specific fields</label>
+			</Form.Field>
+		)
 	}
 
 	render() {
@@ -40,7 +47,7 @@ export default class RegisterForm extends React.Component {
 			<Form>
 				<Form.Group>
 					<Form.Field width={8}>
-						<label>First Name</label>
+						<label htmlFor="first name">First Name</label>
 						<Form.Input
 							name="firstName"
 							value={firstName}
@@ -48,12 +55,12 @@ export default class RegisterForm extends React.Component {
 						/>
 					</Form.Field>
 					<Form.Field width={8}>
-						<label>Last Name</label>
+						<label htmlFor="last name">Last Name</label>
 						<Form.Input name="lastName" value={lastName} onChange={this.handleChange} />
 					</Form.Field>
 				</Form.Group>
 				<Form.Field>
-					<label>Which role best describes you?</label>
+					<label htmlFor="group">Which role best describes you?</label>
 					<Form.Dropdown
 						selection
 						name="group"
@@ -64,14 +71,6 @@ export default class RegisterForm extends React.Component {
 				</Form.Field>
 				{group === 'director' && this.renderDirectorFields()}
 			</Form>
-		)
-	}
-
-	renderDirectorFields = () => {
-		return (
-			<Form.Field>
-				<label>Director specific fields</label>
-			</Form.Field>
 		)
 	}
 }
