@@ -103,10 +103,7 @@ Team.post('remove', doc => {
  */
 Team.statics.getTopTeams = function(n, id, d, cb) {
 	// TODO: throw error if bad regex.
-	const regex = d ? d : /(B|C)/
-
-	// Default number of awards is 4.
-	n = n || 4
+	const regex = d || /(B|C)/
 
 	return this.find({
 		tournament: id,
@@ -120,14 +117,15 @@ Team.statics.getTopTeams = function(n, id, d, cb) {
 				const usedSchools = new Set()
 				let finalTeams = []
 
-				for (let i = 0; i < teams.length; i++) {
+				for (let i = 0; i < teams.length; i += 1) {
 					if (!usedSchools.has(teams[i].school)) {
 						finalTeams.push(teams[i])
 						usedSchools.add(teams[i].school)
 					}
 				}
 
-				finalTeams = finalTeams.splice(0, Math.min(finalTeams.length, n))
+				// Default number of awards is 4.
+				finalTeams = finalTeams.splice(0, Math.min(finalTeams.length, n || 4))
 
 				cb(null, finalTeams)
 			}

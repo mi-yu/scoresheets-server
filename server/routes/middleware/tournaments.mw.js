@@ -9,9 +9,7 @@ exports.getScoresheetsInTournament = (req, res, next) => {
 			if (err) return next(err)
 
 			// Sort entries by event name
-			entries.sort((a, b) => {
-				return a.event.name.localeCompare(b.event.name)
-			})
+			entries.sort((a, b) => a.event.name.localeCompare(b.event.name))
 
 			// Sort scores by team number
 			entries.forEach(entry => {
@@ -23,8 +21,16 @@ exports.getScoresheetsInTournament = (req, res, next) => {
 			})
 
 			res.locals.entries = entries
-			next()
+			return next()
 		})
+}
+
+function countOccurrences(arr, n) {
+	let count = 0
+	arr.forEach(i => {
+		if (i === n) count += 1
+	})
+	return count
 }
 
 exports.populateTotalsAndRankTeams = (req, res, next) => {
@@ -46,7 +52,7 @@ exports.populateTotalsAndRankTeams = (req, res, next) => {
 		if (a.totalScore < b.totalScore) return -1
 
 		// Tiebreaker
-		for (let i = 1; i < teams.length + 1; i++) {
+		for (let i = 1; i < teams.length + 1; i += 1) {
 			const countA = countOccurrences(a.scores, i)
 			const countB = countOccurrences(b.scores, i)
 
@@ -70,14 +76,6 @@ exports.populateTotalsAndRankTeams = (req, res, next) => {
 	})
 
 	next()
-}
-
-function countOccurrences(arr, n) {
-	let count = 0
-	arr.forEach(i => {
-		if (i === n) count++
-	})
-	return count
 }
 
 exports.getTopTeamsPerEvent = (req, res, next) => {

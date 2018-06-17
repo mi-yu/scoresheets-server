@@ -4,6 +4,7 @@
 	"version": "0.0.0",
 	"private": true,
 	"scripts": {
+		"lint": "./node_modules/.bin/eslint --fix",
 		"start": "node server.js",
 		"start:dev": "set NODE_ENV=development&&yarn run start-server",
 		"start:server": "nodemon server.js",
@@ -35,6 +36,11 @@
 	},
 	"devDependencies": {
 		"dotenv": "^6.0.0",
+		"eslint": "^4.9.0",
+		"eslint-plugin-import": "^2.7.0",
+		"eslint-plugin-jsx-a11y": "^6.0.2",
+		"eslint-plugin-react": "^7.4.0",
+		"eslint-config-airbnb": "16.1.0",
 		"jest": "^23.1.0",
 		"nodemon": "^1.17.4",
 		"supertest": "^3.1.0"

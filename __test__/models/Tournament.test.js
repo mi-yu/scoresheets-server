@@ -34,8 +34,6 @@ describe('test Tournament model', () => {
 
 		const savedTournament = await tournament.save()
 		expect(savedTournament.events.length).toEqual(events.length)
-		// const entries = await ScoresheetEntry.find({ tournament: tournament._id }).exec()
-		// expect(entries.length).toEqual(expectedNumEntries)
 	})
 
 	test('Should create exactly one scoresheet entry per tournament event', async () => {
