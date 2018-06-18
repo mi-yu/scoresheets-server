@@ -4,10 +4,11 @@
 	"version": "0.0.0",
 	"private": true,
 	"scripts": {
+		"debug": "node --inspect=0.0.0.0:9229 server.js",
 		"lint": "./node_modules/.bin/eslint --ignore-path .gitignore .",
 		"lint:fix": "./node_modules/.bin/eslint --fix --ignore-path .gitignore .",
 		"start": "node server.js",
-		"start:dev": "set NODE_ENV=development&&yarn run start:server",
+		"start:dev": "set NODE_ENV=development && yarn run start:server",
 		"start:server": "nodemon server.js",
 		"test:drop": "mongo scribe-dev-test --eval 'db.dropDatabase()'",
 		"test:seed": "yarn test:drop && mongoimport --db scribe-dev-test --collection events --file __test__/seeds/Event.seed.json --jsonArray",

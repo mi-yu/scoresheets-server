@@ -21,7 +21,6 @@ User.methods.comparePassword = function(password, cb) {
 
 User.pre('save', function(next) {
 	const user = this
-	if (!user.isModified('password')) next()
 
 	bcrypt.genSalt((saltError, salt) => {
 		if (saltError) {
@@ -31,7 +30,7 @@ User.pre('save', function(next) {
 			if (hashError) next(hashError)
 
 			user.password = password
-			next()
+			return next()
 		})
 	})
 })

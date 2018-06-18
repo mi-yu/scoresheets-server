@@ -29,11 +29,11 @@ paths:
         401:
           description: Unauthorized
           schema:
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
         403:
           description: Forbidden
           schema:
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
   /users/login:
     post:
       tags:
@@ -74,7 +74,7 @@ paths:
         400:
           description: Bad credentials
           schema:
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
   /users/register:
     post:
       tags:
@@ -84,32 +84,32 @@ paths:
       - application/json
       produces:
       - application/json
-        parameters:
-        - in: body
-          name: body
-          required: true
-          schema:
-            type: object
-            required:
-              - email
-              - password
-              - firstName
-              - lastName
-            properties:
-              email:
-                type: string
-                format: $email
-                description: user's email
-                example: bevo@utexas.edu
-              password:
-                type: string
-                format: $password
-                description: user's password
-                example: theeyesoftexas123
-              firstName:
-                type: string
-              lastName:
-                type: string
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          type: object
+          required:
+            - email
+            - password
+            - firstName
+            - lastName
+          properties:
+            email:
+              type: string
+              format: $email
+              description: user's email
+              example: bevo@utexas.edu
+            password:
+              type: string
+              format: $password
+              description: user's password
+              example: theeyesoftexas123
+            firstName:
+              type: string
+            lastName:
+              type: string
       responses:
         201:
           description: Created
@@ -118,7 +118,7 @@ paths:
         400:
           description: Missing or invalid fields
           schema: 
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
   /users/{user_id}:
     get:
       tags:
@@ -127,10 +127,11 @@ paths:
       produces:
       - application/json
       parameters:
-      - in: path
-        name: user_id
-        required: true
-        description: oid of user
+        - in: path
+          name: user_id
+          type: string
+          required: true
+          description: oid of user
       responses:
         200:
           description: Success
@@ -139,15 +140,15 @@ paths:
         401:
           description: Unauthorized
           schema:
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
         403:
           description: Forbidden
           schema:
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
         404:
           description: Not found
           schema:
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
     patch:
       tags:
         - Users
@@ -159,6 +160,7 @@ paths:
       parameters:
       - in: path
         name: user_id
+        type: string
         required: true
         description: oid of user
       - in: body
@@ -188,15 +190,15 @@ paths:
         401:
           description: Unauthorized
           schema:
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
         403:
           description: Forbidden
           schema:
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
         404:
           description: Not found
           schema:
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
     delete:
       tags:
         - Users
@@ -206,6 +208,7 @@ paths:
       parameters:
       - in: path
         name: user_id
+        type: string
         required: true
         description: oid of user
       responses:
@@ -214,15 +217,15 @@ paths:
         401:
           description: Unauthorized
           schema:
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
         403:
           description: Forbidden
           schema:
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
         404:
           description: Event not found
           schema:
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
   /events:
     get:
       tags:
@@ -233,10 +236,9 @@ paths:
       parameters:
       - in: query
         name: inRotation
-        description: Optionally only return events that are in rotation
-        example: true
-        required: false
         type: string
+        description: Optionally only return events that are in rotation
+        required: false
       responses:
         200:
           description: Success
@@ -247,19 +249,19 @@ paths:
         400:
           description: Bad input
           schema:
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
         401:
           description: Unauthorized
           schema:
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
         403:
           description: Forbidden
           schema:
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
         404:
           description: Not found
           schema:
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
     post:
       tags:
         - Events
@@ -313,19 +315,19 @@ paths:
         400:
           description: Input event is invalid
           schema:
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
         401:
           description: Unauthorized
           schema:
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
         403:
           description: Forbidden
           schema:
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
         409:
           description: There is already an event with the same name
           schema:
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
   /events/{event_id}:
     get:
       tags:
@@ -339,8 +341,7 @@ paths:
       - in: path
         name: event_id
         required: true
-        schema:
-          type: string
+        type: string
         description: The event oid
       responses:
         200:
@@ -350,15 +351,15 @@ paths:
         401:
           description: Unauthorized
           schema: 
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
         403:
           description: Forbidden
           schema:
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
         404:
           description: Event not found
           schema:
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
     patch: 
       tags:
         - Events
@@ -371,8 +372,7 @@ paths:
       - in: path
         name: event_id
         required: true
-        schema:
-          type: string
+        type: string
         description: The event oid
       - in: body
         name: body
@@ -429,19 +429,19 @@ paths:
         400:
           description: Input event is invalid
           schema:
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
         401:
           description: Unauthorized
           schema:
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
         403:
           description: Forbidden
           schema:
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
         404:
           description: Could not find event to update
           schema:
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
     delete:
       tags:
         - Events
@@ -454,8 +454,7 @@ paths:
       - in: path
         name: event_id
         required: true
-        schema:
-          type: string
+        type: string
         description: The event oid
       responses:
         204:
@@ -463,18 +462,17 @@ paths:
         401:
           description: Unauthorized
           schema:
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
         403:
           description: Forbidden
           schema:
-            $ref: "#/responses/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"
         404:
           description: Event not found
           schema:
-            $ref: "#/responses/ErrorResponse"
-        
+            $ref: "#/definitions/ErrorResponse"
 
-responses:       
+definitions:
   ErrorResponse:
     type: object
     properties:
@@ -489,8 +487,6 @@ responses:
     required:
       - code
       - message
-
-definitions:
   Event:
     type: object
     required:
@@ -500,8 +496,8 @@ definitions:
     - division
     properties:
       id:
-        type: ObjectId
-        format: oid
+        type: string
+        format: $oid
         example: 5862f91727b955df5fc861f9
       name:
         type: string
@@ -554,8 +550,8 @@ definitions:
     - email
     properties:
       id:
-        type: ObjectId
-        format: oid
+        type: string
+        format: $oid
         example: 5862f91727b955df5fc861f9
       name:
         type: string
@@ -585,8 +581,8 @@ definitions:
     - joinCode
     properties:
       id:
-        type: ObjectId
-        format: oid
+        type: string
+        format: $oid
         example: 5862f91727b955df5fc861f9
       name:
         type: string
@@ -622,6 +618,18 @@ definitions:
       - event
       - division
     properties:
+      id:
+        type: string
+        format: $oid
+        example: 5862f91727b955df5fc861f9
+      tournament:
+        $ref: "#/definitions/Tournament"
+      event:
+        $ref: "#/definitions/Event"
+      division:
+        type: string
+        example: B
+        enum: ["B", "C", "BC"]
 
 
       
