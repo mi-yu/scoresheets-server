@@ -38,7 +38,10 @@ describe('test Tournament model', () => {
 		const tournament = await Tournament.findOne({ name: 'test tournament' })
 			.populate('events')
 			.exec()
-		const expectedNumEntries = tournament.events.reduce((accumulator, event) => accumulator + event.division.length, 0)
+		const expectedNumEntries = tournament.events.reduce(
+			(accumulator, event) => accumulator + event.division.length,
+			0,
+		)
 
 		const entries = await ScoresheetEntry.find({ tournament: tournament._id }).exec()
 		expect(entries.length).toEqual(expectedNumEntries)
@@ -61,12 +64,20 @@ describe('test Tournament model', () => {
 			teamNumber: 1,
 		})
 
-		return Team.insertMany([divBTeam, divCTeam]).then(async () => {
-			const entries = await ScoresheetEntry.find({ tournament: tournament._id }).exec()
-			entries.forEach(entry => {
-				expect(entry.scores.length).toEqual(1)
-				if (entry.division === 'B') { expect(entry.scores[0]).toHaveProperty('team', divBTeam._id) } else expect(entry.scores[0]).toHaveProperty('team', divCTeam._id)
-			})
+		const teams = await Team.insertMany([divBTeam, divCTeam])
+		expect(teams.length).toEqual(2)
+	})
+
+	test('ScoresheetEntries should have been updated', async () => {
+		const tournament = await Tournament.findOne({ name: 'test tournament' }).exec()
+		const divBTeam = await Team.findOne({ school: 'b school' }).exec()
+		const divCTeam = await Team.findOne({ school: 'c school' }).exec()
+		const entries = await ScoresheetEntry.find({ tournament: tournament._id }).exec()
+		entries.forEach(entry => {
+			expect(entry.scores.length).toEqual(1)
+			if (entry.division === 'B') {
+				expect(entry.scores[0]).toHaveProperty('team', divBTeam._id)
+			} else expect(entry.scores[0]).toHaveProperty('team', divCTeam._id)
 		})
 	})
 
