@@ -49,28 +49,20 @@ Tournament.post('save', doc => {
 			})
 
 			// Save ScoresheetEntries.
-			ScoresheetEntry.collection.insert(entries, (error, docs) => {
-				if (error) throw new Error(error)
-			})
+			return ScoresheetEntry.insertMany(entries)
 		})
 })
 
 // Remove all scoresheet entries that reference deleted tournament.
 Tournament.post('remove', doc => {
 	console.log(`removing all scoresheets with tournament id ${doc._id}`)
-	ScoresheetEntry.remove({ tournament: doc._id }, (err, numRemoved) => {
-		if (err) console.log(err)
-		else console.log(`Removed ${numRemoved.n} ScoresheetEntries.`)
-	})
+	return ScoresheetEntry.remove({ tournament: doc._id })
 })
 
 // Remove all teams that reference deleted tournament.
 Tournament.post('remove', doc => {
 	console.log(`removing all teams with tournament id ${doc._id}`)
-	Team.remove({ tournament: doc.id }, (err, numRemoved) => {
-		if (err) console.log(err)
-		else console.log(`Removed ${numRemoved.n} teams.`)
-	})
+	return Team.remove({ tournament: doc.id })
 })
 
 module.exports = mongoose.model('Tournament', Tournament)

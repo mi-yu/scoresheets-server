@@ -1,16 +1,10 @@
 const mongoose = require('mongoose')
 const User = require('../../server/models/User')
-const dbURL = require('../config.json').testURL
+const { testURL } = require('../config')
 
 describe('test User model', () => {
-	beforeAll(() => {
-		mongoose.Promise = global.Promise
-		return mongoose.connect(dbURL)
-	})
-
-	afterAll(done => {
-		mongoose.connection.db.dropDatabase().then(() => mongoose.disconnect(done))
-	})
+	beforeAll(() => mongoose.connect(testURL))
+	afterAll(done => mongoose.connection.db.dropDatabase().then(() => mongoose.disconnect(done)))
 
 	test('Should register user when given valid params', async () => {
 		const newUser = new User({

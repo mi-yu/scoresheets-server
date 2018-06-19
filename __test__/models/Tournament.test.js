@@ -3,48 +3,27 @@ const Tournament = require('../../server/models/Tournament')
 const ScoresheetEntry = require('../../server/models/ScoresheetEntry')
 const Event = require('../../server/models/Event')
 const Team = require('../../server/models/Team')
-const dbURL = require('../config.json').testURL
+const { testURL } = require('../config')
 
 describe('test Tournament model', () => {
-	beforeAll(() => {
-		mongoose.Promise = global.Promise
-		return mongoose.connect(dbURL)
-	})
-
-	afterAll(done => {
-		mongoose.connection.db.dropDatabase().then(() => mongoose.disconnect(done))
-	})
+	beforeAll(() => mongoose.connect(testURL))
+	afterAll(done => mongoose.connection.db.dropDatabase().then(() => mongoose.disconnect(done)))
 
 	test('Should successfully create tournament', async () => {
 		const events = await Event.find({ inRotation: true })
 			.select('_id')
 			.exec()
-		const tournamentData = {
+		const tournament = new Tournament({
 			name: 'test tournament',
 			date: Date.now(),
 			state: 'TX',
 			city: 'Austin',
 			joinCode: 'random-string',
 			events,
-		}
-
-		const tournament = new Tournament(tournamentData)
+		})
 
 		const savedTournament = await tournament.save()
 		expect(savedTournament.events.length).toEqual(events.length)
-	})
-
-	test('Should create exactly one scoresheet entry per tournament event', async () => {
-		const tournament = await Tournament.findOne({ name: 'test tournament' })
-			.populate('events')
-			.exec()
-		const expectedNumEntries = tournament.events.reduce(
-			(accumulator, event) => accumulator + event.division.length,
-			0,
-		)
-
-		const entries = await ScoresheetEntry.find({ tournament: tournament._id }).exec()
-		expect(entries.length).toEqual(expectedNumEntries)
 	})
 
 	test('Should successfully add teams to tournament', async () => {
@@ -66,6 +45,19 @@ describe('test Tournament model', () => {
 
 		const teams = await Team.insertMany([divBTeam, divCTeam])
 		expect(teams.length).toEqual(2)
+	})
+
+	test('Should create exactly one scoresheet entry per tournament event', async () => {
+		const tournament = await Tournament.findOne({ name: 'test tournament' })
+		// 	.populate('events')
+		// 	.exec()
+		// const expectedNumEntries = tournament.events.reduce(
+		// 	(accumulator, event) => accumulator + event.division.length,
+		// 	0,
+		// )
+
+		const entries = await ScoresheetEntry.find({ tournament: tournament.id }).exec()
+		expect(entries.length).toEqual(56)
 	})
 
 	test('ScoresheetEntries should have been updated', async () => {
