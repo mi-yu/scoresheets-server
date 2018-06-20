@@ -16,6 +16,14 @@ module.exports = {
 		code: 'incorrect_credentials',
 		message: 'Invalid email and/or password.',
 	},
+	INTERNAL_SERVER_ERROR: {
+		code: 'internal_server_error',
+		message: 'Sorry, something went wrong on the server, try again later.',
+	},
+	NO_TOURNAMENTS: {
+		code: 'no_tournaments',
+		message: 'No tournaments found, would you like to create one instead?',
+	},
 	UNAUTHORIZED: {
 		code: 'invalid_auth_token',
 		message: 'Unauthorized, please log in to proceed.',
@@ -26,7 +34,11 @@ module.exports = {
 	},
 	validationError: missingPath => ({
 		code: 'validation_error',
-		message: 'Missing or invalid form data.',
+		message: `Missing or invalid form data for field ${missingPath}.`,
 		missingPath,
+	}),
+	notFound: resource => ({
+		code: 'not_found',
+		message: `The ${resource.toLowerCase()} you requested does not exist.`,
 	}),
 }

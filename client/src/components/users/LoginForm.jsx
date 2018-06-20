@@ -37,21 +37,18 @@ class LoginForm extends React.Component {
 			}),
 			body: JSON.stringify(payload),
 		})
-			.then(data => data.json())
-			.catch(err => console.log(err))
-			.then(res => {
-				if (res.success) {
-					Auth.storeToken(res.token)
-					this.setUser(res.user)
-					this.setState({
-						redirect: true,
-					})
-				} else {
-					this.setState({
-						message: res.message,
-					})
-				}
+			.then(data => {
+				if (data.ok) return data.json()
+				throw new Error()
 			})
+			.then(res => {
+				Auth.storeToken(res.token)
+				this.setUser(res.user)
+				this.setState({
+					redirect: true,
+				})
+			})
+			.catch(err => console.log(err))
 	}
 
 	render() {

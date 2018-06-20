@@ -10,6 +10,27 @@ const {
 	getTeamsInTournamentByDivision,
 } = require('./helpers')
 const mw = require('./middleware/tournaments.mw.js')
+const errors = require('../config/errors')
+
+router.get('/', ensureAuthenticated, needsGroup('admin'), (req, res) => {
+	Tournament.find()
+		.exec()
+		.then(tournaments => {
+			if (!tournaments) return res.status(404).json(errors.NO_TOURNAMENTS)
+			return res.json([...tournaments])
+		})
+		.catch(() => res.status(500).json(errors.INTERNAL_SERVER_ERROR))
+})
+
+router.get('/:tournamentId', ensureAuthenticated, needsGroup('admin'), (req, res) => {
+	Tournament.findById(req.params.tournamentId)
+		.exec()
+		.then(tournament => {
+			if (!tournament) return res.status(404).json(errors.notFound('tournament'))
+			return res.json({ ...tournament.toObject() })
+		})
+		.catch(() => res.status(500).json(errors.INTERNAL_SERVER_ERROR))
+})
 
 /* GET users listing. */
 router.post('/new', ensureAuthenticated, needsGroup('admin'), (req, res) => {

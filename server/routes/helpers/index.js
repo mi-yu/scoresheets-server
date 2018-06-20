@@ -1,11 +1,12 @@
-const Tournament = require('../models/Tournament')
-const Event = require('../models/Event')
-const Team = require('../models/Team')
+const Tournament = require('../../models/Tournament')
+const Event = require('../../models/Event')
+const Team = require('../../models/Team')
+const errors = require('../../config/errors')
 
 module.exports = {
 	getTournamentList: (req, res, next) => {
 		Tournament.find((err, results) => {
-			if (err) req.flash('error', `Could not load tournaments: ${err}`)
+			if (err) res.status(500).json(errors.UNKNOWN)
 			res.locals.tournaments = results
 			return next()
 		})
@@ -16,7 +17,7 @@ module.exports = {
 			.exec((err, results) => {
 				if (err) req.flash('error', `Could not load events: ${err}`)
 				res.locals.events = results
-				next()
+				return next()
 			})
 	},
 	getSchoolsList: (req, res, next) => {
@@ -27,7 +28,7 @@ module.exports = {
 				schools.push(el.school)
 			})
 			res.locals.schools = Array.from(new Set(schools))
-			next()
+			return next()
 		})
 	},
 	getTeamsInTournamentByDivision: (req, res, next) => {
@@ -37,7 +38,7 @@ module.exports = {
 			.exec((err, results) => {
 				if (err) req.flash('error', `Could not load teams: ${err}`)
 				res.locals.teams = results
-				next()
+				return next()
 			})
 	},
 	getAllTeamsInTournament: (req, res, next) => {
@@ -47,7 +48,7 @@ module.exports = {
 			.exec((err, results) => {
 				if (err) req.flash('error', err.message)
 				res.locals.teams = results
-				next()
+				return next()
 			})
 	},
 }

@@ -109,17 +109,12 @@ ScoresheetEntry.methods.rank = function(callback) {
 
 /**
  * Get the top n teams in ScoresheetEntry event (for awards presentation).
- * @param  {Number}   n        number of teams to receive awards
+ * @param  {Number}   n        number of teams to receive awards (default: 4)
  * @param  {String}   id       tournament ObjectId
- * @param  {String}   d        division
+ * @param  {String}   d        division (default: /(B|C)/)
  * @param  {Function} callback handler which takes 1 optional error argument
  */
-ScoresheetEntry.statics.getTopTeamsPerEvent = function(n, id, d, callback) {
-	if (!d) d = /(B|C)/
-
-	// Default number of awards
-	if (!n) n = 4
-
+ScoresheetEntry.statics.getTopTeamsPerEvent = function(n = 4, id, d = /(B|C)/, callback) {
 	// Get all ScoresheetEntries for given tournament and arrange the data.
 	// The .lean() gives us raw JS arrays to work with instead of Mongoose's
 	// default wrapped objects.
@@ -187,7 +182,7 @@ ScoresheetEntry.statics.getTopTeamsPerEvent = function(n, id, d, callback) {
 				}
 			}
 
-			callback(null, sortedEntries)
+			return callback(null, sortedEntries)
 		})
 }
 
