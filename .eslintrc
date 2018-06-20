@@ -7,6 +7,7 @@
 		"space-before-function-paren": 0,
 		"arrow-body-style": 1,
 		"react/no-unused-state": 1,
+		"jsx-a11y/label-has-for": 1,
 		"func-names": ["error", "never"],
 		"no-tabs": 0,
 		"indent": [
