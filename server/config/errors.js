@@ -9,8 +9,7 @@ module.exports = {
 	},
 	FORBIDDEN: {
 		code: 'forbidden',
-		message:
-			'You are not authorized to access this content, contact an administrator for more information',
+		message: 'You are not authorized to access this content, contact an administrator for more information',
 	},
 	INCORRECT_CREDENTIALS: {
 		code: 'incorrect_credentials',
@@ -42,11 +41,17 @@ module.exports = {
 		field,
 		resource,
 	}),
-	validationError: field => ({
-		code: 'validation_error',
-		message: `Missing or invalid form data for field ${field}.`,
-		field,
-	}),
+	validationError: errors => {
+		const fields = Object.keys(errors)
+		const fieldsWithErrors = fields.map(field => ({
+			[field]: errors[field].kind,
+		}))
+		return {
+			code: 'validation_error',
+			message: 'There was an error validating your request, check the following fields.',
+			errors: fieldsWithErrors,
+		}
+	},
 	notFound: resource => ({
 		code: 'not_found',
 		message: `The ${resource.toLowerCase()} you requested does not exist.`,
