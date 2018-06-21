@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { ensureAuthenticated, needsGroup } = require('./middleware/auth')
+const { ensureAuthenticated, needsGroup } = require('../passport/auth')
 const { getTournamentList, getCurrentEventsList } = require('./helpers')
 
 router.get(

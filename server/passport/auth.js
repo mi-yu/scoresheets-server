@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
-const User = require('../../models/User')
-const errors = require('../../config/errors')
+const User = require('../models/User')
+const errors = require('../config/errors')
 
 exports.ensureAuthenticated = (req, res, next) => {
 	if (!req.headers.authorization) {

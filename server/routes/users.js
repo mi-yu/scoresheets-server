@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const passport = require('passport')
-const { ensureAuthenticated, needsGroup } = require('./middleware/auth')
+const { ensureAuthenticated, needsGroup } = require('../passport/auth')
 const register = require('../passport/register')
 const User = require('../models/User')
 const errors = require('../config/errors')

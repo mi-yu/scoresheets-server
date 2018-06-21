@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const ScoresheetEntry = require('../models/ScoresheetEntry')
-const { ensureAuthenticated, needsGroup } = require('./middleware/auth')
+const { ensureAuthenticated, needsGroup } = require('../passport/auth')
 
 router.get(
 	'/:tournamentId/scores/:division/:eventId',

@@ -32,10 +32,20 @@ module.exports = {
 		code: 'unknown_error',
 		message: 'An unknown error occurred, try again later.',
 	},
-	validationError: missingPath => ({
+	UNSUPPORTED_ACTION: {
+		code: 'unsupported_action',
+		message: 'The action you have attempted is unsupported.',
+	},
+	duplicateError: (field, resource) => ({
+		code: 'duplicate_error',
+		message: `Field ${field} must be unique across ${resource}.`,
+		field,
+		resource,
+	}),
+	validationError: field => ({
 		code: 'validation_error',
-		message: `Missing or invalid form data for field ${missingPath}.`,
-		missingPath,
+		message: `Missing or invalid form data for field ${field}.`,
+		field,
 	}),
 	notFound: resource => ({
 		code: 'not_found',

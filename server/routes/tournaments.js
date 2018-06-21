@@ -1,8 +1,5 @@
 const router = require('express').Router()
-const Tournament = require('../models/Tournament')
 const Team = require('../models/Team')
-const randomWords = require('random-words')
-const { ensureAuthenticated, needsGroup } = require('./middleware/auth')
 const {
 	getCurrentEventsList,
 	getSchoolsList,
@@ -10,59 +7,22 @@ const {
 	getTeamsInTournamentByDivision,
 } = require('./helpers')
 const mw = require('./middleware/tournaments.mw.js')
-const errors = require('../config/errors')
+const { ensureAuthenticated, needsGroup } = require('../passport/auth')
+const { index, show, create, update, destroy, catchAll } = require('../controllers/tournaments')
 
-router.get('/', ensureAuthenticated, needsGroup('admin'), (req, res) => {
-	Tournament.find()
-		.exec()
-		.then(tournaments => {
-			if (!tournaments) return res.status(404).json(errors.NO_TOURNAMENTS)
-			return res.json([...tournaments])
-		})
-		.catch(() => res.status(500).json(errors.INTERNAL_SERVER_ERROR))
-})
+router.all('*', ensureAuthenticated, needsGroup('admin'))
 
-router.get('/:tournamentId', ensureAuthenticated, needsGroup('admin'), (req, res) => {
-	Tournament.findById(req.params.tournamentId)
-		.exec()
-		.then(tournament => {
-			if (!tournament) return res.status(404).json(errors.notFound('tournament'))
-			return res.json({ ...tournament.toObject() })
-		})
-		.catch(() => res.status(500).json(errors.INTERNAL_SERVER_ERROR))
-})
+router.get('/', index)
 
-/* GET users listing. */
-router.post('/new', ensureAuthenticated, needsGroup('admin'), (req, res) => {
-	let date = new Date(req.body.date)
-	// TODO: fix dates
-	// eslint-disable-next-line
-	date = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000)
+router.post('/', create)
 
-	const tournament = new Tournament({
-		name: req.body.name,
-		date,
-		state: req.body.state,
-		city: req.body.city,
-		joinCode: randomWords({ exactly: 5, join: '-' }),
-		events: req.body.events,
-	})
+router.get('/:tournamentId', show)
 
-	tournament.save(err => {
-		if (err && err.code === 11000) {
-			req.flash('error', `A tournament named "${tournament.name}" already exists.`)
-		} else if (err) {
-			req.flash('error', `An unknown error occurred: ${err}`)
-		} else {
-			req.flash('success', `Successfully created tournament "${tournament.name}"`)
-		}
+router.patch('/:tournamentId', update)
 
-		res.json({
-			newTournament: tournament,
-			message: req.flash(),
-		})
-	})
-})
+router.delete('/:tournamentId', destroy)
+
+router.all('*', catchAll)
 
 router.get('/:id/delete', ensureAuthenticated, needsGroup('admin'), (req, res) => {
 	Tournament.findById(req.params.id, (err, result) => {

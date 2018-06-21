@@ -48,7 +48,7 @@ class LoginForm extends React.Component {
 					redirect: true,
 				})
 			})
-			.catch(err => console.log(err))
+			.catch(err => new Error(err))
 	}
 
 	render() {

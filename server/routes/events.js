@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const Event = require('../models/Event')
-const { ensureAuthenticated, needsGroup } = require('./middleware/auth')
+const { ensureAuthenticated, needsGroup } = require('../passport/auth')
 
 router.post('/new', ensureAuthenticated, needsGroup('admin'), (req, res) => {
 	const event = new Event({
