@@ -19,10 +19,7 @@ exports.show = (req, res) => {
 			if (!tournament) return res.status(404).json(errors.notFound('tournament'))
 			return res.json({ ...tournament.toObject() })
 		})
-		.catch(err => {
-			console.log(err)
-			return res.status(500).json(errors.INTERNAL_SERVER_ERROR)
-		})
+		.catch(err => res.status(500).json(errors.INTERNAL_SERVER_ERROR))
 }
 
 exports.create = (req, res) => {
