@@ -37,7 +37,8 @@
 				"components": ["Link"],
 				"specialLink": ["to"]
 			}
-		]
+		],
+		"import/prefer-default-export": 1
 	},
 	"env": {
 		"browser": true,

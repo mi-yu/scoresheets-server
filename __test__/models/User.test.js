@@ -1,9 +1,9 @@
+import { TEST_URL } from '../config'
 const mongoose = require('mongoose')
 const User = require('../../server/models/User')
-const { testURL } = require('../config')
 
 describe('test User model', () => {
-	beforeAll(() => mongoose.connect(testURL))
+	beforeAll(() => mongoose.connect(TEST_URL))
 	afterAll(done => mongoose.connection.db.dropDatabase().then(() => mongoose.disconnect(done)))
 
 	test('Should register user when given valid params', async () => {

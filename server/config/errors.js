@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	CANNOT_REGISTER_ADMIN: {
 		code: 'cannot_register_admin',
 		message: 'You cannot register as a site admin.',
@@ -9,7 +9,8 @@ module.exports = {
 	},
 	FORBIDDEN: {
 		code: 'forbidden',
-		message: 'You are not authorized to access this content, contact an administrator for more information',
+		message:
+			'You are not authorized to access this content, contact an administrator for more information',
 	},
 	INCORRECT_CREDENTIALS: {
 		code: 'incorrect_credentials',
@@ -18,6 +19,10 @@ module.exports = {
 	INTERNAL_SERVER_ERROR: {
 		code: 'internal_server_error',
 		message: 'Sorry, something went wrong on the server, try again later.',
+	},
+	NO_TEAMS: {
+		code: 'no_teams',
+		message: 'There are no teams created for this tournament.',
 	},
 	NO_TOURNAMENTS: {
 		code: 'no_tournaments',
@@ -35,25 +40,28 @@ module.exports = {
 		code: 'unsupported_action',
 		message: 'The action you have attempted is unsupported.',
 	},
-	duplicateError: (field, resource) => ({
-		code: 'duplicate_error',
-		message: `Field ${field} must be unique across ${resource}.`,
-		field,
-		resource,
-	}),
-	validationError: errors => {
-		const fields = Object.keys(errors)
-		const fieldsWithErrors = fields.map(field => ({
-			[field]: errors[field].kind,
-		}))
-		return {
-			code: 'validation_error',
-			message: 'There was an error validating your request, check the following fields.',
-			errors: fieldsWithErrors,
-		}
-	},
-	notFound: resource => ({
-		code: 'not_found',
-		message: `The ${resource.toLowerCase()} you requested does not exist.`,
-	}),
 }
+
+export const duplicateError = (field, resource) => ({
+	code: 'duplicate_error',
+	message: `Field ${field} must be unique across ${resource}.`,
+	field,
+	resource,
+})
+
+export const validationError = errors => {
+	const fields = Object.keys(errors)
+	const fieldsWitherrors = fields.map(field => ({
+		[field]: errors[field].kind,
+	}))
+	return {
+		code: 'validation_error',
+		message: 'There was an error validating your request, check the following fields.',
+		errors: fieldsWitherrors,
+	}
+}
+
+export const notFoundError = resource => ({
+	code: 'not_found',
+	message: `The ${resource.toLowerCase()} you requested does not exist.`,
+})

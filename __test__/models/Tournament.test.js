@@ -1,12 +1,17 @@
+import { TEST_URL } from '../config'
 const mongoose = require('mongoose')
 const Tournament = require('../../server/models/Tournament')
 const ScoresheetEntry = require('../../server/models/ScoresheetEntry')
 const Event = require('../../server/models/Event')
 const Team = require('../../server/models/Team')
-const { testURL } = require('../config')
+const eventSeedData = require('../seeds/Event.seed.json')
 
 describe('test Tournament model', () => {
-	beforeAll(() => mongoose.connect(testURL))
+	beforeAll(() =>
+		mongoose
+			.connect(TEST_URL)
+			.then(() => mongoose.connection.db.collection('events').insertMany(eventSeedData)),
+	)
 	afterAll(done => mongoose.connection.db.dropDatabase().then(() => mongoose.disconnect(done)))
 
 	test('Should successfully create tournament', async () => {
@@ -49,15 +54,15 @@ describe('test Tournament model', () => {
 
 	test('Should create exactly one scoresheet entry per tournament event', async () => {
 		const tournament = await Tournament.findOne({ name: 'test tournament' })
-		// 	.populate('events')
-		// 	.exec()
-		// const expectedNumEntries = tournament.events.reduce(
-		// 	(accumulator, event) => accumulator + event.division.length,
-		// 	0,
-		// )
+			.populate('events')
+			.exec()
+		const expectedNumEntries = tournament.events.reduce(
+			(accumulator, event) => accumulator + event.division.length,
+			0,
+		)
 
 		const entries = await ScoresheetEntry.find({ tournament: tournament.id }).exec()
-		expect(entries.length).toEqual(56)
+		expect(entries.length).toEqual(expectedNumEntries)
 	})
 
 	test('ScoresheetEntries should have been updated', async () => {

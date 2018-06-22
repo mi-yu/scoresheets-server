@@ -1,6 +1,6 @@
-const jwt = require('jsonwebtoken')
+import jwt from 'jsonwebtoken'
 const User = require('../models/User')
-const errors = require('../config/errors')
+import { UNKNONW, UNAUTHORIZED, FORBIDDEN } from '../config/errors'
 
 exports.ensureAuthenticated = (req, res, next) => {
 	if (!req.headers.authorization) {

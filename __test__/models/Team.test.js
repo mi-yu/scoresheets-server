@@ -1,9 +1,9 @@
+import { TEST_URL } from '../config'
 const mongoose = require('mongoose')
 const Team = require('../../server/models/Team')
-const { testURL } = require('../config')
 
 describe('test Team model', () => {
-	beforeAll(() => mongoose.connect(testURL))
+	beforeAll(() => mongoose.connect(TEST_URL))
 	afterAll(done => mongoose.connection.db.dropDatabase().then(() => mongoose.disconnect(done)))
 
 	const tournamentId = mongoose.Types.ObjectId()
