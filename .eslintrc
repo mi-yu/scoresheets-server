@@ -38,7 +38,8 @@
 				"specialLink": ["to"]
 			}
 		],
-		"import/prefer-default-export": 1
+		"import/prefer-default-export": 1,
+		"import/first": 1
 	},
 	"env": {
 		"browser": true,
