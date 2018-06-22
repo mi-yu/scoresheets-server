@@ -1,20 +1,23 @@
 import express from 'express'
-const path = require('path')
-const bodyParser = require('body-parser')
+import mongoose from 'mongoose'
+import passport from 'passport'
+import path from 'path'
+import bodyParser from 'body-parser'
+
+import users from './routes/users'
+import tournaments from './routes/tournaments'
+import LoginStrategy from './passport/login'
+
+import {
+	UNKNOWN,
+} from './config/errors'
 
 // Routes
 const basic = require('./routes/basic')
-const users = require('./routes/users')
 const admin = require('./routes/admin')
-import tournaments from './routes/tournaments'
 const teams = require('./routes/teams')
 const scoresheets = require('./routes/scoresheets')
 const events = require('./routes/events')
-
-// DB and authentication
-const mongoose = require('mongoose')
-const passport = require('passport')
-const LoginStrategy = require('./passport/login')
 
 // Create Express app
 const app = express()
@@ -35,7 +38,9 @@ if (env === 'development') {
 }
 
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({
+	extended: true,
+}))
 app.use(passport.initialize())
 
 // Passport config
@@ -63,7 +68,7 @@ app.use('/tournaments/:tournamentId/teams', teams)
 app.use('/scoresheets', scoresheets)
 app.use('/events', events)
 
-app.all('*', (req, res) => res.json(errors.UNKNOWN))
+app.all('*', (req, res) => res.status(500).json(UNKNOWN))
 
 // error handler
 // app.use((err, req, res) => {

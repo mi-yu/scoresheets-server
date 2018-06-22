@@ -1,6 +1,5 @@
-const mongoose = require('mongoose')
-const { Schema } = mongoose
-const Event = require('./Event')
+import mongoose from 'mongoose'
+import Event from './Event'
 
 /**
  * Each ScoresheetEntry has its own array of Scores, which
@@ -8,18 +7,38 @@ const Event = require('./Event')
  * main ScoresheetEntry schema from becoming unreadable.
  * @type {Schema}
  */
-const Score = new Schema({
+const Score = new mongoose.Schema({
 	team: {
-		type: Schema.Types.ObjectId,
+		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Team',
 		required: true,
 	} /* The team that this score is associated with. */,
-	rawScore: { type: Number, required: true, default: 0 },
-	tiebreaker: { type: Number, default: 0 },
-	tier: { type: Number, default: 1, required: true },
-	dq: { type: Boolean, default: false } /* Disqualification flag. */,
-	noShow: { type: Boolean, default: false },
-	participationOnly: { type: Boolean, default: false },
+	rawScore: {
+		type: Number,
+		required: true,
+		default: 0,
+	},
+	tiebreaker: {
+		type: Number,
+		default: 0,
+	},
+	tier: {
+		type: Number,
+		default: 1,
+		required: true,
+	},
+	dq: {
+		type: Boolean,
+		default: false,
+	} /* Disqualification flag. */,
+	noShow: {
+		type: Boolean,
+		default: false,
+	},
+	participationOnly: {
+		type: Boolean,
+		default: false,
+	},
 	dropped: {
 		type: Boolean,
 		default: false,
@@ -28,29 +47,45 @@ const Score = new Schema({
 	notes: String /* Any special notes about the score (how a tiebreaker was won, reason for DQ, etc). */,
 })
 
-const ScoresheetEntry = new Schema({
+const ScoresheetEntry = new mongoose.Schema({
 	tournament: {
-		type: Schema.Types.ObjectId,
+		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Tournament',
 		required: true,
 	},
-	event: { type: Schema.Types.ObjectId, ref: 'Event', required: true },
-	division: { type: String, required: true, enum: ['B', 'C'] },
+	event: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Event',
+		required: true,
+	},
+	division: {
+		type: String,
+		required: true,
+		enum: ['B', 'C'],
+	},
 	scores: [Score],
 	maxScore: Number,
-	locked: { type: Boolean, default: false },
+	locked: {
+		type: Boolean,
+		default: false,
+	},
 })
 
 /**
  * Calculate and assign ranks to each score in the ScoresheetEntry.
  * @param  {Function} callback handler which takes 1 optional error argument
  */
-ScoresheetEntry.methods.rank = function(callback) {
-	const { scores } = this
+ScoresheetEntry.methods.rank = function (callback) {
+	const {
+		scores,
+	} = this
 	if (!scores.length) return callback()
 	Event.findById(this.event).exec((err, event) => {
 		// Save our unbroken ties (if they exist) for error handling.
-		const unbrokenTies = { t1: {}, t2: {} }
+		const unbrokenTies = {
+			t1: {},
+			t2: {},
+		}
 
 		try {
 			// Sort the scores.
@@ -114,11 +149,14 @@ ScoresheetEntry.methods.rank = function(callback) {
  * @param  {String}   d        division (default: /(B|C)/)
  * @param  {Function} callback handler which takes 1 optional error argument
  */
-ScoresheetEntry.statics.getTopTeamsPerEvent = function(n = 4, id, d = /(B|C)/, callback) {
+ScoresheetEntry.statics.getTopTeamsPerEvent = function (n = 4, id, d = /(B|C)/, callback) {
 	// Get all ScoresheetEntries for given tournament and arrange the data.
 	// The .lean() gives us raw JS arrays to work with instead of Mongoose's
 	// default wrapped objects.
-	return this.find({ tournament: id, division: d })
+	return this.find({
+		tournament: id,
+		division: d,
+	})
 		.select('event scores division')
 		.populate('event scores.team scores')
 		.lean()
@@ -130,8 +168,7 @@ ScoresheetEntry.statics.getTopTeamsPerEvent = function(n = 4, id, d = /(B|C)/, c
 			let drops = 0
 			entries.forEach(entry => {
 				entry.scores.forEach(score => {
-					if (
-						!score.rank ||
+					if (!score.rank ||
 						score.dq ||
 						score.participationOnly ||
 						score.noShow ||
@@ -186,4 +223,4 @@ ScoresheetEntry.statics.getTopTeamsPerEvent = function(n = 4, id, d = /(B|C)/, c
 		})
 }
 
-module.exports = mongoose.model('ScoresheetEntry', ScoresheetEntry)
+export default mongoose.model('ScoresheetEntry', ScoresheetEntry)

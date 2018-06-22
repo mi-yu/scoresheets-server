@@ -1,8 +1,11 @@
-const mongoose = require('mongoose')
-const { Schema } = mongoose
+import mongoose from 'mongoose'
 
-const Event = new Schema({
-	name: { type: String, unique: true, required: true },
+const Event = new mongoose.Schema({
+	name: {
+		type: String,
+		unique: true,
+		required: true,
+	},
 	category: {
 		type: String,
 		required: true,
@@ -13,8 +16,14 @@ const Event = new Schema({
 		required: true,
 		enum: ['B', 'C', 'BC'],
 	} /* An event can, based on the season, be in any combination of divison B/C. */,
-	inRotation: { type: Boolean, default: false },
-	impound: { type: Boolean, default: false },
+	inRotation: {
+		type: Boolean,
+		default: false,
+	},
+	impound: {
+		type: Boolean,
+		default: false,
+	},
 	stateEvent: {
 		type: Boolean,
 		default: false,
@@ -28,4 +37,4 @@ const Event = new Schema({
 	} /* In some events, the lowest score wins (Electric Vehicle, Scrambler, etc). */,
 })
 
-module.exports = mongoose.model('Event', Event)
+export default mongoose.model('Event', Event)

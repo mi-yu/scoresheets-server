@@ -1,10 +1,9 @@
-const mongoose = require('mongoose')
-const { Schema } = mongoose
-const ScoresheetEntry = require('./ScoresheetEntry')
+import mongoose from 'mongoose'
+import ScoresheetEntry from './ScoresheetEntry'
 
-const Team = new Schema({
+const Team = new mongoose.Schema({
 	tournament: {
-		type: Schema.Types.ObjectId,
+		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Tournament',
 		required: true,
 	} /* Tournament that this team belongs to. */,
@@ -25,38 +24,60 @@ const Team = new Schema({
 })
 
 // Ensure that for a given tournament, there is only one team in each division with a given team number.
-Team.index({ tournament: 1, division: 1, teamNumber: 1 }, { unique: true })
+Team.index({
+	tournament: 1,
+	division: 1,
+	teamNumber: 1,
+}, {
+	unique: true,
+})
 
 Team.post('save', team => {
-	ScoresheetEntry.update(
-		{ tournament: team.tournament, division: team.division },
-		{ $push: { scores: { team: team._id } } },
-		{ multi: true },
-		err => {
-			if (err) {
-				throw new Error(
-					`Error creating scoresheet entry for team ${team.division}${team.teamNumber}`,
-				)
-			}
+	ScoresheetEntry.update({
+		tournament: team.tournament,
+		division: team.division,
+	}, {
+		$push: {
+			scores: {
+				team: team._id,
+			},
 		},
+	}, {
+		multi: true,
+	},
+	err => {
+		if (err) {
+			throw new Error(
+				`Error creating scoresheet entry for team ${team.division}${team.teamNumber}`,
+			)
+		}
+	},
 	)
 })
 
 Team.post('insertMany', docs => {
 	docs.forEach(team => {
-		ScoresheetEntry.update(
-			{ tournament: team.tournament, division: team.division },
-			{ $push: { scores: { team: team._id } } },
-			{ multi: true },
-			err => {
-				if (err) {
-					throw new Error(
-						`Error creating scoresheet entry for team ${team.division}${
-							team.teamNumber
-						}`,
-					)
-				}
+		ScoresheetEntry.update({
+			tournament: team.tournament,
+			division: team.division,
+		}, {
+			$push: {
+				scores: {
+					team: team._id,
+				},
 			},
+		}, {
+			multi: true,
+		},
+		err => {
+			if (err) {
+				throw new Error(
+					`Error creating scoresheet entry for team ${team.division}${
+						team.teamNumber
+					}`,
+				)
+			}
+		},
 		)
 	})
 })
@@ -67,31 +88,35 @@ Team.post('insertMany', docs => {
  */
 Team.post('remove', doc => {
 	// Remove the deleted team from all ScoresheetEntries that include this team.
-	ScoresheetEntry.update(
-		{
-			/* TODO: optimize this query first filter for ScoresheetEntries that belong to same tournament as deleted team. */
+	ScoresheetEntry.update({
+		/* TODO: optimize this query first filter for ScoresheetEntries that belong to same tournament as deleted team. */
+	}, {
+		$pull: {
+			scores: {
+				team: doc._id,
+			},
 		},
-		{ $pull: { scores: { team: doc._id } } },
-		{ multi: true },
-		(err, affected) => {
-			// TODO: better error handling.
-			if (err) console.log(err.message)
+	}, {
+		multi: true,
+	},
+	(err, affected) => {
+		// TODO: better error handling.
+		if (err) console.log(err.message)
 
-			// Rerank teams to reflect removal of team.
-			ScoresheetEntry.find(
-				{
-					tournament: doc.tournament,
-					division: doc.division,
-				},
-				(error, entries) => {
-					entries.forEach(entry =>
-						entry.rank(e => {
-							if (e) console.log(e)
-						}),
-					)
-				},
+		// Rerank teams to reflect removal of team.
+		ScoresheetEntry.find({
+			tournament: doc.tournament,
+			division: doc.division,
+		},
+		(error, entries) => {
+			entries.forEach(entry =>
+				entry.rank(e => {
+					if (e) console.log(e)
+				}),
 			)
 		},
+		)
+	},
 	)
 })
 
@@ -102,7 +127,7 @@ Team.post('remove', doc => {
  * @param  {String}   d  division
  * @param  {Function} cb handler that returns the top n teams per division and an optional error
  */
-Team.statics.getTopTeams = function(n, id, d, cb) {
+Team.statics.getTopTeams = function (n, id, d, cb) {
 	// TODO: throw error if bad regex.
 	const regex = d || /(B|C)/
 
@@ -133,4 +158,4 @@ Team.statics.getTopTeams = function(n, id, d, cb) {
 		})
 }
 
-module.exports = mongoose.model('Team', Team)
+export default mongoose.model('Team', Team)

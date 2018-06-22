@@ -1,6 +1,8 @@
-import { TEST_URL } from '../config'
-const mongoose = require('mongoose')
-const Team = require('../../server/models/Team')
+import mongoose from 'mongoose'
+import {
+	TEST_URL,
+} from '../config'
+import Team from '../../server/models/Team'
 
 describe('test Team model', () => {
 	beforeAll(() => mongoose.connect(TEST_URL))

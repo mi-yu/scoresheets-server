@@ -1,6 +1,8 @@
-import { TEST_URL } from '../config'
-const mongoose = require('mongoose')
-const User = require('../../server/models/User')
+import mongoose from 'mongoose'
+import {
+	TEST_URL,
+} from '../config'
+import User from '../../server/models/User'
 
 describe('test User model', () => {
 	beforeAll(() => mongoose.connect(TEST_URL))
@@ -16,7 +18,9 @@ describe('test User model', () => {
 		})
 
 		await newUser.save()
-		const user = await User.findOne({ email: 'email@test.com' })
+		const user = await User.findOne({
+			email: 'email@test.com',
+		})
 		expect(user.firstName).toEqual('first')
 		expect(user.group).toEqual('user')
 		user.comparePassword('test123', (err, isMatch) => {
@@ -40,7 +44,9 @@ describe('test User model', () => {
 			expect(err.code).toEqual(11000)
 		}
 
-		const users = await User.find({ email: 'email@test.com' })
+		const users = await User.find({
+			email: 'email@test.com',
+		})
 		expect(users.length).toEqual(1)
 	})
 })

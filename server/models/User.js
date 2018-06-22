@@ -1,11 +1,14 @@
-const mongoose = require('mongoose')
-const { Schema } = mongoose
-const bcrypt = require('bcrypt')
+import mongoose from 'mongoose'
+import bcrypt from 'bcrypt'
 
-const User = new Schema({
+const User = new mongoose.Schema({
 	firstName: String,
 	lastName: String,
-	email: { type: String, unique: true, required: true },
+	email: {
+		type: String,
+		unique: true,
+		required: true,
+	},
 	group: {
 		type: String,
 		required: true,
@@ -15,11 +18,11 @@ const User = new Schema({
 	password: String,
 })
 
-User.methods.comparePassword = function(password, cb) {
+User.methods.comparePassword = function (password, cb) {
 	bcrypt.compare(password, this.password, cb)
 }
 
-User.pre('save', function(next) {
+User.pre('save', function (next) {
 	const user = this
 
 	bcrypt.genSalt((saltError, salt) => {
@@ -35,4 +38,4 @@ User.pre('save', function(next) {
 	})
 })
 
-module.exports = mongoose.model('User', User)
+export default mongoose.model('User', User)

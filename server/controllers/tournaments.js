@@ -1,5 +1,4 @@
-const randomWords = require('random-words')
-const Tournament = require('../models/Tournament')
+import randomWords from 'random-words'
 import {
 	NO_TOURNAMENTS,
 	UNKNOWN,
@@ -7,8 +6,9 @@ import {
 	duplicateError,
 	notFoundError,
 } from '../config/errors'
+import Tournament from '../models/Tournament'
 
-exports.index = (req, res) => {
+export const index = (req, res) => {
 	Tournament.find()
 		.exec()
 		.then(tournaments => {
@@ -18,17 +18,18 @@ exports.index = (req, res) => {
 		.catch(() => res.status(500).json(UNKNOWN))
 }
 
-exports.show = (req, res) => {
+export const show = (req, res) => {
 	Tournament.findById(req.params.tournamentId)
 		.exec()
 		.then(tournament => {
 			if (!tournament) return res.status(404).json(notFoundError('tournament'))
-			return res.json({ ...tournament.toObject() })
+			return res.json({ ...tournament.toObject(),
+			})
 		})
 		.catch(err => res.status(500).json(UNKNOWN))
 }
 
-exports.create = (req, res) => {
+export const create = (req, res) => {
 	// TODO: fix dates
 	const date = new Date(req.body.date)
 
@@ -36,14 +37,18 @@ exports.create = (req, res) => {
 		name: req.body.name,
 		state: req.body.state,
 		city: req.body.city,
-		joinCode: randomWords({ exactly: 5, join: '-' }),
+		joinCode: randomWords({
+			exactly: 5,
+			join: '-',
+		}),
 		events: req.body.events,
 		date,
 	})
 
 	tournament
 		.save()
-		.then(() => res.status(201).json({ ...tournament.toObject() }))
+		.then(() => res.status(201).json({ ...tournament.toObject(),
+		}))
 		.catch(err => {
 			if (err.code === 11000) {
 				return res.status(400).json(duplicateError('name', 'tournaments'))
@@ -55,11 +60,11 @@ exports.create = (req, res) => {
 		})
 }
 
-exports.update = (req, res) => {
+export const update = (req, res) => {
 	Tournament.findById(req.params.tournamentId)
 		.exec()
 		.then(tournament => {
-			if (!tournament) return res.status(404).json(notFound('tournament'))
+			if (!tournament) return res.status(404).json(notFoundError('tournament'))
 			tournament.name = req.body.name
 			tournament.date = req.body.date
 			tournament.state = req.body.state
@@ -67,7 +72,8 @@ exports.update = (req, res) => {
 			tournament.events = req.body.events
 			return tournament.save()
 		})
-		.then(updated => res.status(200).json({ ...updated.toObject() }))
+		.then(updated => res.status(200).json({ ...updated.toObject(),
+		}))
 		.catch(err =>
 			res.status(500).json({
 				...UNKNOWN,
@@ -76,14 +82,15 @@ exports.update = (req, res) => {
 		)
 }
 
-exports.destroy = (req, res) => {
+export const destroy = (req, res) => {
 	Tournament.findById(req.params.tournamentId)
 		.exec()
 		.then(tournament => {
-			if (!tournament) return res.status(404).json(notFound('tournament'))
+			if (!tournament) return res.status(404).json(notFoundError('tournament'))
 			return tournament.remove()
 		})
-		.then(deleted => res.status(200).json({ ...deleted.toObject() }))
+		.then(deleted => res.status(200).json({ ...deleted.toObject(),
+		}))
 		.catch(err =>
 			res.status(500).json({
 				...UNKNOWN,
@@ -92,6 +99,4 @@ exports.destroy = (req, res) => {
 		)
 }
 
-exports.catchAll = (req, res) => {
-	return res.status(400).json(UNSUPPORTED_ACTION)
-}
+export const catchAll = (req, res) => res.status(400).json(UNSUPPORTED_ACTION)

@@ -1,6 +1,19 @@
-const router = require('express').Router()
-const { ensureAuthenticated, needsGroup } = require('../passport/auth')
-const { index, show, create, update, destroy, catchAll } = require('../controllers/tournaments')
+import {
+	Router,
+} from 'express'
+import {
+	index,
+	show,
+	create,
+	update,
+	destroy,
+} from '../controllers/tournaments'
+import {
+	ensureAuthenticated,
+	needsGroup,
+} from '../passport/auth'
+
+const router = new Router()
 
 router.all('*', ensureAuthenticated, needsGroup('admin'))
 

@@ -1,10 +1,9 @@
-const mongoose = require('mongoose')
-const { Schema } = mongoose
-const Team = require('./Team')
-const ScoresheetEntry = require('./ScoresheetEntry')
-const Event = require('./Event')
+import mongoose from 'mongoose'
+import Event from './Event'
+import ScoresheetEntry from './ScoresheetEntry'
+import Team from './Team'
 
-const Tournament = new Schema({
+const Tournament = new mongoose.Schema({
 	name: {
 		type: String,
 		unique: true,
@@ -12,24 +11,32 @@ const Tournament = new Schema({
 		required: true,
 	},
 	date: Date,
-	state: { type: String, required: true },
-	city: { type: String, required: true },
+	state: {
+		type: String,
+		required: true,
+	},
+	city: {
+		type: String,
+		required: true,
+	},
 	joinCode: {
 		type: String,
 		unique: true,
 		required: true,
 	} /* TODO: implement ability for users to register as specific event proctors. */,
-	events: [
-		{
-			type: Schema.Types.ObjectId,
-			ref: 'Event',
-		},
-	] /* The events to be held at this tournament. */,
+	events: [{
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Event',
+	}] /* The events to be held at this tournament. */,
 })
 
 // Create ScoresheetEntries after successfully creating tournament.
 Tournament.post('save', doc => {
-	Event.find({ _id: { $in: doc.events } })
+	Event.find({
+		_id: {
+			$in: doc.events,
+		},
+	})
 		.select('division name')
 		.lean()
 		.exec((err, events) => {
@@ -56,13 +63,17 @@ Tournament.post('save', doc => {
 // Remove all scoresheet entries that reference deleted tournament.
 Tournament.post('remove', doc => {
 	console.log(`removing all scoresheets with tournament id ${doc._id}`)
-	return ScoresheetEntry.remove({ tournament: doc._id })
+	return ScoresheetEntry.remove({
+		tournament: doc._id,
+	})
 })
 
 // Remove all teams that reference deleted tournament.
 Tournament.post('remove', doc => {
 	console.log(`removing all teams with tournament id ${doc._id}`)
-	return Team.remove({ tournament: doc.id })
+	return Team.remove({
+		tournament: doc.id,
+	})
 })
 
-module.exports = mongoose.model('Tournament', Tournament)
+export default mongoose.model('Tournament', Tournament)
