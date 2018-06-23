@@ -1,4 +1,4 @@
-export default {
+const errors = {
 	CANNOT_REGISTER_ADMIN: {
 		code: 'cannot_register_admin',
 		message: 'You cannot register as a site admin.',
@@ -42,6 +42,8 @@ export default {
 	},
 }
 
+export default errors
+
 export const duplicateError = (field, resource) => ({
 	code: 'duplicate_error',
 	message: `Field ${field} must be unique across ${resource}.`,
@@ -49,15 +51,13 @@ export const duplicateError = (field, resource) => ({
 	resource,
 })
 
-export const validationError = errors => {
-	const fields = Object.keys(errors)
-	const fieldsWitherrors = fields.map(field => ({
-		[field]: errors[field].kind,
-	}))
+export const validationError = errs => {
+	const fields = Object.keys(errs)
+	const fieldsWithErrors = fields.map(field => ({ [field]: errs[field].kind }))
 	return {
 		code: 'validation_error',
 		message: 'There was an error validating your request, check the following fields.',
-		errors: fieldsWitherrors,
+		errors: fieldsWithErrors,
 	}
 }
 

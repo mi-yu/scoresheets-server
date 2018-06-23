@@ -1,35 +1,28 @@
 import randomWords from 'random-words'
-import {
-	NO_TOURNAMENTS,
-	UNKNOWN,
-	UNSUPPORTED_ACTION,
-	duplicateError,
-	notFoundError,
-} from '../config/errors'
+import { notFoundError } from '../config/errors'
 import Tournament from '../models/Tournament'
 
-export const index = (req, res) => {
+export const index = (req, res, next) => {
 	Tournament.find()
 		.exec()
 		.then(tournaments => {
 			if (!tournaments) return res.status(404).json(NO_TOURNAMENTS)
 			return res.json([...tournaments])
 		})
-		.catch(() => res.status(500).json(UNKNOWN))
+		.catch(err => next(err))
 }
 
-export const show = (req, res) => {
+export const show = (req, res, next) => {
 	Tournament.findById(req.params.tournamentId)
 		.exec()
 		.then(tournament => {
 			if (!tournament) return res.status(404).json(notFoundError('tournament'))
-			return res.json({ ...tournament.toObject(),
-			})
+			return res.json(tournament.toObject())
 		})
-		.catch(err => res.status(500).json(UNKNOWN))
+		.catch(err => next(err))
 }
 
-export const create = (req, res) => {
+export const create = (req, res, next) => {
 	// TODO: fix dates
 	const date = new Date(req.body.date)
 
@@ -47,20 +40,11 @@ export const create = (req, res) => {
 
 	tournament
 		.save()
-		.then(() => res.status(201).json({ ...tournament.toObject(),
-		}))
-		.catch(err => {
-			if (err.code === 11000) {
-				return res.status(400).json(duplicateError('name', 'tournaments'))
-			}
-			return res.status(500).json({
-				...UNKNOWN,
-				message: 'There was an unknown error creating the tournament.',
-			})
-		})
+		.then(() => res.status(201).json(tournament.toObject()))
+		.catch(err => next(err))
 }
 
-export const update = (req, res) => {
+export const update = (req, res, next) => {
 	Tournament.findById(req.params.tournamentId)
 		.exec()
 		.then(tournament => {
@@ -72,31 +56,21 @@ export const update = (req, res) => {
 			tournament.events = req.body.events
 			return tournament.save()
 		})
-		.then(updated => res.status(200).json({ ...updated.toObject(),
-		}))
-		.catch(err =>
-			res.status(500).json({
-				...UNKNOWN,
-				message: 'There was an unknown error updating the tournament.',
+		.then(updated =>
+			res.status(200).json({
+				...updated.toObject(),
 			}),
 		)
+		.catch(err => next(err))
 }
 
-export const destroy = (req, res) => {
+export const destroy = (req, res, next) => {
 	Tournament.findById(req.params.tournamentId)
 		.exec()
 		.then(tournament => {
 			if (!tournament) return res.status(404).json(notFoundError('tournament'))
 			return tournament.remove()
 		})
-		.then(deleted => res.status(200).json({ ...deleted.toObject(),
-		}))
-		.catch(err =>
-			res.status(500).json({
-				...UNKNOWN,
-				message: 'There was an unknown error deleting the tournament.',
-			}),
-		)
+		.then(deleted => res.status(200).json(deleted.toObject()))
+		.catch(err => next(err))
 }
-
-export const catchAll = (req, res) => res.status(400).json(UNSUPPORTED_ACTION)

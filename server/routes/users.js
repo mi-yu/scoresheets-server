@@ -1,54 +1,44 @@
-import {
-	Router,
-} from 'express'
+import { Router } from 'express'
 import passport from 'passport'
-import {
-	ensureAuthenticated,
-	needsGroup,
-} from '../passport/auth'
+import { ensureAuthenticated, needsGroup } from '../passport/auth'
 import register from '../passport/register'
 import User from '../models/User'
-import {
-	UNKNOWN,
-	UNAUTHORIZED,
-	INCORRECT_CREDENTIALS,
-} from '../config/errors'
+import { IncorrectCredentialsError, InternalServerError, UnauthorizedError } from '../errors'
 
 const router = new Router()
 
 /* GET users listing. */
-router.get('/', ensureAuthenticated, needsGroup('admin'), (req, res) => {
+router.get('/', ensureAuthenticated, needsGroup('admin'), (req, res, next) => {
 	User.find()
 		.select('-password')
 		.exec()
-		.then(users => res.json({
-			users,
-		}))
-		.catch(() => res.status(500).json(UNKNOWN))
+		.then(users =>
+			res.json({
+				users,
+			}),
+		)
+		.catch(() => next(new InternalServerError()))
 })
 
-router.get('/me', ensureAuthenticated, (req, res) => {
+router.get('/me', ensureAuthenticated, (req, res, next) => {
 	// TODO: detangle this stuff
 	if (req.user.group === 'admin') {
-		return res.json({
-			user: req.user,
-		})
+		return res.json(req.user)
 	} else if (req.user) {
-		return res.json({
-			user: req.user,
-		})
+		return res.json(req.user)
 	}
-	return res.status(401).json(UNAUTHORIZED)
+
+	return next(new UnauthorizedError())
 })
 
 router.post('/login', (req, res, next) => {
 	passport.authenticate('local-login', (err, token, userData) => {
 		if (err) {
-			if (err.name === 'IncorrectCredentialsError') {
-				return res.status(400).json(INCORRECT_CREDENTIALS)
+			if (err instanceof IncorrectCredentialsError) {
+				return res.status(400).json(err)
 			}
 
-			return res.status(500).json(UNKNOWN)
+			return res.status(500).json(new InternalServerError())
 		}
 
 		return res.json({

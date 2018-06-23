@@ -1,7 +1,13 @@
-const router = require('express').Router()
-const { ensureAuthenticated, needsGroup } = require('../passport/auth')
-import { index } from '../controllers/teams'
+import { Router } from 'express'
+import { ensureAuthenticated, needsGroup } from '../passport/auth'
+import { index, show } from '../controllers/teams'
+
+const router = new Router({ mergeParams: true })
+
+router.all('*', ensureAuthenticated, needsGroup('admin'))
 
 router.get('/', index)
 
-module.exports = router
+router.get('/:teamId', show)
+
+export default router
