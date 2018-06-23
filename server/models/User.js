@@ -15,14 +15,14 @@ const User = new mongoose.Schema({
 		lowercase: true,
 		trim: true,
 	},
-	password: String,
+	password: { type: String, required: true },
 })
 
-User.methods.comparePassword = function (password, cb) {
+User.methods.comparePassword = function(password, cb) {
 	bcrypt.compare(password, this.password, cb)
 }
 
-User.pre('save', function (next) {
+User.pre('save', function(next) {
 	const user = this
 
 	bcrypt.genSalt((saltError, salt) => {

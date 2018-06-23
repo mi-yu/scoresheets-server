@@ -1,54 +1,20 @@
 import { Router } from 'express'
-import passport from 'passport'
 import { ensureAuthenticated, needsGroup } from '../passport/auth'
-import register from '../passport/register'
-import User from '../models/User'
-import { IncorrectCredentialsError, InternalServerError, UnauthorizedError } from '../errors'
+import { index, show, login, create, update, destroy } from '../controllers/users.controller'
 
 const router = new Router()
 
 /* GET users listing. */
-router.get('/', ensureAuthenticated, needsGroup('admin'), (req, res, next) => {
-	User.find()
-		.select('-password')
-		.exec()
-		.then(users =>
-			res.json({
-				users,
-			}),
-		)
-		.catch(() => next(new InternalServerError()))
-})
+router.get('/', ensureAuthenticated, needsGroup('admin'), index)
 
-router.get('/me', ensureAuthenticated, (req, res, next) => {
-	// TODO: detangle this stuff
-	if (req.user.group === 'admin') {
-		return res.json(req.user)
-	} else if (req.user) {
-		return res.json(req.user)
-	}
+router.get('/:userId', ensureAuthenticated, show)
 
-	return next(new UnauthorizedError())
-})
+router.post('/login', login)
 
-router.post('/login', (req, res, next) => {
-	passport.authenticate('local-login', (err, token, userData) => {
-		if (err) {
-			if (err instanceof IncorrectCredentialsError) {
-				return res.status(400).json(err)
-			}
+router.post('/register', create)
 
-			return res.status(500).json(new InternalServerError())
-		}
+router.patch('/:userId', ensureAuthenticated, update)
 
-		return res.json({
-			message: 'You have successfully logged in!',
-			user: userData,
-			token,
-		})
-	})(req, res, next)
-})
-
-router.post('/register', register)
+router.delete('/:userId', ensureAuthenticated, needsGroup('admin'), destroy)
 
 export default router

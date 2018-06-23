@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { ensureAuthenticated, needsGroup } from '../passport/auth'
-import { index, show } from '../controllers/teams'
+import { index, show } from '../controllers/teams.controller'
 
 const router = new Router({ mergeParams: true })
 

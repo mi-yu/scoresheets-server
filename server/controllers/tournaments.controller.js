@@ -1,12 +1,13 @@
 import randomWords from 'random-words'
-import { notFoundError } from '../config/errors'
+
 import Tournament from '../models/Tournament'
+import { NotFoundError } from '../errors'
 
 export const index = (req, res, next) => {
 	Tournament.find()
 		.exec()
 		.then(tournaments => {
-			if (!tournaments) return res.status(404).json(NO_TOURNAMENTS)
+			if (!tournaments) return res.json([])
 			return res.json([...tournaments])
 		})
 		.catch(err => next(err))
@@ -16,7 +17,7 @@ export const show = (req, res, next) => {
 	Tournament.findById(req.params.tournamentId)
 		.exec()
 		.then(tournament => {
-			if (!tournament) return res.status(404).json(notFoundError('tournament'))
+			if (!tournament) return res.status(404).json(new NotFoundError('tournament'))
 			return res.json(tournament.toObject())
 		})
 		.catch(err => next(err))
@@ -48,19 +49,11 @@ export const update = (req, res, next) => {
 	Tournament.findById(req.params.tournamentId)
 		.exec()
 		.then(tournament => {
-			if (!tournament) return res.status(404).json(notFoundError('tournament'))
-			tournament.name = req.body.name
-			tournament.date = req.body.date
-			tournament.state = req.body.state
-			tournament.city = req.body.city
-			tournament.events = req.body.events
+			if (!tournament) return res.status(404).json(new NotFoundError('tournament'))
+			tournament.set(req.body)
 			return tournament.save()
 		})
-		.then(updated =>
-			res.status(200).json({
-				...updated.toObject(),
-			}),
-		)
+		.then(updated => res.status(200).json(updated.toObject()))
 		.catch(err => next(err))
 }
 
@@ -68,7 +61,7 @@ export const destroy = (req, res, next) => {
 	Tournament.findById(req.params.tournamentId)
 		.exec()
 		.then(tournament => {
-			if (!tournament) return res.status(404).json(notFoundError('tournament'))
+			if (!tournament) return res.status(404).json(new NotFoundError('tournament'))
 			return tournament.remove()
 		})
 		.then(deleted => res.status(200).json(deleted.toObject()))

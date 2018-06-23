@@ -1,5 +1,5 @@
-import { NO_TEAMS, UNKNOWN, notFoundError } from '../config/errors'
 import Team from '../models/Team'
+import { NotFoundError } from '../errors'
 
 export const index = (req, res, next) => {
 	// TODO: error handle bad queries?
@@ -9,11 +9,8 @@ export const index = (req, res, next) => {
 		division: divisionQuery,
 	})
 		.exec()
-		.then(teams => {
-			if (teams) return res.json(teams)
-			return res.status(404).json(NO_TEAMS)
-		})
-		.catch(() => res.status(500).json(UNKNOWN))
+		.then(teams => res.json(teams))
+		.catch(err => next(err))
 }
 
 export const show = (req, res, next) => {
@@ -21,7 +18,7 @@ export const show = (req, res, next) => {
 		.exec()
 		.then(team => {
 			if (team) return res.json(team.toObject())
-			return res.status(404).json(notFoundError('team'))
+			return res.status(404).json(new NotFoundError('team'))
 		})
 		.catch(err => next(err))
 }
@@ -29,9 +26,9 @@ export const show = (req, res, next) => {
 export const update = (req, res, next) => {
 	Team.findById(req.params.teamId)
 		.exec()
-		.catch(err => res.status(500).json(UNKNOWN))
+		.catch(err => next(err))
 		.then(team => {
-			if (!team) return res.status(404).json(notFoundError('team'))
+			if (!team) return res.status(404).json(new NotFoundError('team'))
 			team.teamNumber = req.body.teamNumber
 			team.school = req.body.school
 			team.identifier = req.body.identifier
@@ -40,7 +37,5 @@ export const update = (req, res, next) => {
 			return team.save()
 		})
 		.then(savedTeam => res.status(200).json(savedTeam.toObject()))
-		.catch(err => {
-			return next(err)
-		})
+		.catch(err => next(err))
 }

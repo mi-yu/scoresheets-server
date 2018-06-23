@@ -3,9 +3,7 @@ import users from './users'
 import tournaments from './tournaments'
 import teams from './teams'
 import errorHandler from './errorHandler'
-
-import errors from '../config/errors'
-const { UNSUPPORTED_ACTION } = errors
+import { UnsupportedActionError } from '../errors'
 
 const router = new Router()
 
@@ -26,6 +24,6 @@ router.use('/tournaments/:tournamentId/teams', teams)
 // router.use('/events', events)
 
 router.use(errorHandler)
-router.all('*', (req, res) => res.status(400).json(UNSUPPORTED_ACTION))
+router.all('*', (req, res) => res.status(400).json(new UnsupportedActionError()))
 
 export default router

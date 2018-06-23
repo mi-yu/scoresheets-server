@@ -11,6 +11,7 @@ export default new PassportLocalStrategy(
 		passReqToCallback: true,
 	},
 	(req, email, password, done) => {
+		console.log('IN STRATEGY')
 		const userData = {
 			email: req.body.email.trim(),
 			password: req.body.password.trim(),

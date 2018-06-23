@@ -1,17 +1,6 @@
-import {
-	Router,
-} from 'express'
-import {
-	index,
-	show,
-	create,
-	update,
-	destroy,
-} from '../controllers/tournaments'
-import {
-	ensureAuthenticated,
-	needsGroup,
-} from '../passport/auth'
+import { Router } from 'express'
+import { index, show, create, update, destroy } from '../controllers/tournaments.controller'
+import { ensureAuthenticated, needsGroup } from '../passport/auth'
 
 const router = new Router()
 
