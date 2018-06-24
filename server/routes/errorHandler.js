@@ -1,6 +1,7 @@
 import { DuplicateError, ValidationError, InternalServerError } from '../errors'
 
 const errorHandler = (err, req, res, next) => {
+	if (process.env.NODE_ENV === 'development') console.log(err)
 	if (!err) return next()
 
 	if (err.name === 'MongoError' && err.code === 11000) {
