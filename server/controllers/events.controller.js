@@ -45,7 +45,8 @@ export const destroy = (req, res, next) => {
 	Event.findById(req.params.eventId)
 		.exec()
 		.then(event => {
-			if (!event) return next(new NotFoundError('team'))
+			// TODO: follow this pattern for errors in all controllers
+			if (!event) throw new NotFoundError('team')
 			return event.remove()
 		})
 		.then(deletedEvent => res.json(deletedEvent.toObject()))
