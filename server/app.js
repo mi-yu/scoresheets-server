@@ -7,13 +7,11 @@ import LoginStrategy from './passport/login'
 
 // Routes
 import routes from './routes'
-// const scoresheets = require('./routes/scoresheets')
-// const events = require('./routes/events')
 
 // Create Express app
 const app = express()
 
-// Set environment
+// Set NODE_ENV
 const env = process.env.NODE_ENV || 'development'
 
 if (env === 'development') {
@@ -22,7 +20,7 @@ if (env === 'development') {
 		path: './.env',
 	})
 	app.use(logger('dev'))
-	mongoose.connection.openUri(process.env.DB_REACT_LOCAL_URL)
+	mongoose.connection.openUri(process.env.DB_LOCAL_URL)
 	mongoose.set('debug', true)
 } else {
 	mongoose.connection.openUri(process.env.DB_URL)

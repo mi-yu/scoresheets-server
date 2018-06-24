@@ -23,6 +23,16 @@ export const show = (req, res, next) => {
 		.catch(err => next(err))
 }
 
+export const create = (req, res, next) => {
+	const team = new Team({
+		...req.body,
+	})
+
+	team.save()
+		.then(newTeam => res.status(201).json(newTeam.toObject()))
+		.catch(err => next(err))
+}
+
 export const update = (req, res, next) => {
 	Team.findById(req.params.teamId)
 		.exec()
@@ -37,5 +47,16 @@ export const update = (req, res, next) => {
 			return team.save()
 		})
 		.then(savedTeam => res.status(200).json(savedTeam.toObject()))
+		.catch(err => next(err))
+}
+
+export const destroy = (req, res, next) => {
+	Team.findById(req.params.teamId)
+		.exec()
+		.then(team => {
+			if (!team) return res.status(404).json(new NotFoundError('team'))
+			return team.remove()
+		})
+		.then(deletedTeam => res.json(deletedTeam.toObject()))
 		.catch(err => next(err))
 }
