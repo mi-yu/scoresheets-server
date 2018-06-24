@@ -27,7 +27,7 @@ export const show = (req, res, next) => {
 		.select('-password')
 		.exec()
 		.then(user => {
-			if (!user) return next(new NotFoundError('user'))
+			if (!user) throw new NotFoundError('user')
 			return res.json(user)
 		})
 		.catch(err => next(err))
@@ -64,12 +64,15 @@ export const create = (req, res, next) => {
 		if (err) return next(err)
 
 		const returnedUser = newUser.toObject()
+
+		// Don't expose passwords, even if they are hashed!
 		delete returnedUser.password
 		return res.status(201).json(returnedUser)
 	})
 }
 
 export const update = (req, res, next) => {
+	// TODO: remove once we support this
 	if (req.body.password) {
 		return res
 			.status(400)
@@ -86,10 +89,11 @@ export const update = (req, res, next) => {
 		return next(new ForbiddenError())
 	}
 
+	// We don't remove password from query result here, maybe security concern.
 	User.findById(req.params.userId)
 		.exec()
 		.then(user => {
-			if (!user) return next(new NotFoundError('user'))
+			if (!user) throw new NotFoundError('user')
 			user.set(req.body)
 			return user.save()
 		})
@@ -102,7 +106,7 @@ export const destroy = (req, res, next) => {
 		.select('-password')
 		.exec()
 		.then(user => {
-			if (!user) return next(new NotFoundError('user'))
+			if (!user) throw new NotFoundError('user')
 			return user.remove()
 		})
 		.then(deletedUser => res.json(deletedUser.toObject()))

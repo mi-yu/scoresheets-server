@@ -13,7 +13,7 @@ export const show = (req, res, next) => {
 	Tournament.findById(req.params.tournamentId)
 		.exec()
 		.then(tournament => {
-			if (!tournament) return res.status(404).json(new NotFoundError('tournament'))
+			if (!tournament) throw new NotFoundError('tournament')
 			return res.json(tournament.toObject())
 		})
 		.catch(err => next(err))
@@ -45,7 +45,7 @@ export const update = (req, res, next) => {
 	Tournament.findById(req.params.tournamentId)
 		.exec()
 		.then(tournament => {
-			if (!tournament) return res.status(404).json(new NotFoundError('tournament'))
+			if (!tournament) throw new NotFoundError('tournament')
 			tournament.set(req.body)
 			return tournament.save()
 		})
@@ -57,7 +57,7 @@ export const destroy = (req, res, next) => {
 	Tournament.findById(req.params.tournamentId)
 		.exec()
 		.then(tournament => {
-			if (!tournament) return res.status(404).json(new NotFoundError('tournament'))
+			if (!tournament) throw new NotFoundError('tournament')
 			return tournament.remove()
 		})
 		.then(deleted => res.status(200).json(deleted.toObject()))

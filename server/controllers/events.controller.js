@@ -4,7 +4,7 @@ import { NotFoundError } from '../errors'
 export const index = (req, res, next) => {
 	Event.find()
 		.exec()
-		.then(events => res.json([...events]))
+		.then(events => res.json(events))
 		.catch(err => next(err))
 }
 
@@ -12,7 +12,7 @@ export const show = (req, res, next) => {
 	Event.findById(req.params.eventId)
 		.exec()
 		.then(event => {
-			if (!event) return next(new NotFoundError('event'))
+			if (!event) throw new NotFoundError('event')
 			return res.json(event.toObject())
 		})
 		.catch(err => next(err))
@@ -33,7 +33,7 @@ export const update = (req, res, next) => {
 	Event.findById(req.params.eventId)
 		.exec()
 		.then(event => {
-			if (!event) return next(new NotFoundError('team'))
+			if (!event) throw new NotFoundError('event')
 			event.set(req.body)
 			return event.save()
 		})

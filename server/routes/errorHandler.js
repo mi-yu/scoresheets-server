@@ -1,7 +1,9 @@
 import { DuplicateError, ValidationError, InternalServerError } from '../errors'
 
 const errorHandler = (err, req, res, next) => {
-	if (process.env.NODE_ENV === 'development') console.log(err)
+	// We want to print out error to console when in developing
+	// eslint-disable-next-line
+	if (process.env.NODE_ENV !== 'production') console.log(err)
 	if (!err) return next()
 
 	if (err.name === 'MongoError' && err.code === 11000) {
