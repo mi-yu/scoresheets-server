@@ -2,6 +2,7 @@ import { Router } from 'express'
 import users from './users'
 import tournaments from './tournaments'
 import teams from './teams'
+import events from './events'
 import errorHandler from './errorHandler'
 import { UnsupportedActionError } from '../errors'
 
@@ -20,6 +21,7 @@ router.use((req, res, next) => {
 router.use('/users', users)
 router.use('/tournaments', tournaments)
 router.use('/tournaments/:tournamentId/teams', teams)
+router.use('/events', events)
 // router.use('/scoresheets', scoresheets)
 // router.use('/events', events)
 

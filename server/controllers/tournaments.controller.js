@@ -1,15 +1,11 @@
 import randomWords from 'random-words'
-
 import Tournament from '../models/Tournament'
 import { NotFoundError } from '../errors'
 
 export const index = (req, res, next) => {
 	Tournament.find()
 		.exec()
-		.then(tournaments => {
-			if (!tournaments) return res.json([])
-			return res.json([...tournaments])
-		})
+		.then(tournaments => res.json([...tournaments]))
 		.catch(err => next(err))
 }
 
