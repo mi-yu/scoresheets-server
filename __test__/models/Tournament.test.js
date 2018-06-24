@@ -73,6 +73,35 @@ describe('test Tournament model', () => {
 		expect(entries.length).toEqual(expectedNumEntries)
 	})
 
+	// TODO: write this test once seed data gets fixed
+
+	// test('Should successfully add another event to tournament', async () => {
+	// 	const extraEvent = await Event.find({
+	// 		inRotation: false,
+	// 	}).exec()
+
+	// 	console.log(extraEvent)
+
+	// 	const updatedTournament = await Tournament.findOne({
+	// 		name: 'test tournament',
+	// 	})
+	// 		.exec()
+	// 		.then(tournament => {
+	// 			tournament.events.push(extraEvent._id)
+	// 			return tournament.save()
+	// 		})
+
+	// 	const entry = await ScoresheetEntry.find({
+	// 		tournament: updatedTournament._id,
+	// 		event: extraEvent._id,
+	// 	}).exec()
+
+	// 	expect(entry).not.toBeNull()
+	// 	expect(entry.length).toEqual(1)
+	// 	expect(entry.event).toEqual(extraEvent._id)
+	// 	expect(entry.division).toEqual('B')
+	// })
+
 	test('ScoresheetEntries should have been updated', async () => {
 		const tournament = await Tournament.findOne({
 			name: 'test tournament',

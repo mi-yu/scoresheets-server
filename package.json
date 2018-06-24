@@ -11,8 +11,7 @@
 		"start:dev": "set NODE_ENV=development && yarn run start:server:dev",
 		"start:server:dev": "nodemon server.js --exec \"node_modules/.bin/babel-node server.js\"",
 		"test": "set NODE_ENV=test && jest --runInBand",
-		"test:debug":
-			"yarn test:seed && set NODE_ENV=test && node --inspect-brk node_modules/.bin/jest --runInBand",
+		"test:debug": "set NODE_ENV=test && node --inspect=0.0.0.0:9229 node_modules/.bin/jest --runInBand",
 		"heroku-postbuild": "cd client && yarn --production=false && yarn run build"
 	},
 	"jest": {
@@ -47,7 +46,9 @@
 		"nodemon": "^1.17.4"
 	},
 	"nodemonConfig": {
-		"ignore": ["client/**/*"],
+		"ignore": [
+			"client/**/*"
+		],
 		"delay": 10
 	}
 }

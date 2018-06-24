@@ -1,3 +1,5 @@
+/* eslint-disable prefer-arrow-callback */
+
 import mongoose from 'mongoose'
 import Event from './Event'
 import ScoresheetEntry from './ScoresheetEntry'
@@ -24,39 +26,45 @@ const Tournament = new mongoose.Schema({
 		unique: true,
 		required: true,
 	} /* TODO: implement ability for users to register as specific event proctors. */,
-	events: [{
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Event',
-	}] /* The events to be held at this tournament. */,
+	events: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Event',
+		},
+	] /* The events to be held at this tournament. */,
 })
 
 // Create ScoresheetEntries after successfully creating tournament.
-Tournament.post('save', doc => {
-	Event.find({
+Tournament.pre('save', async function() {
+	let eventsNeedingScoresheets = await Event.find({
 		_id: {
-			$in: doc.events,
+			$in: this.events,
 		},
-	})
-		.select('division name')
-		.lean()
-		.exec((err, events) => {
-			if (err) console.log(err)
+	}).exec()
 
-			// Create one ScoresheetEntry for each event in the tournament.
-			// Populate each entry's initial tournament, event, and division information.
-			const entries = []
-			events.forEach(event => {
+	ScoresheetEntry.find({
+		tournament: this._id,
+	})
+		.populate('event')
+		.exec()
+		.then(entries => {
+			if (entries.length) {
+				eventsNeedingScoresheets = this.events.filter(event => {
+					const entryExists = entries.filter(entry => entry.event._id === event._id)
+					return !entryExists
+				})
+			}
+			const newEntries = []
+			eventsNeedingScoresheets.forEach(event => {
 				event.division.split('').forEach(div => {
-					entries.push({
-						tournament: doc._id,
+					newEntries.push({
+						tournament: this._id,
 						event: event._id,
 						division: div,
 					})
 				})
 			})
-
-			// Save ScoresheetEntries.
-			return ScoresheetEntry.insertMany(entries)
+			return ScoresheetEntry.insertMany(newEntries)
 		})
 })
 
