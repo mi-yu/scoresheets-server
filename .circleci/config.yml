@@ -26,11 +26,6 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "client/package.json" }}
-          - v1-dependencies-
-
       - run:
           name: Install dependencies
           command: |
@@ -49,10 +44,27 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      - save_cache:
-          paths:
-            - client/node_modules
-          key: v1-dependencies-{{ checksum "client/package.json" }}
-
       # run tests!
       - run: yarn test
+
+  deploy:
+    docker:
+    - image: buildpack-deps:trusty
+    steps:
+    - checkout
+    - run:
+        name: Deploy Master to Heroku
+        command: |
+            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
