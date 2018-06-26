@@ -1,11 +1,8 @@
 swagger: '2.0'
 info:
-  description: This is a simple API
+  description: An API for Science Olympiad tournament management apps
   version: 1.0.0
-  title: Simple Inventory API
-  # put the contact info for your development or API team
-  contact:
-    email: you@your-company.com
+  title: Scribe API
 
   license:
     name: Apache 2.0
@@ -265,7 +262,7 @@ paths:
     post:
       tags:
         - Events
-      summary: Creates an event
+      summary: Creates events from array
       consumes:
       - application/json
       produces:
@@ -275,37 +272,39 @@ paths:
         name: body
         required: true
         schema:
-          type: object
-          required:
-            - name
-            - category
-            - division
-          properties:
-            name:
-              type: string
-              example: Dynamic Planet
-            category:
-              type: string
-              enum: ["bio", "earth", "inquiry", "phys/chem", "building"]
-            division:
-              type: string
-              enum: ["B", "C", "BC"]
-            inRotation:
-              type: boolean
-            impound:
-              type: boolean
-            trialEvent:
-              type: boolean
-            topics:
-              type: array
-              items:
+          type: array
+          items:
+            type: object
+            required:
+              - name
+              - category
+              - division
+            properties:
+              name:
                 type: string
-            currentTopic:
-              type: string
-            notes:
-              type: string
-            highScoreWins:
-              type: boolean
+                example: Dynamic Planet
+              category:
+                type: string
+                enum: ["bio", "earth", "inquiry", "phys/chem", "building"]
+              division:
+                type: string
+                enum: ["B", "C", "BC"]
+              inRotation:
+                type: boolean
+              impound:
+                type: boolean
+              trialEvent:
+                type: boolean
+              topics:
+                type: array
+                items:
+                  type: string
+              currentTopic:
+                type: string
+              notes:
+                type: string
+              highScoreWins:
+                type: boolean
             
       responses:
         201:
@@ -476,16 +475,11 @@ definitions:
   ErrorResponse:
     type: object
     properties:
-      code:
-        type: string
-        description: Error code
-        example: "event_already_exists"
       message:
         type: string
         description: Some helpful error message
         example: "The event you are trying to create already exists"
     required:
-      - code
       - message
   Event:
     type: object
