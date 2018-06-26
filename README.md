@@ -1,7 +1,7 @@
 # ✒️ Scribe
 A scorekeeping and judging system for Science Olympiad tournaments.
 
-[![CircleCI](https://circleci.com/gh/mi-yu/scribe.svg?style=svg&circle-token=bd8b567fefd15274b718dd1210c78328e9ae1309)](https://circleci.com/gh/mi-yu/scribe)
+[![CircleCI](https://circleci.com/gh/mi-yu/scribe/tree/master.svg?style=svg&circle-token=bd8b567fefd15274b718dd1210c78328e9ae1309)](https://circleci.com/gh/mi-yu/scribe/tree/master)
 
 ### Features:
 - [x] Allows event supervisors to submit scores
@@ -26,8 +26,13 @@ Then in project root:
 		
 5. Run `yarn install` to install dependencies
 7. In separate console, run `mongod` (local development database)
-8. Run `yarn start:dev`
+8. Run `yarn start:dev`, API server should start up at `localhost:5000`
 
-### Tests:
+### Interacting with the API
+1. Install [Postman](https://www.getpostman.com/)
+2. `yarn start:dev`
+3. Hit endpoints with Postman, something like `localhost:5000/status`
+
+### Automated Tests:
 1. Install Jest (testing framework) with `yarn global add jest`
 2. Run `yarn test`
