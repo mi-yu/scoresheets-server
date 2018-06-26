@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 import passport from 'passport'
 import path from 'path'
 import bodyParser from 'body-parser'
-import LoginStrategy from './passport/login'
+import LoginStrategy from './passport/LoginStrategy'
 
 // Routes
 import routes from './routes'
@@ -41,7 +41,7 @@ passport.use('local-login', LoginStrategy)
 mongoose.Promise = global.Promise
 
 // Use routes
-app.use(express.static(path.join(__dirname, 'client/build')))
+// app.use(express.static(path.join(__dirname, 'client/build')))
 app.use(routes)
 
 app.set('port', process.env.PORT || 5000)
