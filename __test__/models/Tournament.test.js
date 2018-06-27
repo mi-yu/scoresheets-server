@@ -1,19 +1,9 @@
-import mongoose from 'mongoose'
-import { TEST_URL } from '../config'
 import Tournament from '../../server/models/Tournament'
 import ScoresheetEntry from '../../server/models/ScoresheetEntry'
 import Event from '../../server/models/Event'
 import Team from '../../server/models/Team'
 
-import eventSeedData from '../seeds/Event.seed'
-
 describe('test Tournament model', () => {
-	beforeAll(() =>
-		mongoose
-			.connect(TEST_URL)
-			.then(() => mongoose.connection.db.collection('events').insertMany(eventSeedData)))
-	afterAll(done => mongoose.connection.db.dropDatabase().then(() => mongoose.disconnect(done)))
-
 	test('Should successfully create tournament', async () => {
 		const events = await Event.find({
 			inRotation: true,

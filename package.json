@@ -14,7 +14,8 @@
 		"test:debug": "set NODE_ENV=test && node --inspect=0.0.0.0:9229 node_modules/.bin/jest --runInBand"
 	},
 	"jest": {
-		"testEnvironment": "node"
+		"testEnvironment": "node",
+		"setupTestFrameworkScriptFile": "<rootDir>/__test__/setup.js"
 	},
 	"dependencies": {
 		"bcrypt": "^2.0.1",
@@ -27,7 +28,8 @@
 		"morgan": "^1.9.0",
 		"passport": "^0.4.0",
 		"passport-local": "^1.0.0",
-		"random-words": "1.1.0"
+		"random-words": "1.1.0",
+		"supertest": "^3.1.0"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.0.0-beta.51",
