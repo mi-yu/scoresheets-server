@@ -1,13 +1,7 @@
 import mongoose from 'mongoose'
-import {
-	TEST_URL,
-} from '../config'
 import Team from '../../server/models/Team'
 
 describe('test Team model', () => {
-	beforeAll(() => mongoose.connect(TEST_URL))
-	afterAll(done => mongoose.connection.db.dropDatabase().then(() => mongoose.disconnect(done)))
-
 	const tournamentId = mongoose.Types.ObjectId()
 	const teams = [
 		new Team({

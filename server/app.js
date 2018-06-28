@@ -1,7 +1,6 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import passport from 'passport'
-import path from 'path'
 import bodyParser from 'body-parser'
 import LoginStrategy from './passport/LoginStrategy'
 
@@ -22,7 +21,7 @@ if (env === 'development') {
 	app.use(logger('dev'))
 	mongoose.connection.openUri(process.env.DB_LOCAL_URL)
 	mongoose.set('debug', true)
-} else {
+} else if (env === 'production') {
 	mongoose.connection.openUri(process.env.DB_URL)
 }
 

@@ -12,6 +12,8 @@ const errorHandler = (err, req, res, next) => {
 		return res.status(400).json(new ValidationError(err.errors))
 	} else if (err.name === 'UnauthorizedError') {
 		return res.status(401).json(err)
+	} else if (err.name === 'ForbiddenError') {
+		return res.status(403).json(err)
 	} else if (err.name === 'NotFoundError') {
 		return res.status(404).json(err)
 	}

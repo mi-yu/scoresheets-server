@@ -3,6 +3,8 @@ import User from '../models/User'
 import { UnauthorizedError, ForbiddenError } from '../errors'
 
 export const ensureAuthenticated = (req, res, next) => {
+	if (process.env.NODE_ENV === 'test') return next()
+
 	if (!req.headers.authorization) return next(new UnauthorizedError())
 
 	const token = req.headers.authorization.split(' ')[1]
@@ -25,6 +27,7 @@ export const ensureAuthenticated = (req, res, next) => {
 }
 
 export const needsGroup = group => (req, res, next) => {
+	if (process.env.NODE_ENV === 'test') return next()
 	if (req.user && req.user.group === group) return next()
 	return res.status(403).json(new ForbiddenError())
 }
