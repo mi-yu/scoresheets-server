@@ -7,4 +7,7 @@ beforeAll(() =>
 		.connect(TEST_URL)
 		.then(() => mongoose.connection.db.collection('events').insertMany(eventSeedData)))
 
-afterAll(done => mongoose.connection.db.dropDatabase().then(() => mongoose.disconnect(done)))
+afterAll(done => {
+	// console.log(mongoose.connection.db)
+	mongoose.connection.db.dropDatabase().then(() => mongoose.disconnect(done))
+})
