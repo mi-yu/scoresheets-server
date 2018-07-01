@@ -3,4 +3,4 @@ node_modules
 dump
 .vscode
 scribe
-client/build
+build

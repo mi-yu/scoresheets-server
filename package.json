@@ -7,7 +7,8 @@
 		"debug": "node --inspect=0.0.0.0:9229 server.js",
 		"lint": "./node_modules/.bin/eslint --ignore-path .gitignore .",
 		"lint:fix": "./node_modules/.bin/eslint --fix --ignore-path .gitignore .",
-		"start": "node server.js",
+		"build": "mkdir -p build/server && npx babel server.js --out-dir build && npx babel server --out-dir build/server",
+		"start": "yarn build && node build/server.js",
 		"start:dev": "set NODE_ENV=development && yarn run start:server:dev",
 		"start:server:dev": "nodemon server.js --exec \"node_modules/.bin/babel-node server.js\"",
 		"test:drop": "mongo scribe-dev-test --eval 'db.dropDatabase()'",
@@ -19,6 +20,7 @@
 		"testEnvironment": "node"
 	},
 	"dependencies": {
+		"babel-runtime": "^6.26.0",
 		"bcrypt": "^2.0.1",
 		"body-parser": "^1.18.2",
 		"debug": "3.1.0",
@@ -33,10 +35,12 @@
 		"supertest": "^3.1.0"
 	},
 	"devDependencies": {
+		"@babel/cli": "^7.0.0-beta.51",
 		"@babel/core": "^7.0.0-beta.51",
 		"@babel/node": "^7.0.0-beta.51",
+		"@babel/plugin-transform-runtime": "^7.0.0-beta.51",
 		"@babel/preset-env": "^7.0.0-beta.51",
-		"babel-core": "^7.0.0-0",
+		"babel-core": "7.0.0-bridge.0",
 		"babel-eslint": "^8.2.3",
 		"babel-jest": "^23.0.1",
 		"eslint": "4.x",
