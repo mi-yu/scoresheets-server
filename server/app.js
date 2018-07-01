@@ -13,7 +13,7 @@ const app = express()
 // Set NODE_ENV
 const env = process.env.NODE_ENV || 'development'
 
-if (env === 'development' || env === 'test') {
+if (env === 'development') {
 	const logger = require('morgan')
 	require('dotenv').config({
 		path: './.env',
