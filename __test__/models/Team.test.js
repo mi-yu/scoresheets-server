@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import Team from '../../server/models/Team'
+import { TEST_URL } from '../config'
 
 describe('test Team model', () => {
 	const tournamentId = mongoose.Types.ObjectId()
@@ -42,6 +43,14 @@ describe('test Team model', () => {
 			rank: 5,
 		}),
 	]
+
+	beforeAll(async () => {
+		await mongoose.connect(TEST_URL)
+	})
+
+	afterAll(async () => {
+		await mongoose.disconnect()
+	})
 
 	it('should insert teams succesfully', async () => {
 		// Use a random ObjectId here since we don't actually need a real Tournament

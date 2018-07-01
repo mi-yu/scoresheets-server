@@ -1,6 +1,16 @@
+import mongoose from 'mongoose'
 import User from '../../server/models/User'
+import { TEST_URL } from '../config'
 
 describe('test User model', () => {
+	beforeAll(async () => {
+		await mongoose.connect(TEST_URL)
+	})
+
+	afterAll(async () => {
+		await mongoose.disconnect()
+	})
+
 	test('Should register user when given valid params', async () => {
 		const newUser = new User({
 			firstName: 'first',

@@ -19,10 +19,10 @@ if (env === 'development') {
 		path: './.env',
 	})
 	app.use(logger('dev'))
-	mongoose.connection.openUri(process.env.DB_LOCAL_URL)
+	mongoose.connect(process.env.DB_LOCAL_URL)
 	mongoose.set('debug', true)
 } else if (env === 'production') {
-	mongoose.connection.openUri(process.env.DB_URL)
+	mongoose.connect(process.env.DB_URL)
 }
 
 app.use(bodyParser.json())
