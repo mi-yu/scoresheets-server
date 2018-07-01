@@ -7,14 +7,18 @@
 		"debug": "node --inspect=0.0.0.0:9229 server.js",
 		"lint": "./node_modules/.bin/eslint --ignore-path .gitignore .",
 		"lint:fix": "./node_modules/.bin/eslint --fix --ignore-path .gitignore .",
-		"build": "mkdir -p build/server && node_modules/.bin/babel server.js --out-dir build && node_modules/.bin/babel server --out-dir build/server",
-		"start": "yarn build && node build/server.js",
+		"build": "mkdir -p build/server && babel server.js --out-dir build && babel server --out-dir build/server",
+		"start": "node build/server.js",
 		"start:dev": "set NODE_ENV=development && yarn run start:server:dev",
 		"start:server:dev": "nodemon server.js --exec \"node_modules/.bin/babel-node server.js\"",
 		"test:drop": "mongo scribe-dev-test --eval 'db.dropDatabase()'",
 		"test:seed": "yarn test:drop && mongoimport --db scribe-dev-test --collection events --file __test__/seeds/Event.seed.json --jsonArray",
 		"test": "yarn test:seed && set NODE_ENV=test && jest --runInBand --forceExit",
-		"test:debug": "yarn test:seed && set NODE_ENV=test && node --inspect-brk node_modules/.bin/jest --runInBand"
+		"test:debug": "yarn test:seed && set NODE_ENV=test && node --inspect-brk node_modules/.bin/jest --runInBand",
+		"heroku-postbuild": "yarn global add @babel/cli && yarn build"
+	},
+	"engines": {
+		"node": "10.x.x"
 	},
 	"jest": {
 		"testEnvironment": "node"
