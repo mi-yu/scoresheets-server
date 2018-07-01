@@ -1,9 +1,19 @@
+import mongoose from 'mongoose'
 import Tournament from '../../server/models/Tournament'
 import ScoresheetEntry from '../../server/models/ScoresheetEntry'
 import Event from '../../server/models/Event'
 import Team from '../../server/models/Team'
+import { TEST_URL } from '../config'
 
 describe('test Tournament model', () => {
+	beforeAll(async () => {
+		await mongoose.connect(TEST_URL)
+	})
+
+	afterAll(async () => {
+		await mongoose.disconnect()
+	})
+
 	test('Should successfully create tournament', async () => {
 		const events = await Event.find({
 			inRotation: true,

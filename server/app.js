@@ -13,16 +13,16 @@ const app = express()
 // Set NODE_ENV
 const env = process.env.NODE_ENV || 'development'
 
-if (env === 'development') {
+if (env === 'development' || env === 'test') {
 	const logger = require('morgan')
 	require('dotenv').config({
 		path: './.env',
 	})
 	app.use(logger('dev'))
-	mongoose.connection.openUri(process.env.DB_LOCAL_URL)
+	mongoose.connect(process.env.DB_LOCAL_URL)
 	mongoose.set('debug', true)
 } else if (env === 'production') {
-	mongoose.connection.openUri(process.env.DB_URL)
+	mongoose.connect(process.env.DB_URL)
 }
 
 app.use(bodyParser.json())
