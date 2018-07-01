@@ -10,16 +10,6 @@ import { UnsupportedActionError } from '../errors'
 
 const router = new Router()
 
-router.use((req, res, next) => {
-	res.header('Access-Control-Allow-Origin', '*')
-	res.header('Access-Control-Allow-Methods', 'GET, PATCH, POST, DELETE')
-	res.header(
-		'Access-Control-Allow-Headers',
-		'Origin, X-Requested-With, Content-Type, Accept, Authorization',
-	)
-	next()
-})
-
 router.use('/users', users)
 router.use('/tournaments', tournaments)
 router.use('/tournaments/:tournamentId/teams', teams)

@@ -2,7 +2,11 @@ import express from 'express'
 import mongoose from 'mongoose'
 import passport from 'passport'
 import bodyParser from 'body-parser'
+import cors from 'cors'
 import LoginStrategy from './passport/LoginStrategy'
+
+// eslint-disable-next-line
+import morganBody from 'morgan-body'
 
 // Routes
 import routes from './routes'
@@ -14,11 +18,10 @@ const app = express()
 const env = process.env.NODE_ENV || 'development'
 
 if (env === 'development') {
-	const logger = require('morgan')
 	require('dotenv').config({
 		path: './.env',
 	})
-	app.use(logger('dev'))
+	morganBody(app)
 	mongoose.connect(process.env.DB_LOCAL_URL)
 	mongoose.set('debug', true)
 } else if (env === 'production') {
@@ -41,6 +44,7 @@ mongoose.Promise = global.Promise
 
 // Use routes
 // app.use(express.static(path.join(__dirname, 'client/build')))
+app.use(cors())
 app.use(routes)
 
 app.set('port', process.env.PORT || 5000)
