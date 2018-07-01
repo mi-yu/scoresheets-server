@@ -5,9 +5,6 @@ import bodyParser from 'body-parser'
 import cors from 'cors'
 import LoginStrategy from './passport/LoginStrategy'
 
-// eslint-disable-next-line
-import morganBody from 'morgan-body'
-
 // Routes
 import routes from './routes'
 
@@ -21,6 +18,8 @@ if (env === 'development') {
 	require('dotenv').config({
 		path: './.env',
 	})
+	// eslint-disable-next-line
+	const morganBody = require('morgan-body')
 	morganBody(app)
 	mongoose.connect(process.env.DB_LOCAL_URL)
 	mongoose.set('debug', true)
