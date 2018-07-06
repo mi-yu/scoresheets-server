@@ -23,6 +23,7 @@ if (env === 'development') {
 	morganBody(app)
 	mongoose.connect(process.env.DB_LOCAL_URL)
 	mongoose.set('debug', true)
+	console.log('connected to db')
 } else if (env === 'production') {
 	mongoose.connect(process.env.DB_URL)
 }

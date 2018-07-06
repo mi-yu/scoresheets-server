@@ -17,7 +17,7 @@ export const index = (req, res, next) => {
 }
 
 export const show = (req, res, next) => {
-	if (req.user.id === req.params.userId) {
+	if (req.user.id === req.params.userId || req.params.userId === 'me') {
 		return res.json(req.user)
 	} else if (req.user.group !== 'admin') {
 		return next(new UnauthorizedError())
