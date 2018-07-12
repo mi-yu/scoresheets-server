@@ -34,6 +34,7 @@ export const show = (req, res, next) => {
 }
 
 export const login = (req, res, next) => {
+	if (!req.body.email || !req.body.password) return next(new IncorrectCredentialsError())
 	passport.authenticate('local-login', (err, token, userData) => {
 		if (err) {
 			return next(err)
