@@ -18,14 +18,17 @@ if (env === 'development') {
 	require('dotenv').config({
 		path: './.env',
 	})
-	// eslint-disable-next-line
-	const morganBody = require('morgan-body')
-	morganBody(app)
 	mongoose.connect(process.env.DB_LOCAL_URL)
 	mongoose.set('debug', true)
 	console.log('connected to db')
 } else if (env === 'production') {
 	mongoose.connect(process.env.DB_URL)
+}
+
+if (env === 'development' || process.env.LOGS_ENABLED) {
+	// eslint-disable-next-line
+	const morganBody = require('morgan-body')
+	morganBody(app)
 }
 
 app.use(bodyParser.json())
