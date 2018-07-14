@@ -110,14 +110,14 @@ ScoresheetEntry.methods.rank = function (callback) {
 				unbrokenTies.t2 = s2.team
 				throw new Error(
 					`Tie must be broken between ${s1.team.school} (${s1.team.division +
-						s1.team.teamNumber}) and ${s2.team.school} (${s2.team.division +
-						s2.team.teamNumber})`,
+					s1.team.teamNumber}) and ${s2.team.school} (${s2.team.division +
+					s2.team.teamNumber})`,
 				)
 			})
 		} catch (e) {
 			// When encountering unbroken ties, immediately return to callback.
 			e.unbrokenTies = unbrokenTies
-			return callback(e)
+			return callback(e, null)
 		}
 
 		// Assign ranks to scores.
@@ -136,8 +136,8 @@ ScoresheetEntry.methods.rank = function (callback) {
 
 		// Save and return to callback.
 		return this.save(e => {
-			if (e) callback(e)
-			else callback()
+			if (e) callback(e, null)
+			else callback(null, this)
 		})
 	})
 }

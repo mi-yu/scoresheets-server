@@ -8,8 +8,8 @@ router.all('*', ensureAuthenticated, needsGroup('admin'))
 
 router.get('/', index)
 
-router.get('/:scoresheetId', show)
+router.get('/:division/:eventId', show)
 
-router.patch('/:scoresheetId', update)
+router.patch('/:division/:eventId', update)
 
 export default router
