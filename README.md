@@ -1,7 +1,7 @@
-# ✒️ Scribe
+# ✒️ scoresheets.io (server)
 A scorekeeping and judging system for Science Olympiad tournaments.
 
-[![CircleCI](https://circleci.com/gh/mi-yu/scribe/tree/master.svg?style=svg&circle-token=bd8b567fefd15274b718dd1210c78328e9ae1309)](https://circleci.com/gh/mi-yu/scribe/tree/master)
+[![CircleCI](https://circleci.com/gh/mi-yu/scoresheets-server/tree/master.svg?style=svg&circle-token=bd8b567fefd15274b718dd1210c78328e9ae1309)](https://circleci.com/gh/mi-yu/scoresheets-server/tree/master)
 
 ### Features:
 - [x] Allows event supervisors to submit scores
