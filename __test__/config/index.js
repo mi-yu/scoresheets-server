@@ -1,1 +1,1 @@
-export const TEST_URL = 'mongodb://localhost/scribe-dev-test'
+export const TEST_URL = 'mongodb://localhost/scoresheets-dev-test'

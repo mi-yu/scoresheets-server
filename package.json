@@ -1,5 +1,5 @@
 {
-	"name": "scribe",
+	"name": "scoresheets-server",
 	"description": "Scorekeeping and judging for Science Olympiad tournaments",
 	"version": "0.0.0",
 	"private": true,
@@ -11,8 +11,8 @@
 		"start": "node build/server.js",
 		"start:dev": "set NODE_ENV=development && yarn run start:server:dev",
 		"start:server:dev": "nodemon server.js --exec \"node_modules/.bin/babel-node server.js\"",
-		"test:drop": "mongo scribe-dev-test --eval 'db.dropDatabase()'",
-		"test:seed": "yarn test:drop && mongoimport --db scribe-dev-test --collection events --file __test__/seeds/Event.seed.json --jsonArray",
+		"test:drop": "mongo scoresheets-dev-test --eval 'db.dropDatabase()'",
+		"test:seed": "yarn test:drop && mongoimport --db scoresheets-dev-test --collection events --file __test__/seeds/Event.seed.json --jsonArray",
 		"test": "yarn test:seed && set NODE_ENV=test && jest --runInBand --forceExit",
 		"test:debug": "yarn test:seed && set NODE_ENV=test && node --inspect-brk node_modules/.bin/jest --runInBand",
 		"heroku-postbuild": "yarn global add @babel/cli && yarn build"
