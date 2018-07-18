@@ -4,16 +4,14 @@ import { ensureAuthenticated, needsGroup } from '../passport/auth'
 
 const router = new Router()
 
-router.all('*', ensureAuthenticated, needsGroup('admin'))
-
 router.get('/', index)
 
-router.post('/', create)
+router.post('/', ensureAuthenticated, create)
 
 router.get('/:tournamentId', show)
 
-router.patch('/:tournamentId', update)
+router.patch('/:tournamentId', ensureAuthenticated, needsGroup('director'), update)
 
-router.delete('/:tournamentId', destroy)
+router.delete('/:tournamentId', ensureAuthenticated, needsGroup('admin'), destroy)
 
 export default router

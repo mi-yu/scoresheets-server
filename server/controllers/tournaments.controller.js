@@ -3,7 +3,17 @@ import Tournament from '../models/Tournament'
 import { NotFoundError } from '../errors'
 
 export const index = (req, res, next) => {
-	Tournament.find()
+	const { userId } = req.query
+	let query
+	if (userId) {
+		query = Tournament.find({
+			directors: req.query.userId,
+		})
+	} else {
+		query = Tournament.find()
+	}
+
+	query
 		.exec()
 		.then(tournaments => res.json([...tournaments]))
 		.catch(err => next(err))

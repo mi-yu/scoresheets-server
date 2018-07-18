@@ -69,16 +69,20 @@ const ScoresheetEntry = new mongoose.Schema({
 		type: Boolean,
 		default: false,
 	},
+	supervisors: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'User',
+		},
+	],
 })
 
 /**
  * Calculate and assign ranks to each score in the ScoresheetEntry.
  * @param  {Function} callback handler which takes 1 optional error argument
  */
-ScoresheetEntry.methods.rank = function (callback) {
-	const {
-		scores,
-	} = this
+ScoresheetEntry.methods.rank = function(callback) {
+	const { scores } = this
 	if (!scores.length) return callback()
 	Event.findById(this.event).exec((err, event) => {
 		// Save our unbroken ties (if they exist) for error handling.
@@ -110,8 +114,8 @@ ScoresheetEntry.methods.rank = function (callback) {
 				unbrokenTies.t2 = s2.team
 				throw new Error(
 					`Tie must be broken between ${s1.team.school} (${s1.team.division +
-					s1.team.teamNumber}) and ${s2.team.school} (${s2.team.division +
-					s2.team.teamNumber})`,
+						s1.team.teamNumber}) and ${s2.team.school} (${s2.team.division +
+						s2.team.teamNumber})`,
 				)
 			})
 		} catch (e) {
@@ -149,7 +153,7 @@ ScoresheetEntry.methods.rank = function (callback) {
  * @param  {String}   d        division (default: /(B|C)/)
  * @param  {Function} callback handler which takes 1 optional error argument
  */
-ScoresheetEntry.statics.getTopTeamsPerEvent = function (n = 4, id, d = /(B|C)/, callback) {
+ScoresheetEntry.statics.getTopTeamsPerEvent = function(n = 4, id, d = /(B|C)/, callback) {
 	// Get all ScoresheetEntries for given tournament and arrange the data.
 	// The .lean() gives us raw JS arrays to work with instead of Mongoose's
 	// default wrapped objects.
@@ -168,7 +172,8 @@ ScoresheetEntry.statics.getTopTeamsPerEvent = function (n = 4, id, d = /(B|C)/, 
 			let drops = 0
 			entries.forEach(entry => {
 				entry.scores.forEach(score => {
-					if (!score.rank ||
+					if (
+						!score.rank ||
 						score.dq ||
 						score.participationOnly ||
 						score.noShow ||

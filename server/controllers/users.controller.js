@@ -33,6 +33,11 @@ export const show = (req, res, next) => {
 		.catch(err => next(err))
 }
 
+export const showMe = (req, res, next) => {
+	if (req.user) return res.json(req.user)
+	return next(NotFoundError('user'))
+}
+
 export const login = (req, res, next) => {
 	if (!req.body.email || !req.body.password) return next(new IncorrectCredentialsError())
 	passport.authenticate('local-login', (err, token, userData) => {

@@ -1,15 +1,18 @@
 import { Router } from 'express'
-import { ensureAuthenticated, needsGroup } from '../passport/auth'
+import { ensureAuthenticated, needsGroup, permitUnauthenticated } from '../passport/auth'
 import { index, show, update } from '../controllers/scoresheets.controller'
 
 const router = new Router({ mergeParams: true })
 
-router.all('*', ensureAuthenticated, needsGroup('admin'))
+router.get('/', permitUnauthenticated, index)
 
-router.get('/', index)
+router.get('/:division/:eventId', permitUnauthenticated, show)
 
-router.get('/:division/:eventId', show)
-
-router.patch('/:division/:eventId', update)
+router.patch(
+	'/:division/:eventId',
+	ensureAuthenticated,
+	needsGroup('director', 'supervisor'),
+	update,
+)
 
 export default router

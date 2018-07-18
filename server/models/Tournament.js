@@ -32,6 +32,13 @@ const Tournament = new mongoose.Schema({
 			ref: 'Event',
 		},
 	] /* The events to be held at this tournament. */,
+	directors: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'User',
+			required: true,
+		},
+	],
 })
 
 // Create ScoresheetEntries after successfully creating tournament.
