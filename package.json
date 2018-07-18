@@ -1,64 +1,63 @@
 {
-	"name": "scribe",
-	"description": "Scorekeeping and judging for Science Olympiad tournaments",
-	"version": "0.0.0",
-	"private": true,
-	"scripts": {
-		"debug": "node --inspect=0.0.0.0:9229 server.js",
-		"lint": "./node_modules/.bin/eslint --ignore-path .gitignore .",
-		"lint:fix": "./node_modules/.bin/eslint --fix --ignore-path .gitignore .",
-		"build": "mkdir -p build/server && babel server.js --out-dir build && babel server --out-dir build/server",
-		"start": "node build/server.js",
-		"start:dev": "set NODE_ENV=development && yarn run start:server:dev",
-		"start:server:dev": "nodemon server.js --exec \"node_modules/.bin/babel-node server.js\"",
-		"test:drop": "mongo scribe-dev-test --eval 'db.dropDatabase()'",
-		"test:seed": "yarn test:drop && mongoimport --db scribe-dev-test --collection events --file __test__/seeds/Event.seed.json --jsonArray",
-		"test": "yarn test:seed && set NODE_ENV=test && jest --runInBand --forceExit",
-		"test:debug": "yarn test:seed && set NODE_ENV=test && node --inspect-brk node_modules/.bin/jest --runInBand",
-		"heroku-postbuild": "yarn global add @babel/cli && yarn build"
-	},
-	"engines": {
-		"node": "10.x.x"
-	},
-	"jest": {
-		"testEnvironment": "node"
-	},
-	"dependencies": {
-		"babel-runtime": "^6.26.0",
-		"bcrypt": "^2.0.1",
-		"body-parser": "^1.18.2",
-		"cors": "^2.8.4",
-		"debug": "3.1.0",
-		"dotenv": "^6.0.0",
-		"express": "4.16.3",
-		"jsonwebtoken": "^8.2.1",
-		"mongoose": "^5.1.5",
-		"passport": "^0.4.0",
-		"passport-local": "^1.0.0",
-		"random-words": "1.1.0",
-		"supertest": "^3.1.0"
-	},
-	"devDependencies": {
-		"@babel/cli": "^7.0.0-beta.51",
-		"@babel/core": "^7.0.0-beta.51",
-		"@babel/node": "^7.0.0-beta.51",
-		"@babel/plugin-transform-runtime": "^7.0.0-beta.51",
-		"@babel/preset-env": "^7.0.0-beta.51",
-		"babel-core": "7.0.0-bridge.0",
-		"babel-eslint": "^8.2.3",
-		"babel-jest": "^23.0.1",
-		"eslint": "4.x",
-		"eslint-config-airbnb": "16.1.0",
-		"eslint-plugin-import": "^2.7.0",
-		"eslint-plugin-jsx-a11y": "^6.0.2",
-		"eslint-plugin-react": "^7.4.0",
-		"jest": "^23.1.0",
-		"morgan-body": "^2.4.5",
-		"nodemon": "^1.17.4",
-		"proxyquire": "^2.0.1",
-		"sinon": "^6.0.1"
-	},
-	"nodemonConfig": {
-		"delay": 10
-	}
+  "name": "scribe",
+  "description": "Scorekeeping and judging for Science Olympiad tournaments",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "debug": "node --inspect=0.0.0.0:9229 server.js",
+    "lint": "./node_modules/.bin/eslint --ignore-path .gitignore .",
+    "lint:fix": "./node_modules/.bin/eslint --fix --ignore-path .gitignore .",
+    "build": "mkdir -p build/server && babel server.js --out-dir build && babel server --out-dir build/server",
+    "start": "node build/server.js",
+    "start:dev": "set NODE_ENV=development && yarn run start:server:dev",
+    "start:server:dev": "nodemon server.js --exec \"node_modules/.bin/babel-node server.js\"",
+    "test:drop": "mongo scoresheets-test --eval 'db.dropDatabase()'",
+    "test:seed": "yarn test:drop && mongoimport --db scoresheets-test --collection events --file __test__/seeds/Event.seed.json --jsonArray",
+    "test": "yarn test:seed && set NODE_ENV=test && jest --runInBand",
+    "test:debug": "yarn test:seed && set NODE_ENV=test && node --inspect-brk node_modules/.bin/jest --runInBand",
+    "heroku-postbuild": "yarn global add @babel/cli && yarn build"
+  },
+  "engines": {
+    "node": "10.x.x"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "dependencies": {
+    "babel-runtime": "^6.26.0",
+    "bcrypt": "^2.0.1",
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "debug": "3.1.0",
+    "dotenv": "^6.0.0",
+    "express": "4.16.3",
+    "jsonwebtoken": "^8.2.1",
+    "mongoose": "^5.1.5",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "random-words": "1.1.0",
+    "supertest": "^3.1.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.0.0-beta.51",
+    "@babel/core": "^7.0.0-beta.51",
+    "@babel/node": "^7.0.0-beta.51",
+    "@babel/plugin-transform-runtime": "^7.0.0-beta.51",
+    "@babel/preset-env": "^7.0.0-beta.51",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-eslint": "^8.2.3",
+    "babel-jest": "^23.0.1",
+    "eslint": "4.x",
+    "eslint-config-airbnb": "16.1.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.4.0",
+    "jest": "^23.1.0",
+    "morgan-body": "^2.4.5",
+    "nodemon": "^1.17.4",
+    "proxyquire": "^2.0.1"
+  },
+  "nodemonConfig": {
+    "delay": 10
+  }
 }
