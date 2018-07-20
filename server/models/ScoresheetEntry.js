@@ -69,60 +69,40 @@ const ScoresheetEntry = new mongoose.Schema({
 		type: Boolean,
 		default: false,
 	},
-	supervisors: [
-		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: 'User',
-		},
-	],
+	supervisors: [{
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User',
+	}],
 })
 
 /**
  * Calculate and assign ranks to each score in the ScoresheetEntry.
  * @param  {Function} callback handler which takes 1 optional error argument
  */
-ScoresheetEntry.methods.rank = function(callback) {
-	const { scores } = this
+ScoresheetEntry.methods.rank = function (callback) {
+	const {
+		scores,
+	} = this
 	if (!scores.length) return callback()
 	Event.findById(this.event).exec((err, event) => {
-		// Save our unbroken ties (if they exist) for error handling.
-		const unbrokenTies = {
-			t1: {},
-			t2: {},
-		}
-
-		try {
-			// Sort the scores.
-			scores.sort((s1, s2) => {
-				if (s1.dropped > s2.dropped || (s1.dropped && s2.dropped)) return 1
-				if (s1.dropped < s2.dropped) return -1
-				if (s1.dq > s2.dq || (s1.dq && s2.dq)) return 1
-				if (s1.dq < s2.dq) return -1
-				if (s1.noShow > s2.noShow || (s1.noShow && s2.noShow)) return 1
-				if (s1.noShow < s2.noShow) return -1
-				if (s1.participationOnly > s2.participationOnly) return 1
-				if (s1.participationOnly < s2.participationOnly) return -1
-				if (s1.tier > s2.tier) return 1
-				if (s1.tier < s2.tier) return -1
-				if (s1.rawScore > s2.rawScore) return event.highScoreWins ? -1 : 1
-				if (s1.rawScore < s2.rawScore) return event.highScoreWins ? 1 : -1
-				if (s1.rawScore === s2.rawScore && s1.tiebreaker < s2.tiebreaker) return 1
-				if (s1.rawScore === s2.rawScore && s1.tiebreaker > s2.tiebreaker) return -1
-
-				// If we reach here, we have an unbroken tie.
-				unbrokenTies.t1 = s1.team
-				unbrokenTies.t2 = s2.team
-				throw new Error(
-					`Tie must be broken between ${s1.team.school} (${s1.team.division +
-						s1.team.teamNumber}) and ${s2.team.school} (${s2.team.division +
-						s2.team.teamNumber})`,
-				)
-			})
-		} catch (e) {
-			// When encountering unbroken ties, immediately return to callback.
-			e.unbrokenTies = unbrokenTies
-			return callback(e, null)
-		}
+		// Sort the scores.
+		scores.sort((s1, s2) => {
+			if (s1.dropped > s2.dropped || (s1.dropped && s2.dropped)) return 1
+			if (s1.dropped < s2.dropped) return -1
+			if (s1.dq > s2.dq || (s1.dq && s2.dq)) return 1
+			if (s1.dq < s2.dq) return -1
+			if (s1.noShow > s2.noShow || (s1.noShow && s2.noShow)) return 1
+			if (s1.noShow < s2.noShow) return -1
+			if (s1.participationOnly > s2.participationOnly) return 1
+			if (s1.participationOnly < s2.participationOnly) return -1
+			if (s1.tier > s2.tier) return 1
+			if (s1.tier < s2.tier) return -1
+			if (s1.rawScore > s2.rawScore) return event.highScoreWins ? -1 : 1
+			if (s1.rawScore < s2.rawScore) return event.highScoreWins ? 1 : -1
+			if (s1.rawScore === s2.rawScore && s1.tiebreaker < s2.tiebreaker) return 1
+			if (s1.rawScore === s2.rawScore && s1.tiebreaker > s2.tiebreaker) return -1
+			return 0
+		})
 
 		// Assign ranks to scores.
 		scores.forEach((score, i) => {
@@ -153,7 +133,7 @@ ScoresheetEntry.methods.rank = function(callback) {
  * @param  {String}   d        division (default: /(B|C)/)
  * @param  {Function} callback handler which takes 1 optional error argument
  */
-ScoresheetEntry.statics.getTopTeamsPerEvent = function(n = 4, id, d = /(B|C)/, callback) {
+ScoresheetEntry.statics.getTopTeamsPerEvent = function (n = 4, id, d = /(B|C)/, callback) {
 	// Get all ScoresheetEntries for given tournament and arrange the data.
 	// The .lean() gives us raw JS arrays to work with instead of Mongoose's
 	// default wrapped objects.
@@ -172,8 +152,7 @@ ScoresheetEntry.statics.getTopTeamsPerEvent = function(n = 4, id, d = /(B|C)/, c
 			let drops = 0
 			entries.forEach(entry => {
 				entry.scores.forEach(score => {
-					if (
-						!score.rank ||
+					if (!score.rank ||
 						score.dq ||
 						score.participationOnly ||
 						score.noShow ||
