@@ -19,20 +19,23 @@ const User = new mongoose.Schema({
 	password: { type: String, required: true },
 })
 
-User.methods.comparePassword = function(password, cb) {
+User.methods.comparePassword = function (password, cb) {
 	bcrypt.compare(password, this.password, cb)
 }
 
-User.pre('save', function(next) {
+User.pre('save', function (next) {
+	// User being saved
 	const user = this
 
 	bcrypt.genSalt((saltError, salt) => {
 		if (saltError) {
 			return next(saltError)
 		}
+
 		bcrypt.hash(user.password, salt, (hashError, password) => {
 			if (hashError) next(hashError)
 
+			// Set hash as the new password to save in DB.
 			user.password = password
 			return next()
 		})

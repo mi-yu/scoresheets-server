@@ -28,6 +28,9 @@ if (env === 'development') {
 	mongoose.connect(process.env.DB_URL)
 }
 
+// Mongoose
+mongoose.Promise = global.Promise
+
 app.use(bodyParser.json())
 app.use(
 	bodyParser.urlencoded({
@@ -39,11 +42,7 @@ app.use(passport.initialize())
 // Passport config
 passport.use('local-login', LoginStrategy)
 
-// Mongoose
-mongoose.Promise = global.Promise
-
 // Use routes
-// app.use(express.static(path.join(__dirname, 'client/build')))
 app.use(cors())
 app.use(routes)
 
