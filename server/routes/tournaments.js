@@ -1,10 +1,10 @@
 import { Router } from 'express'
 import { index, show, create, update, destroy } from '../controllers/tournaments.controller'
-import { ensureAuthenticated, needsGroup } from '../passport/auth'
+import { ensureAuthenticated, needsGroup, permitUnauthenticated } from '../passport/auth'
 
 const router = new Router()
 
-router.get('/', index)
+router.get('/', permitUnauthenticated, index)
 
 router.post('/', ensureAuthenticated, create)
 

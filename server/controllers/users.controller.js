@@ -76,13 +76,11 @@ export const create = (req, res, next) => {
 export const update = (req, res, next) => {
 	// TODO: remove once we support this
 	if (req.body.password) {
-		return res
-			.status(400)
-			.json(
-				new ApplicationError(
-					'Changing your password is unsupported at this time, contact an administrator for help.',
-				),
-			)
+		return res.status(400).json(
+			new ApplicationError(
+				'Changing your password is unsupported at this time, contact an administrator for help.',
+			),
+		)
 	}
 
 	const hasUpdatePermission = req.user.id === req.params.userId || req.user.group === 'admin'

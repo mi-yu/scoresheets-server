@@ -3,14 +3,15 @@ import Tournament from '../models/Tournament'
 import { NotFoundError } from '../errors'
 
 export const index = (req, res, next) => {
-	const { userId } = req.query
 	let query
-	if (userId) {
+	if (req.user.group === 'admin') {
+		query = Tournament.find()
+	} else if (req.user) {
 		query = Tournament.find({
-			directors: req.query.userId,
+			directors: req.user._id,
 		})
 	} else {
-		query = Tournament.find()
+		return next(new NotFoundError('tournament'))
 	}
 
 	query
