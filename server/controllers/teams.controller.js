@@ -11,8 +11,8 @@ export const index = (req, res, next) => {
 	})
 		.exec()
 		.then(teams => {
-			res.json(teams.toObject({virtuals: true}))
-			res.json(teams)
+			const teamsToObject = teams.map(team => team.toObject({ virtuals: true }))
+			res.json(teamsToObject)
 		})
 
 		.catch(err => next(err))
@@ -23,7 +23,7 @@ export const show = (req, res, next) => {
 		.exec()
 		.then(team => {
 			if (team) {
-				res.json(team.toObject({virtuals: true}))
+				res.json(team.toObject({ virtuals: true }))
 				return res.json(team.toObject())
 			}
 			throw new NotFoundError('team')
@@ -34,7 +34,7 @@ export const show = (req, res, next) => {
 export const create = (req, res, next) => {
 	Team.insertMany(req.body)
 		.then(newTeams => {
-			res.json(team.toObject({virtuals: true}))
+			res.json(team.toObject({ virtuals: true }))
 			res.status(201).json(newTeams)
 		})
 		.catch(err => next(err))
@@ -50,7 +50,7 @@ export const update = (req, res, next) => {
 			return team.save()
 		})
 		.then(savedTeam => {
-			res.json(savedTeam.toObject({virtuals: true}))
+			res.json(savedTeam.toObject({ virtuals: true }))
 			res.status(200).json(savedTeam.toObject())
 		})
 		.catch(err => next(err))
@@ -64,7 +64,7 @@ export const destroy = (req, res, next) => {
 			return team.remove()
 		})
 		.then(deletedTeam => {
-			res.json(deletedTeam.toObject({virtuals: true}))
+			res.json(deletedTeam.toObject({ virtuals: true }))
 			res.json(deletedTeam.toObject())
 		})
 		.catch(err => next(err))
