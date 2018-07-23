@@ -23,6 +23,10 @@ const Team = new mongoose.Schema({
 	rank: Number /* Overall sweepstakes rank (calculation triggered by user). */,
 })
 
+Team.virtual('displayName').get(function () {
+	return this.school + (this.identifier ? ' ' + this.identifier : '');
+  });
+
 // Ensure that for a given tournament, there is only one team in each division with a given team number.
 Team.index({
 	tournament: 1,
