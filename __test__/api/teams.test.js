@@ -20,7 +20,7 @@ describe('GET /users', () => {
 			date: Date.now(),
 			state: 'TX',
 			city: 'Austin',
-			joinCode: 'random string'
+			joinCode: 'random string',
 		})
 	})
 
