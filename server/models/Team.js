@@ -24,11 +24,9 @@ const Team = new mongoose.Schema({
 })
 
 Team.virtual('displayName').get(function () {
-	if (this.identifier) {
-		return `${this.school} ${this.identifier}`
-	}
+	if (this.identifier) return `${this.school} ${this.identifier}`
 	return this.school
-});
+})
 
 // Ensure that for a given tournament, there is only one team in each division with a given team number.
 Team.index({
