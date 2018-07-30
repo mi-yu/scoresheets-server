@@ -13,22 +13,22 @@ A scorekeeping and judging system for Science Olympiad tournaments.
 
 ### Run Locally:
 
-1.  Install [MongoDB](https://www.mongodb.com/download-center#community)
-2.  Install [Node](https://nodejs.org/en/) (comes with npm)
-3.  Install Yarn (our package manager) with `npm i -g yarn`
-4.  Clone repo
+1.  Install [Node](https://nodejs.org/en/) (comes with npm)
+2.  Install Yarn (our package manager) with `sudo npm i -g yarn`
+3.  Install [MongoDB](https://www.mongodb.com/download-center#community) Community Edition
+4.  Run `mongod` (local development database)
+5.  Clone the scoresheets-server repository to your local machine
 
-Then in project root:
+Then in repository's root:
 
-4.  Create `.env` file with the following contents:
+6.  Create `.env` file with the following contents:
 
         DB_LOCAL_URL=mongodb://localhost/scoresheets-dev
         NODE_ENV=development
         JWT_SECRET=whatever-string-you-want
 
-5.  Run `yarn install` to install dependencies
-6.  In separate console, run `mongod` (local development database)
-7.  Run `yarn start:dev`, API server should start up at `localhost:5000`
+7.  Run `yarn install` to install dependencies
+8.  Run `yarn start:dev`, API server should start up at `localhost:5000`
 
 ### Interacting with the API
 
