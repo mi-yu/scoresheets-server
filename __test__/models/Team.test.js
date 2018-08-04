@@ -48,6 +48,10 @@ describe('test Team model', () => {
 		await mongoose.connect(TEST_URL)
 	})
 
+	afterEach(async () => {
+		await Team.deleteMany().exec()
+	})
+
 	afterAll(async () => {
 		await mongoose.disconnect()
 	})
@@ -58,7 +62,8 @@ describe('test Team model', () => {
 		expect(inserted.length).toEqual(5)
 	})
 
-	it('should get top teams for sweepstakes correctly', done => {
+	it('should get top teams for sweepstakes correctly', async (done) => {
+		await Team.insertMany(teams)
 		Team.getTopTeams(3, tournamentId, 'B', (err, finalTeams) => {
 			expect(err).toBeNull()
 			expect(finalTeams.length).toEqual(3)
@@ -67,5 +72,25 @@ describe('test Team model', () => {
 			expect(finalTeams[2]._id).toEqual(teams[3]._id)
 			done()
 		})
+	})
+
+	it('should generate displayName correctly', () => {
+		const teamWithIdentifier = new Team({
+			tournament: tournamentId,
+			school: 'some school',
+			teamNumber: 1,
+			division: 'C',
+			identifier: 'purple',
+		})
+
+		const teamWithoutIdentifier = new Team({
+			tournament: tournamentId,
+			school: 'another school',
+			teamNumber: 1,
+			division: 'B',
+		})
+
+		expect(teamWithIdentifier.displayName).toBe('some school purple')
+		expect(teamWithoutIdentifier.displayName).toBe('another school')
 	})
 })
