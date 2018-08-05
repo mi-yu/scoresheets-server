@@ -3,7 +3,6 @@ import User from '../models/User'
 import {
 	ApplicationError,
 	IncorrectCredentialsError,
-	UnauthorizedError,
 	NotFoundError,
 	ForbiddenError,
 } from '../errors'
@@ -20,7 +19,7 @@ export const show = (req, res, next) => {
 	if (req.user.id === req.params.userId || req.params.userId === 'me') {
 		return res.json(req.user)
 	} else if (req.user.group !== 'admin') {
-		return next(new UnauthorizedError())
+		return next(new NotFoundError('user'))
 	}
 
 	User.findById(req.params.userId)

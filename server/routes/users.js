@@ -21,7 +21,7 @@ router.post('/', create)
 
 router.get('/:userId', ensureAuthenticated, show)
 
-router.patch('/:userId', ensureAuthenticated, needsGroup('admin'), update)
+router.patch('/:userId', ensureAuthenticated, update)
 
 router.delete('/:userId', ensureAuthenticated, needsGroup('admin'), destroy)
 
