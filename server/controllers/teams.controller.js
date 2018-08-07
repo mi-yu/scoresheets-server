@@ -34,7 +34,16 @@ export const create = (req, res, next) => {
 			const teamsToObject = newTeams.map(team => team.toObject({ virtuals: true }))
 			res.status(201).json(teamsToObject)
 		})
-		.catch(err => next(err))
+		.catch(err => {
+			if (err.result.hasWriteErrors()) {
+				const errs = err.result.getWriteErrors()
+				return res.status(400).json({
+					errors: errs,
+					name: 'BulkWriteError',
+				})
+			}
+			return next(err)
+		})
 }
 
 export const update = (req, res, next) => {
