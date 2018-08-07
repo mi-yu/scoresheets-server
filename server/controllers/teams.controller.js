@@ -35,7 +35,7 @@ export const create = (req, res, next) => {
 			res.status(201).json(teamsToObject)
 		})
 		.catch(err => {
-			if (err.result.hasWriteErrors()) {
+			if (err.result && err.result.hasWriteErrors()) {
 				const errs = err.result.getWriteErrors()
 				return res.status(400).json({
 					errors: errs,
