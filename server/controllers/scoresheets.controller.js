@@ -64,7 +64,7 @@ export const update = (req, res, next) => {
 				ScoresheetEntry.findById(savedEntry._id)
 					.populate('tournament event scores.team')
 					.exec()
-					.then(sheet => res.json(sheet))
+					.then(sheet => res.json(sheet.toObject({ virtuals: true })))
 					.catch(e => next(e))
 			})
 		})

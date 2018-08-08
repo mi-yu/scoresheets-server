@@ -1,4 +1,4 @@
-import { DuplicateError, ValidationError, InternalServerError } from '../errors'
+import { DuplicateError, InternalServerError } from '../errors'
 
 const errorHandler = (err, req, res, next) => {
 	// We want to print out error to console when in developing

@@ -75,6 +75,10 @@ const ScoresheetEntry = new mongoose.Schema({
 	}],
 })
 
+ScoresheetEntry.index({ tournament: 1, division: 1, event: 1, 'score.team': 1, }, {
+	unique: true,
+})
+
 /**
  * Calculate and assign ranks to each score in the ScoresheetEntry.
  * @param  {Function} callback handler which takes 1 optional error argument
