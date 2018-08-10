@@ -30,7 +30,7 @@ const Event = new mongoose.Schema({
 	} /* Synonymous with trial event */,
 	topics: [String] /* Event specific topics, like Nervous System for A&P */,
 	currentTopic: String,
-	notes: String,
+	resources: String,
 	highScoreWins: {
 		type: Boolean,
 		default: true,
