@@ -18,6 +18,8 @@ const errorHandler = (err, req, res, next) => {
 		return res.status(403).json(err)
 	} else if (err.name === 'NotFoundError') {
 		return res.status(404).json(err)
+	} else if (err.name === 'ApplicationError') {
+		return res.status(500).json(err)
 	}
 
 	return res.status(500).json(new InternalServerError())

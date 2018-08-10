@@ -1,14 +1,10 @@
-import { ValidationError } from '../errors';
+import { ValidationError, ApplicationError } from '../errors';
 
 /* eslint-disable */
 export const validateScoresheet = (req, res, next) => {
 	const { scores } = req.body
 	if (!scores) {
-		return next(new ValidationError({
-			scores: {
-				type: 'required',
-			},
-		}))
+		return next()
 	}
 
 	const errors = []
@@ -40,5 +36,16 @@ export const validateScoresheet = (req, res, next) => {
 	}
 
 	if (errors.length) return next(new ValidationError('There are unbroken ties', errors))
+	return next()
+}
+
+export const whitelistParams = (...whitelist) => (req, res, next) => {
+	const params = Object.keys(req.body)
+	params.forEach(param => {
+		if (!whitelist.includes(param)) {
+			return next(new ApplicationError(`Bad request with invalid param ${param}`))
+		}
+	})
+
 	return next()
 }

@@ -1,5 +1,11 @@
 import ScoresheetEntry from '../models/ScoresheetEntry'
-import { NotFoundError, ApplicationError } from '../errors'
+import { NotFoundError, UnauthorizedError, ApplicationError } from '../errors'
+
+// Helpers
+
+const userIsTournamentSupervisor = (entry, user) => (user.group === 'supervisor' && entry.supervisors.includes(user._id))
+
+const userIsTournamentDirector = (tournament, user) => (user.group === 'director' && tournament.directors.includes(user._id))
 
 export const index = (req, res, next) => {
 	ScoresheetEntry.find({
@@ -9,7 +15,7 @@ export const index = (req, res, next) => {
 		.populate('tournament event scores.team')
 		.exec()
 		.then(entries => {
-			const canAccess = ['admin', 'director', 'supervisor'].includes(req.user.group)
+			const canAccess = req.user.group === 'admin' || userIsTournamentDirector(entries[0].tournament, req.user)
 			if (!entries || (!canAccess && !entries[0].tournament.public)) {
 				throw new NotFoundError('scoresheet entry')
 			}
@@ -28,7 +34,7 @@ export const show = (req, res, next) => {
 		.populate('tournament event scores.team')
 		.exec()
 		.then(entry => {
-			const canAccess = ['admin', 'director', 'supervisor'].includes(req.user.group)
+			const canAccess = req.user.group === 'admin' || userIsTournamentDirector
 			if (!entry || (!canAccess && !entry.public)) throw new NotFoundError('scoresheet entry')
 			return res.json(entry.toObject({ virtuals: true }))
 		})
@@ -46,16 +52,18 @@ export const update = (req, res, next) => {
 		.exec()
 		.then(entry => {
 			if (
-				!entry ||
-				(req.user.group === 'supervisor' && !entry.supervisors.includes(req.user._id))
+				!entry
+				|| (
+					req.user.group !== 'admin'
+					&& !userIsTournamentDirector(entry.tournament, req.user)
+					&& !userIsTournamentSupervisor(entry, req.user)
+				)
 			) {
-				throw new NotFoundError('scoresheet entry')
+				throw new UnauthorizedError()
 			}
 
-			if (Object.keys(req.body).length !== 1 || !req.body.scores) {
-				throw new ApplicationError(
-					'Currently only scores may be modified for scoresheet entries.',
-				)
+			if (entry.locked && req.body.scores) {
+				throw new ApplicationError('Cannot modify locked scoresheet.')
 			}
 
 			entry.set(req.body)
