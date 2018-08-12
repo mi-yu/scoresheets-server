@@ -41,6 +41,7 @@ Team.post('save', team => {
 	ScoresheetEntry.update({
 		tournament: team.tournament,
 		division: team.division,
+		'scores.team': { $ne: team._id },
 	}, {
 		$push: {
 			scores: {

@@ -75,7 +75,7 @@ const ScoresheetEntry = new mongoose.Schema({
 	}],
 })
 
-ScoresheetEntry.index({ tournament: 1, division: 1, event: 1, 'score.team': 1, }, {
+ScoresheetEntry.index({ tournament: 1, division: 1, event: 1, 'scores.team': 1 }, {
 	unique: true,
 })
 
