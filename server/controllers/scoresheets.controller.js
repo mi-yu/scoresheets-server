@@ -3,9 +3,15 @@ import { NotFoundError, UnauthorizedError, ApplicationError } from '../errors'
 
 // Helpers
 
-const userIsTournamentSupervisor = (entry, user) => (user.group === 'supervisor' && entry.supervisors.includes(user._id))
+const userIsTournamentSupervisor = (entry, user) => (
+	user.group === 'supervisor'
+	&& entry.supervisors.find(supervisor => supervisor.toString() === user.id)
+)
 
-const userIsTournamentDirector = (tournament, user) => (user.group === 'director' && tournament.directors.includes(user._id))
+const userIsTournamentDirector = (tournament, user) => (
+	user.group === 'director'
+	&& tournament.directors.find(director => director.toString() === user.id)
+)
 
 export const index = (req, res, next) => {
 	ScoresheetEntry.find({
@@ -47,7 +53,7 @@ export const update = (req, res, next) => {
 		division: req.params.division,
 		event: req.params.eventId,
 	})
-		// .populate('tournament event scores.team')
+		.populate('tournament')
 		// TODO: should this data be populated server-side or client-side?
 		.exec()
 		.then(entry => {

@@ -44,6 +44,7 @@ export const create = (req, res, next) => {
 		}),
 		events: req.body.events,
 		date,
+		directors: [req.user._id],
 	})
 
 	tournament
