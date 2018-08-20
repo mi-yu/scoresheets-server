@@ -8,7 +8,7 @@ router.get('/', permitUnauthenticated, index)
 
 router.post('/', ensureAuthenticated, create)
 
-router.get('/:tournamentId', permitUnauthenticated, show)
+router.get('/:tournamentId', ensureAuthenticated, show)
 
 router.patch('/:tournamentId', ensureAuthenticated, needsGroup('admin', 'director'), update)
 
