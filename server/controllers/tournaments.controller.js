@@ -21,10 +21,19 @@ export const index = (req, res, next) => {
 }
 
 export const show = (req, res, next) => {
-	Tournament.findOne({
-		_id: req.params.tournamentId,
-		directors: req.user._id,
-	})
+	let query
+	if (req.user.group === 'admin') {
+		query = Tournament.findById(req.params.tournamentId)
+	} else if (req.user) {
+		query = Tournament.findOne({
+			_id: req.params.tournamentId,
+			directors: req.user._id,
+		})
+	} else {
+		return next(new NotFoundError('tournament'))
+	}
+
+	query
 		.exec()
 		.then(tournament => {
 			if (!tournament) throw new NotFoundError('tournament')
