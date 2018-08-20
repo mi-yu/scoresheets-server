@@ -21,7 +21,10 @@ export const index = (req, res, next) => {
 }
 
 export const show = (req, res, next) => {
-	Tournament.findById(req.params.tournamentId)
+	Tournament.findOne({
+		_id: req.params.tournamentId,
+		directors: req.user._id,
+	})
 		.exec()
 		.then(tournament => {
 			if (!tournament) throw new NotFoundError('tournament')
