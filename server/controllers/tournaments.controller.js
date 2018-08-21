@@ -16,7 +16,9 @@ export const index = (req, res, next) => {
 
 	query
 		.exec()
-		.then(tournaments => res.json([...tournaments]))
+		.then(tournaments => {
+			res.json(tournaments.map(tournament => tournament.toObject({ virtuals: true })))
+		})
 		.catch(err => next(err))
 }
 
@@ -37,7 +39,7 @@ export const show = (req, res, next) => {
 		.exec()
 		.then(tournament => {
 			if (!tournament) throw new NotFoundError('tournament')
-			return res.json(tournament.toObject())
+			return res.json(tournament.toObject({ virtuals: true }))
 		})
 		.catch(err => next(err))
 }
@@ -61,7 +63,7 @@ export const create = (req, res, next) => {
 
 	tournament
 		.save()
-		.then(() => res.status(201).json(tournament.toObject()))
+		.then(() => res.status(201).json(tournament.toObject({ virtuals: true })))
 		.catch(err => next(err))
 }
 
@@ -73,7 +75,7 @@ export const update = (req, res, next) => {
 			tournament.set(req.body)
 			return tournament.save()
 		})
-		.then(updated => res.status(200).json(updated.toObject()))
+		.then(updated => res.status(200).json(updated.toObject({ virtuals: true })))
 		.catch(err => next(err))
 }
 
@@ -84,6 +86,6 @@ export const destroy = (req, res, next) => {
 			if (!tournament) throw new NotFoundError('tournament')
 			return tournament.remove()
 		})
-		.then(deleted => res.status(200).json(deleted.toObject()))
+		.then(deleted => res.status(200).json(deleted.toObject({ virtuals: true })))
 		.catch(err => next(err))
 }

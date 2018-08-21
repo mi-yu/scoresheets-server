@@ -33,6 +33,18 @@ describe('test Tournament model', () => {
 		expect(savedTournament.events.length).toEqual(events.length)
 	})
 
+	test('should successfully create urlName for tournament', async () => {
+		const tournament = new Tournament({
+			name: 'TesTing urlName virtual function 123',
+			date: Date.now(),
+			state: 'TX',
+			city: 'Austin',
+			joinCode: 'random-string',
+		})
+
+		expect(tournament.urlName).toBe('testing-urlname-virtual-function-123')
+	})
+
 	test('Should successfully add teams to tournament', async () => {
 		const tournament = await Tournament.findOne({
 			name: 'test tournament',

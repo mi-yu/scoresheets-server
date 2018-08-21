@@ -41,8 +41,12 @@ const Tournament = new mongoose.Schema({
 	],
 })
 
+Tournament.virtual('urlName').get(function () {
+	return this.name.toLowerCase().split(' ').join('-')
+})
+
 // Create ScoresheetEntries after successfully creating tournament.
-Tournament.pre('save', async function() {
+Tournament.pre('save', async function () {
 	let eventsNeedingScoresheets = await Event.find({
 		_id: {
 			$in: this.events,

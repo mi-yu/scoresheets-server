@@ -3,14 +3,24 @@ import { NotFoundError, UnauthorizedError, ApplicationError } from '../errors'
 
 // Helpers
 
-const userIsTournamentSupervisor = (entry, user) => (
+const userIsTournamentSupervisor = (user, entry) => (
 	user.group === 'supervisor'
 	&& entry.supervisors.find(supervisor => supervisor.toString() === user.id)
 )
 
-const userIsTournamentDirector = (tournament, user) => (
+const userIsTournamentDirector = (user, tournament) => (
 	user.group === 'director'
 	&& tournament.directors.find(director => director.toString() === user.id)
+)
+
+const canAccessScoresheet = (user, entry) => (
+	entry.public || (
+		user && (
+			user.group === 'admin'
+			|| userIsTournamentDirector(user, entry.tournament)
+			|| userIsTournamentSupervisor(user, entry)
+		)
+	)
 )
 
 export const index = (req, res, next) => {
@@ -21,11 +31,12 @@ export const index = (req, res, next) => {
 		.populate('tournament event scores.team')
 		.exec()
 		.then(entries => {
-			const canAccess = req.user.group === 'admin' || userIsTournamentDirector(entries[0].tournament, req.user)
-			if (!entries || (!canAccess && !entries[0].tournament.public)) {
+			const filteredEntries = entries.filter(entry => canAccessScoresheet(req.user, entry))
+
+			if (!filteredEntries) {
 				throw new NotFoundError('scoresheet entry')
 			}
-			const entriesWithVirtuals = entries.map(entry => entry.toObject({ virtuals: true }))
+			const entriesWithVirtuals = filteredEntries.map(entry => entry.toObject({ virtuals: true }))
 			return res.json(entriesWithVirtuals)
 		})
 		.catch(err => next(err))
@@ -40,8 +51,7 @@ export const show = (req, res, next) => {
 		.populate('tournament event scores.team')
 		.exec()
 		.then(entry => {
-			const canAccess = req.user.group === 'admin' || userIsTournamentDirector
-			if (!entry || (!canAccess && !entry.public)) throw new NotFoundError('scoresheet entry')
+			if (!canAccessScoresheet(req.user, entry)) throw new NotFoundError('scoresheet entry')
 			return res.json(entry.toObject({ virtuals: true }))
 		})
 		.catch(err => next(err))
@@ -61,8 +71,8 @@ export const update = (req, res, next) => {
 				!entry
 				|| (
 					req.user.group !== 'admin'
-					&& !userIsTournamentDirector(entry.tournament, req.user)
-					&& !userIsTournamentSupervisor(entry, req.user)
+					&& !userIsTournamentDirector(req.user, entry.tournament)
+					&& !userIsTournamentSupervisor(req.user, entry)
 				)
 			) {
 				throw new UnauthorizedError()
@@ -70,6 +80,12 @@ export const update = (req, res, next) => {
 
 			if (entry.locked && req.body.scores) {
 				throw new ApplicationError('Cannot modify locked scoresheet.')
+			}
+
+			if (req.body.locked) {
+				req.body = {
+					locked: true,
+				}
 			}
 
 			entry.set(req.body)
