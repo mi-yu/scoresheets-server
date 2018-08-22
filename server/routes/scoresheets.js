@@ -13,7 +13,7 @@ router.patch(
 	'/:division/:eventId',
 	ensureAuthenticated,
 	needsGroup('director', 'supervisor'),
-	whitelistParams('scores', 'locked'),
+	whitelistParams('scores', 'locked', 'public'),
 	validateScoresheet,
 	update,
 )

@@ -89,14 +89,21 @@ export const update = (req, res, next) => {
 			}
 
 			entry.set(req.body)
-			entry.rank((err, savedEntry) => {
-				if (err) throw err
-				ScoresheetEntry.findById(savedEntry._id)
-					.populate('tournament event scores.team')
-					.exec()
-					.then(sheet => res.json(sheet.toObject({ virtuals: true })))
+
+			if (req.body.scores) {
+				entry.rank((err, savedEntry) => {
+					if (err) throw err
+					ScoresheetEntry.findById(savedEntry._id)
+						.populate('tournament event scores.team')
+						.exec()
+						.then(sheet => res.json(sheet.toObject({ virtuals: true })))
+						.catch(e => next(e))
+				})
+			} else {
+				entry.save()
+					.then(() => res.json(entry.toObject({ virtuals: true })))
 					.catch(e => next(e))
-			})
+			}
 		})
 		.catch(err => next(err))
 }

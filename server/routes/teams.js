@@ -4,11 +4,11 @@ import { index, show, create, update, destroy } from '../controllers/teams.contr
 
 const router = new Router({ mergeParams: true })
 
-router.get('/', ensureAuthenticated, needsGroup('director', 'supervisor'), index)
+router.get('/', index)
 
 router.post('/', ensureAuthenticated, needsGroup('director'), create)
 
-router.get('/:teamId', ensureAuthenticated, needsGroup('director', 'supervisor'), show)
+router.get('/:teamId', show)
 
 router.patch('/:teamId', ensureAuthenticated, needsGroup('director'), update)
 
