@@ -1,5 +1,7 @@
+/* eslint-disable prefer-arrow-callback */
 import mongoose from 'mongoose'
 import Event from './Event'
+import Team from './Team'
 
 /**
  * Each ScoresheetEntry has its own array of Scores, which
@@ -87,7 +89,7 @@ ScoresheetEntry.index({ tournament: 1, division: 1, event: 1, 'scores.team': 1 }
  * Calculate and assign ranks to each score in the ScoresheetEntry.
  * @param  {Function} callback handler which takes 1 optional error argument
  */
-ScoresheetEntry.methods.rank = function(callback) {
+ScoresheetEntry.methods.rank = function (callback) {
 	const {
 		scores,
 	} = this
@@ -141,7 +143,7 @@ ScoresheetEntry.methods.rank = function(callback) {
  * @param  {String}   d        division (default: /(B|C)/)
  * @param  {Function} callback handler which takes 1 optional error argument
  */
-ScoresheetEntry.statics.getTopTeamsPerEvent = function(n = 4, id, d = /(B|C)/, callback) {
+ScoresheetEntry.statics.getTopTeamsPerEvent = function (n = 4, id, d = /(B|C)/, callback) {
 	// Get all ScoresheetEntries for given tournament and arrange the data.
 	// The .lean() gives us raw JS arrays to work with instead of Mongoose's
 	// default wrapped objects.
@@ -161,10 +163,10 @@ ScoresheetEntry.statics.getTopTeamsPerEvent = function(n = 4, id, d = /(B|C)/, c
 			entries.forEach(entry => {
 				entry.scores.forEach(score => {
 					if (!score.rank ||
-                        score.dq ||
-                        score.participationOnly ||
-                        score.noShow ||
-                        score.dropped
+						score.dq ||
+						score.participationOnly ||
+						score.noShow ||
+						score.dropped
 					) {
 						drops += 1
 					}

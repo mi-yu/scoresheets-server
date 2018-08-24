@@ -53,6 +53,22 @@ Tournament.pre('save', async function () {
 		},
 	}).exec()
 
+	const cTeams = await Team.find({
+		tournament: this._id,
+		division: 'C',
+	})
+		.select('_id')
+		.exec()
+
+	const bTeams = await Team.find({
+		tournament: this._id,
+		division: 'B',
+	})
+		.select('_id')
+		.exec()
+
+	const teamMapFunc = (team) => ({ team })
+
 	ScoresheetEntry.find({
 		tournament: this._id,
 	})
@@ -60,19 +76,17 @@ Tournament.pre('save', async function () {
 		.exec()
 		.then(entries => {
 			if (entries.length) {
-				eventsNeedingScoresheets = this.events.filter(event => {
-					const entryExists = entries.filter(entry => entry.event._id === event._id)
-					return !entryExists
-				})
+				eventsNeedingScoresheets = eventsNeedingScoresheets.filter(event => !entries.find(entry => entry.event.id === event.id))
 			}
 			const newEntries = []
 			eventsNeedingScoresheets.forEach(event => {
 				event.division.split('').forEach(div => {
-					newEntries.push({
+					newEntries.push(new ScoresheetEntry({
 						tournament: this._id,
 						event: event._id,
 						division: div,
-					})
+						scores: (div === 'B' ? bTeams.map(teamMapFunc) : cTeams.map(teamMapFunc)) || [],
+					}))
 				})
 			})
 			return ScoresheetEntry.insertMany(newEntries)

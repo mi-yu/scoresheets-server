@@ -14,7 +14,7 @@ const userIsTournamentDirector = (user, tournament) => (
 )
 
 const canAccessScoresheet = (user, entry) => (
-	entry.public || (
+	(
 		user && (
 			user.group === 'admin'
 			|| userIsTournamentDirector(user, entry.tournament)
@@ -51,7 +51,7 @@ export const show = (req, res, next) => {
 		.populate('tournament event scores.team')
 		.exec()
 		.then(entry => {
-			if (!canAccessScoresheet(req.user, entry)) throw new NotFoundError('scoresheet entry')
+			if (!entry || !canAccessScoresheet(req.user, entry)) throw new NotFoundError('scoresheet entry')
 			return res.json(entry.toObject({ virtuals: true }))
 		})
 		.catch(err => next(err))
