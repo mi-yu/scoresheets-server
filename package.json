@@ -9,13 +9,14 @@
 		"lint:fix": "./node_modules/.bin/eslint --fix --ignore-path .gitignore .",
 		"build": "mkdir -p build/server && babel server.js --out-dir build && babel server --out-dir build/server",
 		"start": "node build/server.js",
+		"start:prod": "pm2 start build/server.js --name scoresheets-server",
 		"start:dev": "set NODE_ENV=development && yarn run start:server:dev",
 		"start:server:dev": "nodemon server.js --exec \"node_modules/.bin/babel-node server.js\"",
 		"test:drop": "mongo scoresheets-dev-test --eval 'db.dropDatabase()'",
 		"test:seed": "yarn test:drop && mongoimport --db scoresheets-dev-test --collection events --file __test__/seeds/Event.seed.json --jsonArray",
 		"test": "yarn test:seed && set NODE_ENV=test && jest --runInBand --forceExit",
 		"test:debug": "yarn test:seed && set NODE_ENV=test && node --inspect-brk node_modules/.bin/jest --runInBand",
-		"heroku-postbuild": "yarn global add @babel/cli && yarn build"
+		"heroku-postbuild": "yarn global add pm2 && yarn global add @babel/cli && yarn build"
 	},
 	"engines": {
 		"node": "10.x.x"
