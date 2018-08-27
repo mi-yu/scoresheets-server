@@ -173,6 +173,27 @@ describe('test Tournament model', () => {
 		})
 	})
 
+	test('Adding event should add corresponding ScoresheetEntry', async () => {
+		const tournament = await Tournament.findOne({
+			name: 'test tournament',
+		}).exec()
+
+		const extraEvent = await Event.findOne({
+			inRotation: false,
+		})
+			.exec()
+		tournament.events.push(extraEvent._id)
+
+		await tournament.save()
+		const extraScoresheet = ScoresheetEntry.findOne({
+			event: extraEvent._id,
+			tournament: tournament._id,
+		})
+			.exec()
+
+		expect(extraScoresheet).not.toBeFalsy()
+	})
+
 	test('Deleting tournament should delete associated ScoresheetEntries/Teams', async () => {
 		const tournament = await Tournament.findOne({
 			name: 'test tournament',
