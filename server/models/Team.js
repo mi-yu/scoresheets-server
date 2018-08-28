@@ -7,7 +7,10 @@ const Team = new mongoose.Schema({
 		ref: 'Tournament',
 		required: true,
 	} /* Tournament that this team belongs to. */,
-	school: String,
+	school: {
+		type: String,
+		required: true,
+	},
 	identifier: String /* Distinguishes between two teams from same school (team A, team B, etc) */,
 	division: {
 		type: String,
