@@ -1,0 +1,42 @@
+[
+	{
+		"building": false,
+		"category": "bio",
+		"division": "BC",
+		"highScoreWins": true,
+		"impound": false,
+		"inRotation": true,
+		"name": "Ecology",
+		"stateEvent": false
+	},
+	{
+		"building": false,
+		"category": "earth",
+		"division": "C",
+		"highScoreWins": true,
+		"impound": false,
+		"inRotation": true,
+		"name": "Astronomy",
+		"stateEvent": false
+	},
+	{
+		"building": true,
+		"category": "building",
+		"division": "B",
+		"highScoreWins": true,
+		"impound": true,
+		"inRotation": true,
+		"name": "Roller Coaster",
+		"stateEvent": false
+	},
+	{
+		"building": false,
+		"category": "phys/chem",
+		"division": "C",
+		"highScoreWins": true,
+		"impound": false,
+		"inRotation": false,
+		"name": "Sounds of Music",
+		"stateEvent": false
+	}
+]

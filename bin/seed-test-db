@@ -1,0 +1,5 @@
+#!/bin/sh
+
+find __test__/seeds/*.seed.json -type f -exec basename {} ';' | sed 's/.seed.json$//' | while read col; do
+    mongoimport -d scoresheets-dev-test -c $col --file __test__/seeds/$col.seed.json --jsonArray;
+done
