@@ -33,7 +33,7 @@ describe('test Tournament model', () => {
 		expect(savedTournament.events.length).toEqual(events.length)
 	})
 
-	test('should successfully create urlName for tournament', async () => {
+	test('should successfully create urlName for tournament', () => {
 		const tournament = new Tournament({
 			name: 'TesTing urlName virtual function 123',
 			date: Date.now(),

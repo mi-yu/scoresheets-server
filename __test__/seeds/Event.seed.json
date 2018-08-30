@@ -1,62 +1,62 @@
 [
 	{
+		"__v": 1,
 		"_id": {
 			"$oid": "5867f91727b955df5fc861fb"
 		},
-		"name": "Ecology",
-		"inRotation": true,
 		"building": false,
-		"impound": false,
-		"resources": "1 page front and back",
-		"currentTopic": "",
-		"highScoreWins": true,
-		"stateEvent": false,
 		"category": "bio",
+		"currentTopic": "",
 		"division": "BC",
-		"__v": 1,
+		"highScoreWins": true,
+		"impound": false,
+		"inRotation": true,
+		"name": "Ecology",
+		"resources": "1 page front and back",
+		"stateEvent": false,
 		"topics": []
 	},
 	{
 		"_id": {
 			"$oid": "5867f91727b955df5fc861fd"
 		},
-		"name": "Astronomy",
-		"inRotation": true,
 		"building": false,
-		"impound": false,
-		"resources": "2 laptops, 2 binders, or one of each",
-		"division": "C",
-		"stateEvent": false,
-		"highScoreWins": true,
+		"category": "earth",
 		"currentTopic": "",
-		"category": "earth"
+		"division": "C",
+		"highScoreWins": true,
+		"impound": false,
+		"inRotation": true,
+		"name": "Astronomy",
+		"resources": "2 laptops, 2 binders, or one of each",
+		"stateEvent": false
 	},
 	{
 		"_id": {
 			"$oid": "5867f91727b955df5fc86210"
 		},
-		"name": "Roller Coaster",
-		"inRotation": true,
 		"building": true,
-		"impound": true,
-		"currentTopic": "",
-		"highScoreWins": true,
-		"stateEvent": false,
 		"category": "building",
-		"division": "B"
+		"currentTopic": "",
+		"division": "B",
+		"highScoreWins": true,
+		"impound": true,
+		"inRotation": true,
+		"name": "Roller Coaster",
+		"stateEvent": false
 	},
 	{
+		"__v": 0,
 		"_id": {
 			"$oid": "5b7e3f6b15dc728120ff076e"
 		},
 		"category": "phys/chem",
-		"inRotation": false,
-		"impound": false,
-		"stateEvent": false,
-		"topics": [],
-		"highScoreWins": true,
-		"name": "Sounds of Music",
 		"division": "C",
-		"__v": 0
+		"highScoreWins": true,
+		"impound": false,
+		"inRotation": false,
+		"name": "Sounds of Music",
+		"stateEvent": false,
+		"topics": []
 	}
 ]
