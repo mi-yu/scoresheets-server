@@ -64,31 +64,43 @@ Team.post('save', team => {
 	)
 })
 
-Team.post('insertMany', docs => {
-	docs.forEach(team => {
-		ScoresheetEntry.update({
-			tournament: team.tournament,
-			division: team.division,
+Team.post('insertMany', async (docs) => {
+	const bTeams = docs.filter(team => team.division === 'B')
+	const cTeams = docs.filter(team => team.division === 'C')
+
+	const bTeamIds = bTeams.map(team => ({ team: team._id }))
+
+	const cTeamIds = cTeams.map(team => ({ team: team._id }))
+
+	if (bTeamIds.length) {
+		await ScoresheetEntry.update({
+			tournament: bTeams[0].tournament,
+			division: 'B',
 		}, {
 			$push: {
 				scores: {
-					team: team._id,
+					$each: bTeamIds,
 				},
 			},
 		}, {
 			multi: true,
-		},
-		err => {
-			if (err) {
-				throw new Error(
-					`Error creating scoresheet entry for team ${team.division}${
-						team.teamNumber
-					}`,
-				)
-			}
-		},
-		)
-	})
+		}).exec()
+	}
+
+	if (cTeamIds.length) {
+		await ScoresheetEntry.update({
+			tournament: cTeams[0].tournament,
+			division: 'C',
+		}, {
+			$push: {
+				scores: {
+					$each: cTeamIds,
+				},
+			},
+		}, {
+			multi: true,
+		}).exec()
+	}
 })
 
 /**
