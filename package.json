@@ -18,7 +18,7 @@
 		"heroku-postbuild": "yarn global add @babel/cli && yarn build"
 	},
 	"engines": {
-		"node": "10.x.x"
+		"node": "11.x.x"
 	},
 	"jest": {
 		"testEnvironment": "node"
