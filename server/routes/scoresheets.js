@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { ensureAuthenticated, needsGroup, permitUnauthenticated } from '../passport/auth'
+import { ensureAuthenticated, needsGroup } from '../passport/auth'
 import { validateScoresheet, whitelistParams } from '../middleware/scoresheets.mw'
 import { index, show, update } from '../controllers/scoresheets.controller'
 

@@ -2,10 +2,17 @@ import { ValidationError, ApplicationError } from '../errors';
 
 /* eslint-disable */
 export const validateScoresheet = (req, res, next) => {
-	const { scores } = req.body
+	let { scores } = req.body
 	if (!scores) {
 		return next()
 	}
+
+	scores = scores.map((score) => ({
+		...score,
+		rawScore: Number(score.rawScore),
+	}))
+
+	console.log(scores)
 
 	const errors = []
 
@@ -25,7 +32,6 @@ export const validateScoresheet = (req, res, next) => {
 					&& !dropped_a && !dropped_b
 					/* eslint-enable */
 				) {
-					// TODO: add better messages
 					errors.push({
 						scoreA,
 						scoreB,

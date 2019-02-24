@@ -64,7 +64,6 @@ export const update = (req, res, next) => {
 		event: req.params.eventId,
 	})
 		.populate('tournament')
-		// TODO: should this data be populated server-side or client-side?
 		.exec()
 		.then(entry => {
 			if (
@@ -92,8 +91,10 @@ export const update = (req, res, next) => {
 
 			if (req.body.scores) {
 				entry.rank((err, savedEntry) => {
-					if (err) throw err
-					ScoresheetEntry.findById(savedEntry._id)
+					if (err) {
+						return next(err)
+					}
+					return ScoresheetEntry.findById(savedEntry._id)
 						.populate('tournament event scores.team')
 						.exec()
 						.then(sheet => res.json(sheet.toObject({ virtuals: true })))
